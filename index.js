@@ -151,6 +151,10 @@ client.on("message", async message => {
             {
               name: `:innocent: Inspirational Quote`,
               value: `Gives an inspirational quote!\n\`${pfx}quote\``
+            },
+            {
+              name: `:loud_sound: Soundboard`,
+              value: `Plays audio clips.\n\`${pfx}play {audio clip}\`\nRun \`oof help soundboard\` for help with audio clips`
             }
           ],
           timestamp: new Date(),
@@ -160,6 +164,46 @@ client.on("message", async message => {
           }
         }
       });
+    }
+    else if (args[0].toLowerCase() === "soundboard") {
+      message.channel.send({
+        embed: {
+          color: 0x0099ff,
+          title: ':loud_sound: Audio Clips',
+          fields: [
+            {name:`:expressionless: Bruh`, value:`\`${pfx}soundboard bruh\``},
+            {name:`:peanuts: Deez nuts`, value:`\`${pfx}soundboard deez nuts\``},
+            {name:`( -_-)︻デ═一 Get noscoped`, value:`\`${pfx}soundboard get noscoped\``},
+            {name:`:ok_hand: Gotcha bitch`, value:`\`${pfx}soundboard gotcha bitch\``},
+            {name:`△ Illuminati`, value:`\`${pfx}soundboard illuminati\``},
+            {name:`Just do it`, value:`\`${pfx}soundboard just do it\``},
+            {name:`Surprise motherfucker`, value:`\`${pfx}soundboard surprise motherfucker\``},
+            {name:`且_(ﾟ◇ﾟ)ノ Tadah`, value:`\`${pfx}soundboard tadah\``},
+            {name:`(✘ㅿ✘) Wasted`, value:`\`${pfx}soundboard wasted\``},
+            {name:`:violin: Sad violin`, value:`\`${pfx}soundboard sad violin\``},
+            {name:`:stop_button: Stop`, value:`\`${pfx}soundboard stop\``},
+            {name:`Enemy spotted`, value:`\`${pfx}soundboard enemy spotted\``},
+            {name:`:woman_running: Why are you running`, value:`\`${pfx}soundboard why are you running\``},
+            {name:`:man_in_tuxedo: Objection`, value:`\`${pfx}soundboard objection\``},
+            {name:`Mmm whatcha say`, value:`\`${pfx}soundboard mmm whatcha say\``},
+            {name:`Mission Failed`, value:`\`${pfx}soundboard mission failed\``},
+            {name:`Deja Vu`, value:`\`${pfx}soundboard deja vu\``},
+            {name:`:gun: Gunshot`, value:`\`${pfx}soundboard gunshot\``},
+            {name:`No God no please no`, value:`\`${pfx}soundboard no god no\``},
+            {name:`(⌐▀͡ ̯ʖ▀)︻̷┻̿═━一- F.B.I open up`, value:`\`${pfx}soundboard fbi open up\``},
+            {name:`Oof`, value:`\`${pfx}soundboard oof\``},
+            {name:`:man_judge: Law in order`, value:`\`${pfx}soundboard law in order\``},
+            {name:`:drum: Joke drum`, value:`\`${pfx}soundboard joke drum\``},
+            {name:`Shut up`, value:`\`${pfx}soundboard shut up\``},
+            {name:`:bell: Discord notification`, value:`\`${pfx}soundboard discord notification\``}
+          ],
+          timestamp: new Date(),
+          footer: {
+            text: `${message.author.tag} Executed: \`${message.content}\``,
+            icon_url: message.author.avatarURL
+          }
+        }
+      })
     }
   }
   else if (command === "8ball") {
@@ -242,6 +286,24 @@ client.on("message", async message => {
     }
     getTopPost(message, args[0]);
   }
+  else if (command === "soundboard") {
+    if (message.member.voice.channel) {
+      if (args[0] === undefined) {
+        message.channel.send("You didn't provide an audio clip to play.")
+        return;
+      }
+      const argsStr = args.join(" ");
+      console.log(argsStr);
+      if (config.sound_effects[args.join(" ")] === undefined) {
+        message.channel.send("You didn't provide a valid audio clip!");
+        return;
+      }
+      play_audio(config.sound_effects[args.join(" ")], message);
+      // play_audio(, message)
+    } else {
+      message.reply("You need to join a VC first!")
+    }
+	}
 });
 
 async function testBlacklistImage(message) {
@@ -321,6 +383,16 @@ async function getTopPost(message, subreddit_name) {
     .setTimestamp(new Date(postToUse.created_utc * 1000));
   message.channel.send(embed);
   // message.channel.send(`<https://reddit.com${postToUse.permalink}>\n${postToUse.url}`);
+}
+
+async function play_audio(audio_path, message) {
+  const connection = await message.member.voice.channel.join();
+  const dispatcher  = connection.play("./audio/"+audio_path);
+  dispatcher.resume();
+  dispatcher.on('finish', () => {
+    dispatcher.destroy();
+    connection.disconnect();
+  })
 }
 
 client.login(config.token);

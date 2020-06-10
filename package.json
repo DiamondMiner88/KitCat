@@ -17,9 +17,14 @@
   },
   "homepage": "https://github.com/DiamondMiner88/despacito-spider#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
+    "ffmpeg-static": "^4.2.2",
     "image-hash": "^3.5.1",
     "node-fetch": "^2.6.0",
-    "snoowrap": "^1.21.0"
+    "opusscript": "0.0.7",
+    "request": "^2.88.2",
+    "snoowrap": "^1.21.0",
+    "sqlite3": "^4.2.0"
   }
 }
