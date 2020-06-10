@@ -1,23 +1,14 @@
 //https://discordapp.com/oauth2/authorize?&client_id=713778178967076945&scope=bot&permissions=8
 const Discord = require("discord.js");
 const fs = require('fs');
-const snoowrap = require('snoowrap');
-const fetch = require("node-fetch");
 const config = require("./config.json");
 const blackListImageHash = require("./image-hash-blacklist.json")
 const {
   imageHash
 } = require('image-hash');
-
 const client = new Discord.Client();
 const pfx = config.prefix;
-const reddit = new snoowrap({
-  userAgent: config.reddit_user_agent,
-  clientId: config.reddit_client_id,
-  clientSecret: config.reddit_client_secret,
-  username: config.reddit_username,
-  password: config.reddit_password,
-});
+const reddit_funcs = require("./reddit.js");
 
 // Run on exit
 if (process.platform === "win32") {
@@ -50,10 +41,8 @@ client.on("message", async message => {
   testBlacklistImage(message);
   if (message.author.bot) return;
 
-  let redditThreadRegex = /https?:\/\/www.reddit.com\/r\/.+?(?=\/)\/comments\/.+?(?=\/)\/.+/g;
-  if (message.content.match(redditThreadRegex)) {
-    // TODO: connect to reddit, get the thread from url and post the content on discord
-  }
+  // TODO: add reddit link tester here
+  reddit_funcs.linkImagesFromPosts(message);
 
   var weebAliases = ['weeb', 'weeabo', 'wee b', 'w e e b', 'w eeb', 'weeab o', 'we_eb', 'weeeb', 'weeeeb', 'w_eeb', 'w e eb', 'wee  b', 'weebs'];
   for (var index = 0; index < weebAliases.length; index++) {
@@ -71,239 +60,19 @@ client.on("message", async message => {
   if (command === "ping") {
     // Calculates ping between sending a message and editing it, giving a round-trip latency.
     // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
-    m = await message.channel.send("Ping?");
-    m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
+    let m = await message.channel.send("Ping?");
+    m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
   }
   else if (command === "help") {
-    if (args[0] === undefined) {
-      message.channel.send({
-        embed: {
-          color: 0x0099ff,
-          title: 'Command List',
-          fields: [{
-              name: `:tools: Moderation`,
-              value: `Used for moderating the server!\n\`${pfx}help moderation\``
-            },
-            {
-              name: `:smile: Fun`,
-              value: `'Fun' commands\n\`${pfx}help fun\``
-            }
-          ],
-          timestamp: new Date(),
-          footer: {
-            text: `${message.author.tag} Executed: \`${message.content}\``,
-            icon_url: message.author.avatarURL
-          }
-        }
-      });
-    }
-    else if (args[0].toLowerCase() === "moderation") {
-      message.channel.send({
-        embed: {
-          color: 0x0099ff,
-          title: ':tools: Moderation Commands',
-          fields: [{
-              name: `:wastebasket: Purge`,
-              value: `Used to delete messages\n\`${pfx}purge {amount: default = ${config.default_purge_amnt}}\``
-            },
-            {
-              name: `:warning: Warn`,
-              value: `Used to warn people.\n\`${pfx}warn {member} {reason}\` **WIP**`
-            },
-            {
-              name: `:leg: Kick`,
-              value: `Used to kick members.\n\`${pfx}kick {member} {optional: reason}\` **WIP**`
-            },
-            {
-              name: `:no_entry_sign: Ban`,
-              value: `Used to ban members.\n\`${pfx}ban {member} {optional: reason}\` **WIP**`
-            },
-            {
-              name: `:arrows_counterclockwise: Unban`,
-              value: `Used to unban banned users.\n\`${pfx}unban {user}\` **WIP**`
-            },
-          ],
-          timestamp: new Date(),
-          footer: {
-            text: `${message.author.tag} Executed: \`${message.content}\``,
-            icon_url: message.author.avatarURL
-          }
-        }
-      });
-    }
-    else if (args[0].toLowerCase() === "fun") {
-      message.channel.send({
-        embed: {
-          color: 0x0099ff,
-          title: ':smile: Fun',
-          fields: [{
-              name: `:8ball: 8Ball`,
-              value: `Ask it a question, and it will give you an answer.\n\`${pfx}8ball {question}\``
-            },
-            {
-              name: `:joy: Memes`,
-              value: `Get memes from r/memes\n\`${pfx}meme\``
-            },
-            {
-              name: `:globe_with_meridians: Subreddit`,
-              value: `Get posts from a subreddit! (NSFW subreddits allowed in NSFW channels)\n\`${pfx}subreddit {subreddit}\``
-            },
-            {
-              name: `:innocent: Inspirational Quote`,
-              value: `Gives an inspirational quote!\n\`${pfx}quote\``
-            },
-            {
-              name: `:loud_sound: Soundboard`,
-              value: `Plays audio clips.\n\`${pfx}play {audio clip}\`\nRun \`oof help soundboard\` for help with audio clips`
-            }
-          ],
-          timestamp: new Date(),
-          footer: {
-            text: `${message.author.tag} Executed: \`${message.content}\``,
-            icon_url: message.author.avatarURL
-          }
-        }
-      });
-    }
-    else if (args[0].toLowerCase() === "soundboard") {
-      message.channel.send({
-        embed: {
-          color: 0x0099ff,
-          title: ':loud_sound: Audio Clips',
-          fields: [
-            {name:`:expressionless: Bruh`, value:`\`${pfx}soundboard bruh\``},
-            {name:`:peanuts: Deez nuts`, value:`\`${pfx}soundboard deez nuts\``},
-            {name:`( -_-)︻デ═一 Get noscoped`, value:`\`${pfx}soundboard get noscoped\``},
-            {name:`:ok_hand: Gotcha bitch`, value:`\`${pfx}soundboard gotcha bitch\``},
-            {name:`△ Illuminati`, value:`\`${pfx}soundboard illuminati\``},
-            {name:`Just do it`, value:`\`${pfx}soundboard just do it\``},
-            {name:`Surprise motherfucker`, value:`\`${pfx}soundboard surprise motherfucker\``},
-            {name:`且_(ﾟ◇ﾟ)ノ Tadah`, value:`\`${pfx}soundboard tadah\``},
-            {name:`(✘ㅿ✘) Wasted`, value:`\`${pfx}soundboard wasted\``},
-            {name:`:violin: Sad violin`, value:`\`${pfx}soundboard sad violin\``},
-            {name:`:stop_button: Stop`, value:`\`${pfx}soundboard stop\``},
-            {name:`Enemy spotted`, value:`\`${pfx}soundboard enemy spotted\``},
-            {name:`:woman_running: Why are you running`, value:`\`${pfx}soundboard why are you running\``},
-            {name:`:man_in_tuxedo: Objection`, value:`\`${pfx}soundboard objection\``},
-            {name:`Mmm whatcha say`, value:`\`${pfx}soundboard mmm whatcha say\``},
-            {name:`Mission Failed`, value:`\`${pfx}soundboard mission failed\``},
-            {name:`Deja Vu`, value:`\`${pfx}soundboard deja vu\``},
-            {name:`:gun: Gunshot`, value:`\`${pfx}soundboard gunshot\``},
-            {name:`No God no please no`, value:`\`${pfx}soundboard no god no\``},
-            {name:`(⌐▀͡ ̯ʖ▀)︻̷┻̿═━一- F.B.I open up`, value:`\`${pfx}soundboard fbi open up\``},
-            {name:`Oof`, value:`\`${pfx}soundboard oof\``},
-            {name:`:man_judge: Law in order`, value:`\`${pfx}soundboard law in order\``},
-            {name:`:drum: Joke drum`, value:`\`${pfx}soundboard joke drum\``},
-            {name:`Shut up`, value:`\`${pfx}soundboard shut up\``},
-            {name:`:bell: Discord notification`, value:`\`${pfx}soundboard discord notification\``}
-          ],
-          timestamp: new Date(),
-          footer: {
-            text: `${message.author.tag} Executed: \`${message.content}\``,
-            icon_url: message.author.avatarURL
-          }
-        }
-      })
-    }
+    let help_commands = require("./help_commands.js");
+    help_commands.help_commands(message, command, args);
   }
-  else if (command === "8ball") {
-    if (args !== undefined) {
-      message.channel.send(`Question: ${args.join(" ")}\nAnswer: ${config.eight_ball_replies[Math.floor(Math.random()*config.eight_ball_replies.length)]}`);
-    }
-    else {
-      message.channel.send(`You didn't ask a question`);
-    }
+  else {
+    let fun_commands = require("./fun_commands.js");
+    fun_commands.fun_commands(message, command, args);
+    let moderation_commands = require("./moderation_commands.js");
+    moderation_commands.moderation_commands(message, command, args);
   }
-  else if (command === "quote") {
-    // https://github.com/lukePeavey/quotable#readme
-    const response = await fetch('https://api.quotable.io/random');
-    const data = await response.json();
-    message.channel.send(`"${data.content}"\n- ${data.author}`);
-  }
-  else if (command === "purge") {
-    purgeamnt = config.default_purge_amnt;
-    if (!isNaN(args[0])) purgeamnt = Number(args[0]);
-    if (purgeamnt > 100) {
-      message.channel.send(`The purging limit is 100`);
-    }
-    else {
-      let tmpPurgeMsg;
-      message.channel.bulkDelete(purgeamnt)
-        .then((messages) => {
-          tmpPurgeMsg = `Purged ${messages.size} messages`;
-          message.channel.send(tmpPurgeMsg)
-          .then(msg => msg.delete({
-            timeout: 10000
-          }));
-        })
-        .catch(console.error);
-    }
-  }
-  else if (command === 'avatar') {
-    if (args[0] === undefined) {
-      message.channel.send(`You need to mention someone or put their username#discriminator`);
-      return;
-    }
-    let target_user = message.mentions.users.first();
-    if (!target_user) {
-      let matching_users = client.users.cache.filter(user => user.username === args[0].split("#")[0]);
-      target_user = matching_users.find(user => user.discriminator === args[0].split("#")[1]);
-      if (!target_user) {
-        message.channel.send('Member not found');
-        return;
-      }
-    }
-    message.channel.send({
-      embed: {
-        color: 0x0099ff,
-        title: 'Avatar',
-        fields: [{
-          name: `${target_user.tag}'s Avatar`,
-          value: target_user.avatarURL({
-            format: "png"
-          })
-        }],
-        image: {
-          url: target_user.avatarURL({
-            format: "png"
-          })
-        },
-        timestamp: new Date(),
-        footer: {
-          text: `${message.author.tag} Executed: \`${message.content}\``,
-          icon_url: message.author.avatarURL
-        }
-      }
-    });
-  }
-  else if (command === "meme") {
-    getTopPost(message, config.memes_subreddit);
-  }
-  else if (command === "subreddit") {
-    if (args[0] === undefined) {
-      message.channel.send(`Missing subreddit`);
-      return;
-    }
-    getTopPost(message, args[0]);
-  }
-  else if (command === "soundboard") {
-    if (message.member.voice.channel) {
-      if (args[0] === undefined) {
-        message.channel.send("You didn't provide an audio clip to play.")
-        return;
-      }
-      const argsStr = args.join(" ");
-      console.log(argsStr);
-      if (config.sound_effects[args.join(" ")] === undefined) {
-        message.channel.send("You didn't provide a valid audio clip!");
-        return;
-      }
-      play_audio(config.sound_effects[args.join(" ")], message);
-      // play_audio(, message)
-    } else {
-      message.reply("You need to join a VC first!")
-    }
-	}
 });
 
 async function testBlacklistImage(message) {
@@ -335,64 +104,6 @@ async function testBlacklistImage(message) {
       });
     }
   }
-}
-
-var reddit_submission_ids = [];
-var reddit_idlist_starttime = new Date().getTime();
-async function getTopPost(message, subreddit_name) {
-  // reset id list if its been a day
-  // id list is to prevent returning the same post
-  if (new Date().getTime() - 86400000 >= reddit_idlist_starttime) {
-    reddit_idlist_starttime = new Date().getTime();
-    reddit_submission_ids = [];
-  }
-
-  let subreddit = await reddit.getSubreddit(subreddit_name);
-  let topPosts = await subreddit.getTop({
-    limit: 100
-  });
-  let postToUse;
-  for (submission in topPosts) {
-    if (!reddit_submission_ids.includes(topPosts[submission].id)) {
-      postToUse = topPosts[submission];
-      reddit_submission_ids.push(postToUse.id);
-      break;
-    }
-  }
-  // if (postToUse.subreddit.over_18 && !message.channel.nsfw) {
-  //   message.channel.send(`The subreddit is NSFW. Run this command in a NSFW channel to get the post.`);
-  // }
-  // else if (postToUse.over_18 && !message.channel.nsfw) {
-  //   message.channel.send(`The post was NSFW while this channel is not. Getting a new post, hold on...`);
-  //   getTopPost(message, subreddit_name);
-  // }
-  // else {
-  //   embed = new Discord.MessageEmbed();
-  //   embed.setColor("white");
-  //   console.log(postToUse);
-  //   // message.channel.send(embed);
-  //   // message.channel.send(`<https://reddit.com${postToUse.permalink}>\n${postToUse.url}`);
-  // }
-  let embed = new Discord.MessageEmbed()
-    .setColor("white")
-    .setAuthor(`u/${postToUse.author.name}`)
-    .setTitle(postToUse.title)
-    .setURL(`https://reddit.com${postToUse.permalink}`)
-    .setImage(postToUse.url)
-    .setFooter(`👍 ${postToUse.score} `)
-    .setTimestamp(new Date(postToUse.created_utc * 1000));
-  message.channel.send(embed);
-  // message.channel.send(`<https://reddit.com${postToUse.permalink}>\n${postToUse.url}`);
-}
-
-async function play_audio(audio_path, message) {
-  const connection = await message.member.voice.channel.join();
-  const dispatcher  = connection.play("./audio/"+audio_path);
-  dispatcher.resume();
-  dispatcher.on('finish', () => {
-    dispatcher.destroy();
-    connection.disconnect();
-  })
 }
 
 client.login(config.token);
