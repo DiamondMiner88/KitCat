@@ -1,0 +1,25 @@
+{
+  "name": "despacito-spider",
+  "version": "1.0.0",
+  "description": "despacito-spider will take over discord",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiamondMiner88/despacito-spider.git"
+  },
+  "author": "DiamondMiner88",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/DiamondMiner88/despacito-spider/issues"
+  },
+  "homepage": "https://github.com/DiamondMiner88/despacito-spider#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "image-hash": "^3.5.1",
+    "node-fetch": "^2.6.0",
+    "snoowrap": "^1.21.0"
+  }
+}
