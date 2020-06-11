@@ -41,6 +41,8 @@ function moderation_commands(message, command, args, client) {
     }
     if (message.member.hasPermission("BAN_MEMBERS")) {
       let target_member = message.guild.members.cache.find(member => member.id === target_user.id);
+      channel = message.guild.channels.cache.find(channel => channel.name === 'bot-log');
+
       args.shift();
       let banLength;
       if (args.length === 0) {
@@ -63,13 +65,12 @@ function moderation_commands(message, command, args, client) {
           reason: args.join(" ")
         });
       }
+      if (channel !== undefined) channel.send(`\`${message.author.tag}\` has banned \`${target_member.tag}\`.`);
+      else console.log(`welcome channel is missing`);
     }
     else {
       message.channel.send(`You do not the permission to ban members.`)
     }
-    // channel = message.guild.channels.cache.find(channel => channel.name === 'bot-log');
-    // if (channel !== undefined) channel.send(`\`${message.author.tag}\` has left the server.`);
-    // else console.log(`welcome channel is missing`);
   }
   if (command === "kick") {
 
