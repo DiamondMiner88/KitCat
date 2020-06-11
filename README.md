@@ -8,7 +8,7 @@ These instructions will get a copy of the project up and running on your local m
 You need [Node.js](https://nodejs.org/en/download/) installed on your system.
 
 ### Installing
-Open your terminal, and run `npm install` to install all the libraries. Fill in the tokens in [config.json](https://github.com/DiamondMiner88/despacito-spider-tmp/blob/master/config.json)
+Open your terminal, and run `npm install` to install all the libraries. Rename [config-example.json](https://github.com/DiamondMiner88/despacito-spider/blob/master/config-example.json) to `config.json`. Fill in the tokens
 ## Deployment
 Open your terminal, and run `node index.json`.
 ## Built With
