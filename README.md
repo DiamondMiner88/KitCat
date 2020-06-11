@@ -16,3 +16,5 @@ Open your terminal, and run `node index.json`.
 ## Authors
 - [DiamondMiner88](https://github.com/DiamondMiner88)- _Coding_
 - [Nano-AI](https://github.com/Nano-AI) - _Coding_
+## License
+This project is licensed under the MIT License. See [LICENSE](https://github.com/DiamondMiner88/despacito-spider/blob/master/LICENSE) for details.
