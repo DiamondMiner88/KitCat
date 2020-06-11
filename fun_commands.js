@@ -6,7 +6,7 @@ const reddit_funcs = require("./reddit.js");
 async function fun_commands(message, command, args) {
   if (command === 'avatar') {
     if (args[0] === undefined) {
-      message.channel.send(`You need to mention someone or put their username#discriminator`);
+      message.channel.send(`You need to mention someone or put their tag.`);
       return;
     }
     let target_user = message.mentions.users.first();

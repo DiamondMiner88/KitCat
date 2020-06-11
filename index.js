@@ -2,10 +2,6 @@
 const Discord = require("discord.js");
 const fs = require('fs');
 const config = require("./config.json");
-const blackListImageHash = require("./image-hash-blacklist.json")
-const {
-  imageHash
-} = require('image-hash');
 const client = new Discord.Client();
 const pfx = config.prefix;
 const reddit_funcs = require("./reddit.js");
@@ -32,16 +28,19 @@ client.on("ready", () => {
   client.user.setActivity(`${pfx}help`)
 });
 
-client.on("guildMemberRemove", member => {
-  channel = member.guild.channels.find(channel => channel.name === 'general');
-  channel.send(`\`${member.user.tag}\` has left the server.`);
-});
+// client.on("guildMemberRemove", member => {
+//   channel = message.guild.channels.cache.find(channel => channel.name === 'welcome');
+//   if (channel !== undefined) channel.send(`\`${message.author.tag}\` has left the server.`);
+//   else console.log(`welcome channel is missing`);
+// });
 
 client.on("message", async message => {
-  testBlacklistImage(message);
+  let fun_commands = require("./fun_commands.js");
+  let moderation_commands = require("./moderation_commands.js");
+  moderation_commands.testBlacklistImage(message);
+
   if (message.author.bot) return;
 
-  // TODO: add reddit link tester here
   reddit_funcs.linkImagesFromPosts(message);
 
   var weebAliases = ['weeb', 'weeabo', 'wee b', 'w e e b', 'w eeb', 'weeab o', 'we_eb', 'weeeb', 'weeeeb', 'w_eeb', 'w e eb', 'wee  b', 'weebs'];
@@ -68,42 +67,9 @@ client.on("message", async message => {
     help_commands.help_commands(message, command, args);
   }
   else {
-    let fun_commands = require("./fun_commands.js");
     fun_commands.fun_commands(message, command, args);
-    let moderation_commands = require("./moderation_commands.js");
-    moderation_commands.moderation_commands(message, command, args);
+    moderation_commands.moderation_commands(message, command, args, client);
   }
 });
-
-async function testBlacklistImage(message) {
-  let url = undefined;
-  if (message.attachments.size > 0) {
-    url = message.attachments.first().url;
-  }
-  regex = /http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g;
-  if (message.content.match(regex)) {
-    url = message.content;
-  }
-  if (url !== undefined) {
-    if (url.toLowerCase().indexOf("jpg", url.length - 3) !== -1) {
-      imageHash(url, 16, true, (error, hash) => {
-        if (error) throw error;
-        console.log(hash + " " + url);
-        if (blackListImageHash.includes(hash)) {
-          message.delete();
-        }
-      });
-    }
-    if (url.toLowerCase().indexOf("png", url.length - 3) !== -1) {
-      imageHash(url, 16, true, (error, hash) => {
-        if (error) throw error;
-        console.log(hash + " " + url);
-        if (blackListImageHash.includes(hash)) {
-          message.delete();
-        }
-      });
-    }
-  }
-}
 
 client.login(config.token);
