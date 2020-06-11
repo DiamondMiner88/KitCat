@@ -1,7 +1,18 @@
-# despacito-spider
-Custom discord bot
+# Despacito Spider
+This is a custom Discord bot called Despacito Spider.
 
-Get node.js and npm,\
-Rename `config-example.json` to `config.json` and fill in tokens.\
-`npm install` to get dependencies\
-`node index.js` to run bot
+## Getting Started
+These instructions will get a copy of the project up and running on your local machine.
+
+### Prerequisites
+You need [Node.js](https://nodejs.org/en/download/) installed on your system.
+
+### Installing
+Open your terminal, and run `npm install` to install all the libraries. Fill in the tokens in [config.json](https://github.com/DiamondMiner88/despacito-spider-tmp/blob/master/config.json)
+## Deployment
+Open your terminal, and run `node index.json`.
+## Built With
+- Node.js
+## Authors
+- [DiamondMiner88](https://github.com/DiamondMiner88)- _Coding_
+- [Nano-AI](https://github.com/Nano-AI) - _Coding_
