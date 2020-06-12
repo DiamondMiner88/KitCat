@@ -28,11 +28,11 @@ client.on("ready", () => {
   client.user.setActivity(`${pfx}help`)
 });
 
-// client.on("guildMemberRemove", member => {
-//   channel = message.guild.channels.cache.find(channel => channel.name === 'welcome');
-//   if (channel !== undefined) channel.send(`\`${message.author.tag}\` has left the server.`);
-//   else console.log(`welcome channel is missing`);
-// });
+client.on("guildMemberRemove", member => {
+  channel = member.guild.channels.cache.find(channel => channel.name === 'welcome');
+  if (channel !== undefined) channel.send(`\`${member.user.tag}\` has left the server.`);
+  else console.log(`welcome channel is missing`);
+});
 
 client.on("message", async message => {
   let fun_commands = require("./fun_commands.js");
