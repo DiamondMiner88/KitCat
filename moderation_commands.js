@@ -137,11 +137,9 @@ async function moderation_commands(message, command, args, client) {
       message.channel.send("You do not have the permission to kick members.");
       return;
     }
-
     let kickUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
     if (!kickUser) message.channel.send("Member not found.");
     let kickReason = args.join(" ").slice(22);
-
     if (kickUser.id.toString() === config.bot_id) {
       message.channel.send("I'm not going to kick myself.");
     }
@@ -152,7 +150,26 @@ async function moderation_commands(message, command, args, client) {
     if (kickReason === "") {
       kickReason = "None provided";
     }
-
+    /*
+    const authorPosition = message.guild.member(message.author).roles.highest.position;
+    const kickUserPosition = message.guild.member(kickUser).roles.highest.position;
+    if (authorPosition < kickUserPosition) {
+      message.channel.send("You can't kick someone with a higher position than you.");
+      return;
+    }
+    if(authorPosition === kickUserPosition) {
+      message.channel.send("You can't kick someone the same position as you.");
+      return;
+    }
+    const botPosition = message.guild.member(message.guild.me).roles.highest.position;
+    if(botPosition < kickUserPosition) {
+      message.channel.send("I can't kick them because they are superior to me.");
+      return;
+    }
+    if(botPosition === kickUserPosition) {
+      message.channel.send("I can't kick someone the same position as me.")
+    }
+    */
     let kickEmbed = new Discord.MessageEmbed()
     .setTitle("~ Kick ~")
     .setDescription(`<@${kickUser.id}> got kicked by <@${message.author.id}>`)
@@ -203,9 +220,11 @@ async function moderation_commands(message, command, args, client) {
 
     kickChannel.send(kickEmbed);
   }
+
   /*
   else if (command === "getperms") {
-    const member = message.guild.member(message.mentions.members.first()).roles.highest.position;
+    // const member = message.guild.member(message.mentions.members.first()).roles.highest.position;
+    const member = message.guild.member(message.mentions.members.first()).roles.highest.permissions.toArray();
     message.channel.send(member);
   }
   */
