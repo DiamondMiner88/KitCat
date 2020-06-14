@@ -5,7 +5,9 @@ const {
   imageHash
 } = require('image-hash');
 
-function moderation_commands(message, command, args, client) {
+const Discord = require('discord.js')
+
+async function moderation_commands(message, command, args, client) {
   if (command === "purge") {
     purgeamnt = config.default_purge_amnt;
     if (!isNaN(args[0])) purgeamnt = Number(args[0]);
@@ -26,6 +28,10 @@ function moderation_commands(message, command, args, client) {
     }
   }
   else if (command === "ban") {
+    if (!message.member.hasPermission("BAN_MEMBERS")) {
+      message.channel.send(`You do not the permission to ban members.`);
+      return;
+    }
     if (args[0] === undefined) {
       message.channel.send(`You need to mention someone or put their tag.`);
       return;
@@ -73,6 +79,10 @@ function moderation_commands(message, command, args, client) {
     }
   }
   else if (command === "sban") {
+    if (!message.member.hasPermission("BAN_MEMBERS")) {
+      message.channel.send(`You do not the permission to ban members.`);
+      return;
+    }
     if (args[0] === undefined) {
       message.author.send(`You need to mention someone or put their tag.`);
       return;
@@ -123,8 +133,78 @@ function moderation_commands(message, command, args, client) {
 
   }
   else if (command === "kick") {
+    if (!message.member.hasPermission("KICK_MEMBERS")){
+      message.channel.send("You do not have the permission to ban members.");
+    }
 
+    let kickUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
+    if (!kickUser) message.channel.send("Member not found.");
+    let kickReason = args.join(" ").slice(22);
+
+    if (kickUser.id.toString() === config.bot_id) {
+      message.channel.send("I'm not going to kick myself.");
+    }
+
+    if (kickReason === "") {
+      kickReason = "None provided";
+    }
+
+    let kickEmbed = new Discord.MessageEmbed()
+    .setTitle("~ Kick ~")
+    .setDescription(`<@${kickUser.id}> got kicked by <@${message.author.id}>`)
+    .setColor("0x0099ff")
+    .addFields(
+      { name: "Kicked User", value: `<@${kickUser.id}>`, inline: true },
+      { name: "Kicked By", value: `<@${message.author.id}>`, inline: true },
+      { name: "Kicked In", value: `<#${message.channel.id}>`, inline:true },
+      { name: "Time", value: message.createdAt, inline: true },
+      { name: "Reason", value: kickReason },
+    );
+    
+    let kickChannel = null;
+    for (let i = 0; i < config.log_channels.length; i++) {
+      kickChannel = message.guild.channels.cache.find(guild => guild.name === config.log_channels[i]);
+      if (kickChannel) break
+    }
+    // let error = false;
+    message.guild.member(kickUser).kick(kickReason)// .catch(error=true)
+    // if (error) return message.channel.send("I can't kick that user, they are superior to me.");
+
+
+    kickUser.send(new Discord.MessageEmbed()
+    .setTitle("You got kicked!")
+    .setColor("0x0099ff")
+    .addFields(
+      { name: "Kicked By", value: `<@${message.author.id}>`, inline: true },
+      { name: "Kicked In", value: `<#${message.channel.id}>`, inline:true },
+      { name: "Time", value: message.createdAt, inline: true },
+      { name: "Reason", value: kickReason },
+    ));
+
+    message.author.send(new Discord.MessageEmbed()
+    .setTitle("You kicked someone!")
+    .setColor("0x0099ff")
+    .addFields(
+      { name: "Kicked User", value: `<@${kickUser.id}>`, inline: true },
+      { name: "Kicked In", value: `<#${message.channel.id}>`, inline:true },
+      { name: "Time", value: message.createdAt, inline: true },
+      { name: "Reason", value: kickReason },
+    ));
+    
+    if (!kickChannel) {
+      kickEmbed.setFooter("Could not find any channel for bot logs, so emebd got sent here instead.");
+      message.channel.send(kickEmbed);
+      return;
+    }
+
+    kickChannel.send(kickEmbed);
   }
+  /*
+  else if (command === "getperms") {
+    const member = message.guild.member(message.mentions.members.first()).roles.highest.position;
+    message.channel.send(member);
+  }
+  */
 }
 
 async function testBlacklistImage(message) {
