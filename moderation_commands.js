@@ -134,7 +134,8 @@ async function moderation_commands(message, command, args, client) {
   }
   else if (command === "kick") {
     if (!message.member.hasPermission("KICK_MEMBERS")){
-      message.channel.send("You do not have the permission to ban members.");
+      message.channel.send("You do not have the permission to kick members.");
+      return;
     }
 
     let kickUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
@@ -144,7 +145,10 @@ async function moderation_commands(message, command, args, client) {
     if (kickUser.id.toString() === config.bot_id) {
       message.channel.send("I'm not going to kick myself.");
     }
-
+    if (kickUser.id === message.author.id) {
+      message.channel.send("Why are you trying to kick your self?");
+      return;
+    }
     if (kickReason === "") {
       kickReason = "None provided";
     }
