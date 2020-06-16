@@ -34,6 +34,14 @@ client.on("guildMemberRemove", member => {
   else console.log(`welcome channel is missing`);
 });
 
+client.once("reconnecting", () => {
+  console.log("Reconnecting to discord...");
+});
+
+client.once("disconnect", () => {
+  console.log("Disconnected from discord...");
+});
+
 client.on("message", async message => {
   let fun_commands = require("./fun_commands.js");
   let moderation_commands = require("./moderation_commands.js");

@@ -69,7 +69,7 @@ function help_commands(message, command, args) {
           },
           {
             name: `:joy: Memes`,
-            value: `Get memes from r/memes\n\`${pfx}meme\``
+            value: `Get memes from r/${config.memes_subreddit}\n\`${pfx}meme\``
           },
           {
             name: `:globe_with_meridians: Subreddit`,

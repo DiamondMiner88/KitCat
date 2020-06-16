@@ -20,6 +20,7 @@
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
     "ffmpeg-static": "^4.2.2",
+    "google-tts-api": "0.0.4",
     "image-hash": "^3.5.1",
     "node-fetch": "^2.6.0",
     "opusscript": "0.0.7",
