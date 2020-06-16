@@ -3,7 +3,7 @@ const pfx = config.prefix;
 const Discord = require('discord.js')
 
 module.exports = {
-  command: "purge",
+  command: "kick",
   category: "moderation",
   help_name: `:leg: Kick`,
   help_description: `Used to kick members.\n\`${pfx}kick {member} {optional: reason}\``,
