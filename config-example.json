@@ -53,5 +53,7 @@
     "discord notification": "discord-notification.mp3"
   },
   "default_purge_amnt": 5,
-  "memes_subreddit": "memes"
+  "memes_subreddit": "memes",
+  "log_channels": ["auditlog", "incidents", "logs", "admin-logs", "moderation-logs", "audit-log"],
+  "discord-bot-id": "ENTER YOUR OWN BOT ID HERE"
 }
