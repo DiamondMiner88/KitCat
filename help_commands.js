@@ -29,26 +29,15 @@ function help_commands(message, command, args) {
       embed: {
         color: 0x0099ff,
         title: ':tools: Moderation Commands',
-        fields: [{
-            name: `:wastebasket: Purge`,
-            value: `Used to delete messages\n\`${pfx}purge {amount: default = ${config.default_purge_amnt}}\``
-          },
-          {
-            name: `:warning: Warn`,
-            value: `Used to warn people.\n\`${pfx}warn {member} {reason}\` **WIP**`
-          },
-          {
-            name: `:leg: Kick`,
-            value: `Used to kick members.\n\`${pfx}kick {member} {optional: reason}\` **WIP**`
-          },
-          {
-            name: `:no_entry_sign: Ban`,
-            value: `Used to ban members.\n\`${pfx}ban {member} {optional: reason}\` **WIP**`
-          },
+        fields: [
           {
             name: `:arrows_counterclockwise: Unban`,
             value: `Used to unban banned users.\n\`${pfx}unban {user}\` **WIP**`
           },
+          {
+            name: 'fix later',
+            value: 'fix later'
+          }
         ],
         timestamp: new Date(),
         footer: {
@@ -63,25 +52,10 @@ function help_commands(message, command, args) {
       embed: {
         color: 0x0099ff,
         title: ':smile: Fun',
-        fields: [{
-            name: `:8ball: 8Ball`,
-            value: `Ask it a question, and it will give you an answer.\n\`${pfx}8ball {question}\``
-          },
+        fields: [
           {
-            name: `:joy: Memes`,
-            value: `Get memes from r/${config.memes_subreddit}\n\`${pfx}meme\``
-          },
-          {
-            name: `:globe_with_meridians: Subreddit`,
-            value: `Get posts from a subreddit! (NSFW subreddits allowed in NSFW channels)\n\`${pfx}subreddit {subreddit}\``
-          },
-          {
-            name: `:innocent: Inspirational Quote`,
-            value: `Gives an inspirational quote!\n\`${pfx}quote\``
-          },
-          {
-            name: `:loud_sound: Soundboard`,
-            value: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`oof help soundboard\` for help with audio clips`
+            name: `fix this later`,
+            value: `fix this later`
           }
         ],
         timestamp: new Date(),

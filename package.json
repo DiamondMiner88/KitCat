@@ -25,7 +25,6 @@
     "node-fetch": "^2.6.0",
     "opusscript": "0.0.7",
     "request": "^2.88.2",
-    "snoowrap": "^1.21.0",
-    "sqlite3": "^4.2.0"
+    "snoowrap": "^1.21.0"
   }
 }
