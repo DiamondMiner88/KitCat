@@ -12,6 +12,6 @@ module.exports = {
       message.channel.send(`Missing subreddit`);
       return;
     }
-    require("../reddit.js").reddit_funcs.getTopPost(message, args[0]);
+    require("../reddit.js").getTopPost(message, args[0]);
   }
 }

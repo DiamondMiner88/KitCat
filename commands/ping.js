@@ -5,7 +5,7 @@ module.exports = {
   command: "ping",
   category: "utils",
   help_name: `Ping`,
-  help_description: `Gets my latency and API latency.`,
+  help_description: `Gets my latency and API latency.\n\`${pfx}ping\``,
 
   async execute(client, message, args) {
     // Calculates ping between sending a message and editing it, giving a round-trip latency.

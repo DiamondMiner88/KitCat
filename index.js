@@ -4,7 +4,7 @@ const pfx = config.prefix;
 const fs = require('fs');
 const path = require('path');
 const Discord = require("discord.js");
-const client = new Discord.Client();
+var client = new Discord.Client();
 
 // Run on exit
 if (process.platform === "win32") {
@@ -24,11 +24,11 @@ process.on("SIGINT", function() {
 });
 
 //concept from https://github.com/moonstar-x/discord-tts-bot/blob/cb86e98488d76870a2f857ded6371bd6f4ff8329/src/app.js
-var commands = new Discord.Collection();
+client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(path.join(__dirname, './commands', file));
-  commands.set(command.command, command);
+  client.commands.set(command.command, command);
 }
 
 client.on("ready", () => {
@@ -69,7 +69,7 @@ client.on("message", async message => {
   const args = message.content.slice(pfx.length).trim().split(/ +/g); // args is an array of text after the command that were seperated by a whitespace
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix
 
-  const command = commands.get(commandText);
+  const command = client.commands.get(commandText);
   if (command) command.execute(client, message, args);
 });
 

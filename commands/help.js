@@ -1,13 +1,63 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const Discord = require('discord.js');
 
 module.exports = {
-  command: "COMMAND_EXECUTOR",
-  category: "CATEGORY-moderation/fun/utils/other",
-  help_name: `NAME TO BE DISPLAYED ON HELP COMMAND`,
-  help_description: `DESCRIPTON OF COMMAND FOR HELP COMMAND`,
+  command: "help",
+  category: "utils",
+  help_name: `Help`,
+  help_description: `What you're looking at right now.\n\`${pfx}help\``,
 
   execute(client, message, args) {
-    // This gets called when the command is equal to #command on line 5
+    if (args.length === 0) {
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle("Command sections:")
+        .addField("Moderation Commands", `\`${pfx}help moderation\``)
+        .addField(":smile: Fun", `\`${pfx}help fun\``)
+        .addField(":tools: Utility Commands", `\`${pfx}help utils\``)
+        .addField(":loud_sound: Audio Clips", `\`${pfx}help soundboard\``);
+      message.channel.send(embed);
+    }
+    else if (args[0] === "moderation") {
+      let commands = client.commands.filter(command => command.category === "moderation");
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle("Moderation Commands")
+      commands.forEach((command) => {
+        embed.addField(command.help_name, command.help_description);
+      });
+      message.channel.send(embed);
+    }
+    else if (args[0] === "fun") {
+      let commands = client.commands.filter(command => command.category === "fun");
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle(":smile: Fun")
+      commands.forEach((command) => {
+        embed.addField(command.help_name, command.help_description);
+      });
+      message.channel.send(embed);
+    }
+    else if (args[0] === "utils") {
+      let commands = client.commands.filter(command => command.category === "utils");
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle(":tools: Utility Commands")
+      commands.forEach((command) => {
+        embed.addField(command.help_name, command.help_description);
+      });
+      message.channel.send(embed);
+    }
+    else if (args[0] === "soundboard") {
+      let sounds = config.sound_effects;
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle(":loud_sound: Audio Clips")
+      for (sound in sounds) {
+        embed.addField(sounds[sound].help_name, sounds[sound].help_description.replace("${pfx}", pfx));
+      }
+      message.channel.send(embed);
+    }
   }
 }
