@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const Discord = require("discord.js");
 var client = new Discord.Client();
+const {
+  imageHash
+} = require('image-hash');
 
 // Run on exit
 if (process.platform === "win32") {
@@ -12,7 +15,6 @@ if (process.platform === "win32") {
     input: process.stdin,
     output: process.stdout
   });
-
   rl.on("SIGINT", function() {
     process.emit("SIGINT");
   });
@@ -21,6 +23,14 @@ process.on("SIGINT", function() {
   console.log(`Exiting...`);
   client.destroy();
   process.exit();
+});
+
+fs.exists('image-blacklist.json', function(exists) {
+  if (!exists) {
+    fs.writeFile('image-blacklist.json', JSON.stringify({}), 'utf8', function(writeErr) {
+      if (writeErr) throw writeErr;
+    });
+  }
 });
 
 //concept from https://github.com/moonstar-x/discord-tts-bot/blob/cb86e98488d76870a2f857ded6371bd6f4ff8329/src/app.js
@@ -51,13 +61,24 @@ client.once("disconnect", () => {
 });
 
 client.on("message", async message => {
-  require("./moderation_commands.js").testBlacklistImage(message);
-
   var weebAliases = ['weeb', 'weeabo', 'wee b', 'w e e b', 'w eeb', 'weeab o', 'we_eb', 'weeeb', 'weeeeb', 'w_eeb', 'w e eb', 'wee  b', 'weebs'];
   for (var index = 0; index < weebAliases.length; index++) {
     if (message.content.toLowerCase().includes(weebAliases[index])) {
       message.delete();
       return;
+    }
+  }
+
+  var url = undefined;
+  if (message.attachments.size > 0) url = message.attachments.first().url;
+  if (message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)) url = message.content;
+  if (url !== undefined) {
+    if (url.toLowerCase().indexOf("png", url.length - 3) !== -1) {
+      imageHash(url, 16, true, (error, hash) => {
+        if (error) throw error;
+        let tmp = imageBlacklist[hash];;
+        if (tmp) message.delete();
+      });
     }
   }
 
