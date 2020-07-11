@@ -1,21 +1,23 @@
 const config = require("../config.json");
 const pfx = config.prefix;
-const request = require("request");
-const fs = require('fs');
-const Discord = require("discord.js");
 
 module.exports = {
     command: "tts",
-    catagory: "fun",
+    category: "fun",
     help_name: `:robot: TTS`,
-    help_description: `Joins VC and says what you want it to say!\n\`${pfx} {text}\``,
+    help_description: `Joins VC and says what you want it to say!\n\`${pfx}tts {text}\``,
 
     async execute(client, message, args) {
         var channel = message.member.voice.channel;
         if (message.member.voice.channel){
+            if (args.join(" ").length > 200) {
+                message.channel.send("Text exceeds 200 character limit.");
+                return;
+            }
             const channel = message.member.voice.channel;
             const connection = await message.member.voice.channel.join();
             var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(args.join(" "))}&tl=en&client=tw-ob`;
+            // message.channel.send(url);
             const dispatcher = connection.play(url);
             dispatcher.on("finish", () => {
                 channel.leave();
