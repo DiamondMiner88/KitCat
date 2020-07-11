@@ -20,31 +20,38 @@ module.exports = {
     help_description: `Get NSFW photos, and gifs. \n\`${pfx}nsfw {type}\``,
 
     execute(client, message, args) {
+        if (!message.channel.nsfw) {
+            message.channel.send("This command can only be run in channels marked NSFW.");
+            return;
+        }
         // message.channel.send(args);
         if (args[0].toLowerCase() == "hentai"){
-            console.log(args);
+            if (args[1] == "help") {
+                message.channel.send(`Here are your options: \`${hentai_commands.join(", ")}\``);
+                return;
+            }
             if (!hentai_commands.includes(args[2]) && args.length > 2) {
-                message.channel.send("You didn't provide a valid hentai type.");
+                message.channel.send(`You didn't provide a valid hentai type. Run \`${pfx}nsfw hentai help\``);
                 return;
             }
             var url = "";
-            console.log(args.length);
             if (args.length < 2) {
                 url = `https://nekos.life/api/v2/img/Random_hentai_gif`;
             } else {
                 url = `https://nekos.life/api/v2/img/${args[1]}`;
             }
-            var media_url;
-            var testing = request({
+            request({
                 url: url,
                 json: true
             }, function (error, response, body) {
                 if (!error && response.statusCode === 200) { 
                     const hEmbed = new Discord.MessageEmbed()
                         .setColor("#FF69B4")
-                        .setTitle("Hentai")
+                        .setTitle("Here's some hentai")
                         .setImage(body.url)
-                    console.log(body.url);
+                        .setTimestamp()
+                        .setFooter(`${message.author.tag} ran the commnd | Content gotten from nekos.life`, message.author.avatarURL())
+                    // console.log( message.author.avatarURL);
                     message.channel.send(hEmbed);
                 }
             });
