@@ -1,5 +1,7 @@
 const config = require("../config.json");
-const { DiscordAPIError } = require("discord.js");
+const {
+  DiscordAPIError
+} = require("discord.js");
 const pfx = config.prefix;
 
 module.exports = {
@@ -27,11 +29,12 @@ module.exports = {
           // console.log(error);
           if (error instanceof DiscordAPIError) {
             message.channel.send("You can only bulk delete messages that are under 14 days old");
-          } else {
+          }
+          else {
             console.error(error);
           }
         });
-        // .catch(console.error);
+      // .catch(console.error);
     }
   }
 }

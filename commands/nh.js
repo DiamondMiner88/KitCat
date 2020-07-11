@@ -1,7 +1,7 @@
 const config = require("../config.json");
 const pfx = config.prefix;
 const {
-  API, Tag
+  API
 } = require('nhentai-api');
 const api = new API();
 
@@ -23,7 +23,6 @@ module.exports = {
     if (args[0] != undefined) {
       if (args[0].match(/\d{1,6}/g)) {
         api.getBook(Number(args[0])).then(book => {
-
           var parodies = book.tags.filter(tag => tag.type.type === "parody");
           var characters = book.tags.filter(tag => tag.type.type === "character");
           var bookTags = book.tags.filter(tag => tag.type.type === "tag");
@@ -32,7 +31,6 @@ module.exports = {
           var lang = book.tags.filter(tag => tag.type.type === "language");
 
           message.channel.send(`<https://nhentai.net/g/${book.id}>\n**Title:** ${book.title.pretty}\n**Parodies:** ${tagsToString(parodies)}\n**Characters:** ${tagsToString(characters)}\n**Tags:** ${tagsToString(bookTags)}\n**Artists:** ${tagsToString(artists)}\n**Groups:** ${tagsToString(groups)}\n**Languages:** ${tagsToString(lang)}\n`);
-          return;
         }).catch(error => message.channel.send(error.message));
       }
       else message.channel.send("That is not a valid number!");
