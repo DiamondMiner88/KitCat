@@ -13,6 +13,7 @@ const hentai_commands = ['classic', 'erofeet', 'erok',
                         'bj', 'yuri', 'trap', 'anal', 
                         'blowjob', 'holoero', 'neko', 'hentai', 'futanari', 
                         'ero', 'solo', 'waifu', 'pwankg', 'eron', 'erokemo']
+
 module.exports = {
     command: "nsfw",
     category: "fun",
@@ -25,7 +26,7 @@ module.exports = {
             return;
         }
         // message.channel.send(args);
-        if (args[0].toLowerCase() == "hentai"){
+        if (args[0].toLowerCase() === "hentai"){
             if (args[1] == "help") {
                 message.channel.send(`Here are your options: \`${hentai_commands.join(", ")}\``);
                 return;
@@ -55,6 +56,23 @@ module.exports = {
                     message.channel.send(hEmbed);
                 }
             });
+        } else {
+            if (args.length == 0) {
+                // get stuff from https://www.reddit.com/r/nsfw/
+                return;
+            }
+            if (args[0].toLowerCase() === "gay") {
+                // get stuff from https://www.reddit.com/r/GaybrosGoneWild/
+                return;
+            }
+            if (args[0].toLowerCase() === "trans") {
+                // get stuff from https://www.reddit.com/r/GoneWildTrans/
+                return;
+            }
+            if (args[0].toLowerCase() === "cosplay") {
+                // get stuff from https://www.reddit.com/r/nsfwcosplay/
+                return;
+            }
         }
     }
 }
