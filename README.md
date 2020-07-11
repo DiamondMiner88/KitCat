@@ -19,7 +19,7 @@ Open your terminal, and run `node index.json`.
 ## TODO
 - silent kick
 - permissions on the ban command
-- google-text-to-speech in a VC - _Diamond_
+- google-text-to-speech in a VC - _Diamond_ - Done (by _Nano-AI_)
 - automatic help setion based on enum categories (change to enum instead of string) and command's name/descriptions
 ## License
 This project is licensed under the MIT License. See [LICENSE](https://github.com/DiamondMiner88/despacito-spider/blob/master/LICENSE) for details.
