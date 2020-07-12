@@ -11,6 +11,10 @@ module.exports = {
   help_description: `Used to delete messages\n\`${pfx}purge {amount: default = ${config.default_purge_amnt}}\``,
 
   execute(client, message, args) {
+    if (!message.member.hasPermission("MANAGE_MESSAGES")) {
+      message.channel.send("You do not have the permission to manage messages.");
+      return;
+    }
     let purgeamnt = config.default_purge_amnt;
     if (!isNaN(args[0])) purgeamnt = Number(args[0]);
     if (purgeamnt > 100) {
