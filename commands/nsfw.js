@@ -32,7 +32,7 @@ const help = [
 	},
 	{
 		name: ":play_pause: Video",
-		description: `Sends embed with title of video, thumbnail (Doesn't work sometimes), and link. \`${pfx}nsfw video {query}\``
+		description: `Sends embed with title of video, thumbnail (Doesn't work sometimes), and link. \`${pfx}nsfw hentai video {query}\``
 	}
 ]
 
@@ -40,7 +40,7 @@ module.exports = {
     command: "nsfw",
     category: "fun",
     help_name: ":smirk: NSFW",
-    help_description: `Get NSFW photos, and gifs. \n\`${pfx}nsfw {type}\``,
+    help_description: `Get NSFW photos, and gifs. Run \n\`${pfx}nsfw help\` for more information you sick creep.`,
 
     execute(client, message, args) {
         if (!message.channel.nsfw) {
