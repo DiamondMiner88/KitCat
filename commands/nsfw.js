@@ -32,7 +32,7 @@ const help = [
 	},
 	{
 		name: ":play_pause: Video",
-		description: `Sends embed with title of video, thumbnail (Doesn't work sometimes), and link. \`${pfx}nsfw hentai video {query}\``
+		description: `Sends embed with title of video, thumbnail (Doesn't work sometimes), and link. \`${pfx}nsfw video {query}\``
 	}
 ]
 
