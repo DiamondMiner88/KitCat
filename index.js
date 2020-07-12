@@ -68,8 +68,12 @@ client.on("message", async message => {
     if (url.toLowerCase().indexOf("png", url.length - 3) !== -1) {
       imageHash(url, 16, true, (error, hash) => {
         if (error) throw error;
-        let tmp = imageBlacklist[hash];;
-        if (tmp) message.delete();
+        fs.readFile('image-blacklist.json', function readFileCallback(err, data) {
+          if (err) throw err;
+          const imageBlacklist = JSON.parse(data);
+          let tmp = imageBlacklist[hash];;
+          if (tmp) message.delete();
+        });
       });
     }
   }
