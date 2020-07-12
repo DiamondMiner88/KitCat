@@ -2,6 +2,13 @@ const config = require("../config.json");
 const pfx = config.prefix;
 const Discord = require("discord.js");
 const request = require("request");
+const fetch = require('node-fetch');
+// const snoowrap = require('snoowrap');
+// const pSearch = require("pornsearch");
+
+/*
+https://pornopics.co/
+*/
 
 const hentai_commands = ['classic', 'erofeet', 'erok',
                         'les', 'hololewd', 'lewdk', 
@@ -14,6 +21,17 @@ const hentai_commands = ['classic', 'erofeet', 'erok',
                         'blowjob', 'holoero', 'neko', 'hentai', 'futanari', 
                         'ero', 'solo', 'waifu', 'pwankg', 'eron', 'erokemo']
 
+const help = [
+    {
+        name: ":hot_face: Hentai",
+        description: `Gives a gif or image out of a category of Hentai. \`${pfx}nsfw hentai {type}\`. Run \`${pfx}nsfw hentai help\` for all the available categories.`
+    },
+    {
+        name: ":play_pause: Video Custom Search",
+        description: `Gives a small video clip that lasts around 5 seconds long. (WITH AUDIO)`
+    }
+]
+
 module.exports = {
     command: "nsfw",
     category: "fun",
@@ -25,13 +43,37 @@ module.exports = {
             message.channel.send("This command can only be run in channels marked NSFW.");
             return;
         }
-        // message.channel.send(args);
+        if (args[0].toLowerCase() === "help") {
+            const hEmbed = new Discord.MessageEmbed()
+                .setColor("#FF69B4")
+                .setTitle("Help")
+                .setTimestamp()
+                .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL())
+            for (var items in help) {
+                hEmbed.addField(items.name, items.description);
+            }
+            // console.log( message.author.avatarURL);
+            message.channel.send(hEmbed);
+        }
+
+        if (args[0].toLowerCase() === "gif") {
+            // const search = require('pornsearch')
+            // const searcher = search.search(args.slice(1, args.length).join(" "), driver="Sex");
+            // console.log(searcher.gifUrl())
+            searcher.gifs()
+                .then(gifs => {
+                    var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
+                    message.channel.send(`Title: \`${random.title}\`\n${random.url}`);
+                });
+            return;
+        }
+
         if (args[0].toLowerCase() === "hentai"){
             if (args[1] == "help") {
                 message.channel.send(`Here are your options: \`${hentai_commands.join(", ")}\``);
                 return;
             }
-            if (!hentai_commands.includes(args[2]) && args.length > 2) {
+            if (!hentai_commands.includes(args[2])) {
                 message.channel.send(`You didn't provide a valid hentai type. Run \`${pfx}nsfw hentai help\``);
                 return;
             }
@@ -56,23 +98,6 @@ module.exports = {
                     message.channel.send(hEmbed);
                 }
             });
-        } else {
-            if (args.length == 0) {
-                // get stuff from https://www.reddit.com/r/nsfw/
-                return;
-            }
-            if (args[0].toLowerCase() === "gay") {
-                // get stuff from https://www.reddit.com/r/GaybrosGoneWild/
-                return;
-            }
-            if (args[0].toLowerCase() === "trans") {
-                // get stuff from https://www.reddit.com/r/GoneWildTrans/
-                return;
-            }
-            if (args[0].toLowerCase() === "cosplay") {
-                // get stuff from https://www.reddit.com/r/nsfwcosplay/
-                return;
-            }
         }
     }
 }

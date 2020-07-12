@@ -26,6 +26,7 @@
     "nhentai-api": "^3.0.2",
     "node-fetch": "^2.6.0",
     "opusscript": "0.0.7",
+    "pornsearch": "^2.4.3",
     "request": "^2.88.2",
     "snoowrap": "^1.21.0"
   },
