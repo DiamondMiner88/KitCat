@@ -13,6 +13,14 @@ module.exports = {
   help_description: `For more commands on the blacklist do\n\`${pfx}blacklist help\``,
 
   execute(client, message, args) {
+    fs.exists('image-blacklist.json', function(exists) {
+      if (!exists) {
+        fs.writeFile('image-blacklist.json', JSON.stringify({}), 'utf8', function(writeErr) {
+          if (writeErr) throw writeErr;
+        });
+      }
+    });
+
     const subcommand = args.shift();
     if (subcommand === "help") {
       var embed = new Discord.MessageEmbed()

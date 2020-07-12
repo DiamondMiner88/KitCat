@@ -25,14 +25,6 @@ process.on("SIGINT", function() {
   process.exit();
 });
 
-fs.exists('image-blacklist.json', function(exists) {
-  if (!exists) {
-    fs.writeFile('image-blacklist.json', JSON.stringify({}), 'utf8', function(writeErr) {
-      if (writeErr) throw writeErr;
-    });
-  }
-});
-
 //concept from https://github.com/moonstar-x/discord-tts-bot/blob/cb86e98488d76870a2f857ded6371bd6f4ff8329/src/app.js
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
@@ -76,8 +68,12 @@ client.on("message", async message => {
     if (url.toLowerCase().indexOf("png", url.length - 3) !== -1) {
       imageHash(url, 16, true, (error, hash) => {
         if (error) throw error;
-        let tmp = imageBlacklist[hash];;
-        if (tmp) message.delete();
+        fs.readFile('image-blacklist.json', function readFileCallback(err, data) {
+          if (err) throw err;
+          const imageBlacklist = JSON.parse(data);
+          let tmp = imageBlacklist[hash];;
+          if (tmp) message.delete();
+        });
       });
     }
   }
