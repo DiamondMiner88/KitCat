@@ -96,7 +96,7 @@ module.exports = {
                 message.channel.send(`Here are your options: \`${hentai_commands.join(", ")}\``);
                 return;
             }
-            if (!hentai_commands.includes(args[2])) {
+            if (!hentai_commands.includes(args[1])) {
                 message.channel.send(`You didn't provide a valid hentai type. Run \`${pfx}nsfw hentai help\``);
                 return;
             }
