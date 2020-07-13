@@ -44,13 +44,9 @@ client.on("guildMemberRemove", member => {
   else console.log(`welcome channel is missing`);
 });
 
-client.once("reconnecting", () => {
-  console.log("Reconnecting to discord...");
-});
-
-client.once("disconnect", () => {
-  console.log("Disconnected from discord...");
-});
+client.on("messageReactionAdd", (messageReaction, user) => {
+  require("./commands/2048.js").onReactionAdded(messageReaction, user);
+})
 
 client.on("message", async message => {
   var weebAliases = ['weeb', 'weeabo', 'wee b', 'w e e b', 'w eeb', 'weeab o', 'we_eb', 'weeeb', 'weeeeb', 'w_eeb', 'w e eb', 'wee  b', 'weebs'];
