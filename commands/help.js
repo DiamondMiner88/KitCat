@@ -49,15 +49,5 @@ module.exports = {
       });
       message.channel.send(embed);
     }
-    else if (args[0] === "soundboard") {
-      let sounds = config.sound_effects;
-      let embed = new Discord.MessageEmbed()
-        .setColor(0x0099ff)
-        .setTitle(":loud_sound: Audio Clips")
-      for (sound in sounds) {
-        embed.addField(sounds[sound].help_name, sounds[sound].help_description.replace("${pfx}", pfx));
-      }
-      message.channel.send(embed);
-    }
   }
 }
