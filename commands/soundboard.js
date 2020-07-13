@@ -3,7 +3,6 @@ const pfx = config.prefix;
 
 async function play_audio(audio_path, message) {
   const connection = await message.member.voice.channel.join();
-  console.log(audio_path);
   const dispatcher = connection.play("./audio/" + audio_path.file);
   dispatcher.resume();
   dispatcher.on('finish', () => {
