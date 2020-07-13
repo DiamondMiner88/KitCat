@@ -54,9 +54,9 @@ module.exports = {
         if (args[0].toLowerCase() === "help") {
             const hEmbed = new Discord.MessageEmbed()
                 .setColor("#FF69B4")
-                .setTitle("Help")
-                .setTimestamp()
-                .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL())
+                .setTitle("Help");
+                // .setTimestamp()
+                // .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL())
             for (var items in help) {
                 hEmbed.addField(help[items].name, help[items].description);
             }
