@@ -47,6 +47,10 @@ module.exports = {
             message.channel.send("This command can only be run in channels marked NSFW.");
             return;
         }
+        if (args.length === 0) {
+            message.channel.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
+            return;
+        }
         if (args[0].toLowerCase() === "help") {
             const hEmbed = new Discord.MessageEmbed()
                 .setColor("#FF69B4")
