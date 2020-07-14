@@ -11,14 +11,14 @@ https://pornopics.co/
 */
 
 const hentai_commands = ['classic', 'erofeet', 'erok',
-                        'les', 'hololewd', 'lewdk', 
-                        'keta', 'feetg', 'nsfw_neko_gif', 'eroyuri', 'kiss', 
-                        'kuni', 'tits', 'pussy_jpg', 'cum_jpg', 'pussy', 'lewdkemo', 
-                        'lizard', 'slap', 'lewd', 'cum', 'cuddle', 'spank', 'smallboobs', 
-                        'Random_hentai_gif', 'fox_girl', 'nsfw_avatar', 
-                        'gecg', 'boobs', 'feet', 'kemonomimi', 'solog', 
-                        'bj', 'yuri', 'trap', 'anal', 
-                        'blowjob', 'holoero', 'neko', 'hentai', 'futanari', 
+                        'les', 'hololewd', 'lewdk',
+                        'keta', 'feetg', 'nsfw_neko_gif', 'eroyuri', 'kiss',
+                        'kuni', 'tits', 'pussy_jpg', 'cum_jpg', 'pussy', 'lewdkemo',
+                        'lizard', 'slap', 'lewd', 'cum', 'cuddle', 'spank', 'smallboobs',
+                        'Random_hentai_gif', 'fox_girl', 'nsfw_avatar',
+                        'gecg', 'boobs', 'feet', 'kemonomimi', 'solog',
+                        'bj', 'yuri', 'trap', 'anal',
+                        'blowjob', 'holoero', 'neko', 'hentai', 'futanari',
                         'ero', 'solo', 'waifu', 'pwankg', 'eron', 'erokemo']
 
 const help = [
@@ -44,11 +44,11 @@ module.exports = {
 
     execute(client, message, args) {
         if (!message.channel.nsfw) {
-            message.channel.send("This command can only be run in channels marked NSFW.");
+            message.author.send("This command can only be run in channels marked NSFW.");
             return;
         }
         if (args.length === 0) {
-            message.channel.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
+            message.author.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
             return;
         }
         if (args[0].toLowerCase() === "help") {
@@ -61,7 +61,7 @@ module.exports = {
                 hEmbed.addField(help[items].name, help[items].description);
             }
             // console.log( message.author.avatarURL);
-            message.channel.send(hEmbed);
+            message.author.send(hEmbed);
         }
         if (args[0].toLowerCase() === "clip") {
             const search = require('pornsearch')
@@ -70,7 +70,7 @@ module.exports = {
                 .then(gifs => {
 					// console.log(gifs);
                     var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
-                    message.channel.send(`Title: \`${random.title}\`\n${random.webm}`);
+                    message.author.send(`Title: \`${random.title}\`\n${random.webm}`);
                 });
             return;
 		}
@@ -91,7 +91,7 @@ module.exports = {
 						.setTimestamp()
 						.setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL())
 					// console.log(random.title);
-                    message.channel.send(embed);
+                    message.author.send(embed);
                 });
             return;
 		}
@@ -114,7 +114,7 @@ module.exports = {
                 url: url,
                 json: true
             }, function (error, response, body) {
-                if (!error && response.statusCode === 200) { 
+                if (!error && response.statusCode === 200) {
                     const hEmbed = new Discord.MessageEmbed()
                         .setColor("#FF69B4")
                         .setTitle("Here's some hentai")
@@ -122,7 +122,7 @@ module.exports = {
                         .setTimestamp()
                         .setFooter(`${message.author.tag} ran the commnd | Content gotten from nekos.life`, message.author.avatarURL())
                     // console.log( message.author.avatarURL);
-                    message.channel.send(hEmbed);
+                    message.author.send(hEmbed);
                 }
             });
         }
