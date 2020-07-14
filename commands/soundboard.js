@@ -16,7 +16,7 @@ module.exports = {
   command: "soundboard",
   category: "fun",
   help_name: `:loud_sound: Soundboard`,
-  help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`oof soundboard help\` for help with audio clips`,
+  help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`${pfx}soundboard help\` for help with audio clips`,
 
   execute(client, message, args) {
     console.log(args);
