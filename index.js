@@ -86,7 +86,6 @@ client.on("message", async message => {
     });
   }
 
-  // command format: prefix command args(array split by a space)...
   if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
   const args = message.content.slice(pfx.length).trim().split(/ +/g); // args is an array of text after the command that were seperated by a whitespace
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix

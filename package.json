@@ -20,15 +20,13 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "discord.js": "^12.2.0",
-    "ffmpeg-static": "^4.2.5",
     "image-hash": "^3.5.1",
     "nhentai-api": "^3.0.2",
     "node-fetch": "^2.6.0",
     "opusscript": "0.0.7",
-    "pornsearch": "^2.4.3",
     "request": "^2.88.2",
     "snoowrap": "^1.21.0",
-    "ytdl-core": "^3.1.2"
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
