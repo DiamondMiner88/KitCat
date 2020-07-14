@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const Discord = require('discord.js');
 
 async function play_audio(audio_path, message) {
   const connection = await message.member.voice.channel.join();
@@ -15,9 +16,20 @@ module.exports = {
   command: "soundboard",
   category: "fun",
   help_name: `:loud_sound: Soundboard`,
-  help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`oof help soundboard\` for help with audio clips`,
+  help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`oof soundboard help\` for help with audio clips`,
 
   execute(client, message, args) {
+    console.log(args);
+    if (args[0] === "help") {
+      let sounds = config.sound_effects;
+      let embed = new Discord.MessageEmbed()
+        .setColor(0x0099ff)
+        .setTitle(":loud_sound: Audio Clips")
+      for (sound in sounds) {
+        embed.addField(sounds[sound].help_name, sounds[sound].help_description.replace("${pfx}", pfx));
+      }
+      return message.channel.send(embed);
+    }
     if (message.member.voice.channel) {
       if (args[0] === undefined) {
         message.channel.send("You didn't provide an audio clip to play.")
