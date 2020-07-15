@@ -38,14 +38,6 @@ client.on("messageReactionAdd", (messageReaction, user) => {
 })
 
 client.on("message", async message => {
-  var weebAliases = ['weeb', 'weeabo', 'wee b', 'w e e b', 'w eeb', 'weeab o', 'we_eb', 'weeeb', 'weeeeb', 'w_eeb', 'w e eb', 'wee  b', 'weebs'];
-  for (var index = 0; index < weebAliases.length; index++) {
-    if (message.content.toLowerCase().includes(weebAliases[index])) {
-      message.delete();
-      return;
-    }
-  }
-
   var url = undefined;
   if (message.attachments.size > 0) url = message.attachments.first().url;
   if (message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)) url = message.content;
