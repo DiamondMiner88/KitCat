@@ -5,6 +5,9 @@ const fs = require('fs');
 const {
   imageHash
 } = require('image-hash');
+var {
+  db
+} = require("../db.js");
 
 module.exports = {
   command: "blacklist",
@@ -13,14 +16,10 @@ module.exports = {
   help_description: `For more commands on the blacklist do\n\`${pfx}blacklist help\``,
 
   execute(client, message, args) {
-    fs.exists('image-blacklist.json', function(exists) {
-      if (!exists) {
-        fs.writeFile('image-blacklist.json', JSON.stringify({}), 'utf8', function(writeErr) {
-          if (writeErr) throw writeErr;
-        });
-      }
-    });
-
+    if (!message.member.hasPermission("MANAGE_MESSAGES")) {
+      message.channel.send("You do not have permission to do this.");
+      return;
+    }
     const subcommand = args.shift();
     if (subcommand === "help") {
       var embed = new Discord.MessageEmbed()
@@ -42,37 +41,23 @@ module.exports = {
         message.channel.send(embed);
       }
       else if (subcommand2 === "add") {
-        if (!message.member.hasPermission("MANAGE_MESSAGES")) {
-          message.channel.send("You do not have the MANAGE_MESSAGES permission.");
-          return;
-        }
         if (message.attachments.size === 0) {
-          message.channel.send("You didnt provide an image attachment to blacklist.");
+          message.author.send("You didn't provide an image attachment to blacklist.");
+          message.delete();
           return;
         }
+
         var url = message.attachments.first().url;
         var reason = (args.length === 0 ? "None" : args.join(" "));
 
-        fs.readFile('image-blacklist.json', function readFileCallback(readErr, data) {
-          if (readErr) throw readErr;
-          const imageBlacklist = JSON.parse(data);
-          imageHash(url, 16, true, (hashErr, hash) => {
-            if (hashErr) throw hashErr;
-            imageBlacklist[hash] = {
-              "link": url,
-              "reason": reason,
-              "author_id": message.author.id
+        imageHash(url, 16, true, (hashErr, hash) => {
+          if (hashErr) throw hashErr;
+          db.run("INSERT OR IGNORE INTO image_blacklist(hash, guild, user, reason, url) VALUES(?, ?, ?, ?, ?)", [hash, message.guild.id, message.author.id, reason, url], (err) => {
+            if (err) console.log("Error trying to add image to blacklist: " + err);
+            else {
+              message.author.send("Successfully blacklisted image!");
+              message.delete();
             }
-            fs.writeFile('image-blacklist.json', JSON.stringify(imageBlacklist), 'utf8', function(writeErr) {
-              if (writeErr) throw writeErr;
-              var m = message.channel.send('Image added to blacklist')
-                .then(msg => msg.delete({
-                  timeout: 10000
-                }));;
-              setTimeout(function() {
-                message.delete();
-              }, 10000);
-            });
           });
         });
       }
@@ -80,23 +65,45 @@ module.exports = {
         var embed = new Discord.MessageEmbed()
           .setColor(0x0099ff)
           .setTitle("Blacklisted images:");
-        fs.readFile('image-blacklist.json', function readFileCallback(err, data) {
-          if (err) throw err;
-          const imageBlacklist = JSON.parse(data);
 
-          for (const hash in imageBlacklist) embed.addField(hash, `[Link to the image](${imageBlacklist[hash].link})\nReason: \`${imageBlacklist[hash].reason}\`\nWho blacklisted it: <@${imageBlacklist[hash].author_id}>`);
-          message.author.send(embed);
-          message.delete();
+        db.all("SELECT hash, user, reason, url FROM image_blacklist WHERE guild=?", [message.guild.id], (err, results) => {
+          if (err) {
+            console.log("Error trying to add image to blacklist: " + err);
+            message.author.send("Something went wrong trying to retrieve the data.");
+            message.delete();
+          }
+          else {
+            results.forEach(result => {
+              embed.addField(result.url, `Reason: \`${result.reason}\`\nWho blacklisted it: <@${result.user}>`);
+            })
+            message.author.send(embed);
+            message.delete();
+          }
         });
       }
       else if (subcommand2 === "remove") {
-        if (!message.member.hasPermission("MANAGE_MESSAGES")) {
-          message.channel.send("You do not have the MANAGE_MESSAGES permission.");
+        if (message.attachments.size === 0) {
+          message.author.send("You didn't provide an image attachment to remove from the blacklist.");
+          message.delete();
           return;
         }
-        message.channel.send("this command is in progress. ask diamondminer88 to remove it");
+
+        imageHash(message.attachments.first().url, 16, true, (hashErr, hash) => {
+          if (hashErr) throw hashErr;
+          db.run("DELETE FROM image_blacklist WHERE hash=?", [hash], (err) => {
+            if (err) {
+              console.log("Error trying to remove image from blacklist: " + err);
+              message.author.send("Something went wrong trying to delete data.");
+              message.delete();
+            }
+            else {
+              message.author.send("Successfully removed the image from the blacklist!");
+              message.delete();
+            }
+          });
+        });
       }
-      else if (args.length === 0) message.channel.send("You didn't provide a valid subcommand")
+      else if (args.length === 0) message.channel.send("You didn't provide a subcommand");
     }
     else message.channel.send(`You didnt provide a valid subcommand! Do \`${pfx}blacklist help\` for subcommands`);
   }
