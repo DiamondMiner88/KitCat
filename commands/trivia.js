@@ -90,8 +90,6 @@ module.exports = {
         var url = `https://opentdb.com/api.php?amount=1`;
 		var user = message.author;
         if (args.length != 0) {
-            // if (input.length < 3) return message.channel.send("You didn't provide valid paramaters.");
-            // console.log(input[1].toLowerCase().replace(/\s+/g, ''));
             var category = categories[input[0].toLowerCase().replace(/\s+/g, '')];
 		    		var difficulty = selectedDifficulty[input[1].toLowerCase().replace(/\s+/g, '')];
 		    		var toq = selectedType[input[2].toLowerCase().replace(/\s+/g, '')];
@@ -99,8 +97,6 @@ module.exports = {
 		    		if (category === undefined) return message.channel.send("You provided an invalid category!");
 		    		if (difficulty === undefined) return message.channel.send("You provided an invalid difficulty!");
 		    		if (toq === undefined) return message.channel.send("You provided an invalid type of question!")
-		    		// console.log(`${category}, ${difficulty}, ${toq}`);
-		            //&category=${category}&difficulty=${difficulty}&type=${toq}
             if (category != "any")  url += `&category=${category}`;
             if (difficulty != "any") url += `&difficulty=${difficulty}`;
             if (toq != "any") url += `&type=${toq}`;
