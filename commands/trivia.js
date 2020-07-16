@@ -75,6 +75,9 @@ module.exports = {
 		if (difficulty === undefined) return message.channel.send("You provided an invalid difficulty!");
 		if (toq === undefined) return message.channel.send("You provided an invalid type of question!")
 
+	
+		console.log(`${category}, ${difficulty}, ${toq}`);
+
 		var url = `https://opentdb.com/api.php?amount=1&category=${category}&difficulty=${difficulty}&type=${toq}`;
 
 		console.log(url);
