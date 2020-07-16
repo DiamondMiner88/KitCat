@@ -1,12 +1,8 @@
 {
   "ecmaVersion": 8,
   "libs": [],
-  "loadEagerly": [
-    "node_modules/discord.js/src/index.js"
-  ],
-  "dontLoad": [
-    "node_modules/**"
-  ],
+  "loadEagerly": [],
+  "dontLoad": [],
   "plugins": {
     "es_modules": {},
     "node": {},
