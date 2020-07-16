@@ -3,6 +3,7 @@ const pfx = config.prefix;
 const fs = require('fs');
 const path = require('path');
 const Discord = require("discord.js");
+
 var client = new Discord.Client();
 const {
   imageHash
