@@ -13,120 +13,45 @@ module.exports = {
       message.channel.send("You do not have the permission to kick members.");
       return;
     }
-    let kickUser = message.guild.member(message.mentions.users.first() || message.guild.members.get(args[0]));
-    if (!kickUser) message.channel.send("Member not found.");
-    let kickReason = args.join(" ").slice(22);
-    if (kickUser.id.toString() === config.bot_id) {
-      message.channel.send("I'm not going to kick myself.");
-    }
-    if (kickUser.id === message.author.id) {
-      message.channel.send("Why are you trying to kick your self?");
-      return;
-    }
-    if (kickReason === "") {
-      kickReason = "None provided";
-    }
-    /*
-    const authorPosition = message.guild.member(message.author).roles.highest.position;
-    const kickUserPosition = message.guild.member(kickUser).roles.highest.position;
-    if (authorPosition < kickUserPosition) {
-      message.channel.send("You can't kick someone with a higher position than you.");
-      return;
-    }
-    if(authorPosition === kickUserPosition) {
-      message.channel.send("You can't kick someone the same position as you.");
-      return;
-    }
-    const botPosition = message.guild.member(message.guild.me).roles.highest.position;
-    if(botPosition < kickUserPosition) {
-      message.channel.send("I can't kick them because they are superior to me.");
-      return;
-    }
-    if(botPosition === kickUserPosition) {
-      message.channel.send("I can't kick someone the same position as me.")
-    }
-    */
-    let kickEmbed = new Discord.MessageEmbed()
-      .setTitle("~ Kick ~")
-      .setDescription(`<@${kickUser.id}> got kicked by <@${message.author.id}>`)
-      .setColor("0x0099ff")
-      .addFields({
-        name: "Kicked User",
-        value: `<@${kickUser.id}>`,
-        inline: true
-      }, {
-        name: "Kicked By",
-        value: `<@${message.author.id}>`,
-        inline: true
-      }, {
-        name: "Kicked In",
-        value: `<#${message.channel.id}>`,
-        inline: true
-      }, {
-        name: "Time",
-        value: message.createdAt,
-        inline: true
-      }, {
-        name: "Reason",
-        value: kickReason
-      }, );
 
-    let kickChannel = null;
-    for (let i = 0; i < config.log_channels.length; i++) {
-      kickChannel = message.guild.channels.cache.find(guild => guild.name === config.log_channels[i]);
-      if (kickChannel) break
+    let target_user = message.mentions.users.first();
+    if (!target_user) {
+      let matching_users = client.users.cache.filter(user => user.username === args[0].split("#")[0]);
+      target_user = matching_users.find(user => user.discriminator === args[0].split("#")[1]);
+      if (!target_user) {
+        message.channel.send('Member to kick not found.');
+        return;
+      }
     }
-    // let error = false;
-    message.guild.member(kickUser).kick(kickReason) // .catch(error=true)
-    // if (error) return message.channel.send("I can't kick that user, they are superior to me.");
 
+    args.shift();
 
-    kickUser.send(new Discord.MessageEmbed()
-      .setTitle("You got kicked!")
-      .setColor("0x0099ff")
-      .addFields({
-        name: "Kicked By",
-        value: `<@${message.author.id}>`,
-        inline: true
-      }, {
-        name: "Kicked In",
-        value: `<#${message.channel.id}>`,
-        inline: true
-      }, {
-        name: "Time",
-        value: message.createdAt,
-        inline: true
-      }, {
-        name: "Reason",
-        value: kickReason
-      }, ));
-
-    message.author.send(new Discord.MessageEmbed()
-      .setTitle("You kicked someone!")
-      .setColor("0x0099ff")
-      .addFields({
-        name: "Kicked User",
-        value: `<@${kickUser.id}>`,
-        inline: true
-      }, {
-        name: "Kicked In",
-        value: `<#${message.channel.id}>`,
-        inline: true
-      }, {
-        name: "Time",
-        value: message.createdAt,
-        inline: true
-      }, {
-        name: "Reason",
-        value: kickReason
-      }, ));
-
-    if (!kickChannel) {
-      kickEmbed.setFooter("Could not find any channel for bot logs, so emebd got sent here instead.");
-      message.channel.send(kickEmbed);
+    const reason = args.length > 0 ? args.join(" ") : "None";
+    if (!message.guild.member(target_user).kickable) {
+      message.channel.send("I am unable to kick the user because of missing permissions.");
       return;
     }
 
-    kickChannel.send(kickEmbed);
+    const logMsg = new Discord.MessageEmbed()
+      .setTitle(`*${target_user.username} got yeeted out the window*`)
+      .setColor(0x0099ff)
+      .addField("User kicked", `<@${target_user.id}>`)
+      .addField("Kicked By", `<@${message.author.id}>`)
+      .addField("Time", message.createdAt)
+      .addField("Reason", reason);
+
+    const uGotKicked = new Discord.MessageEmbed()
+      .setTitle(`You got kicked from \`${message.guild.name}\``)
+      .setColor(0x0099ff)
+      .addField("Kicked By", `<@${message.author.id}>`)
+      .addField("Time", message.createdAt)
+      .addField("Reason", reason);
+
+    message.channel.send(logMsg);
+    target_user.send(uGotKicked);
+
+    message.guild.member(target_user).kick({
+      reason: reason
+    }).catch(err => message.channel.send(`Error kicking user: ${err.message}`));
   }
 }

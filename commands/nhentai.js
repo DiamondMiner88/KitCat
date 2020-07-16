@@ -11,9 +11,19 @@ function tagsToString(tags) {
   return tagStr.slice(0, -2);
 }
 
-function getOverview(bookID, callback) {
-  if (bookID === undefined) return "You did not provide a number!";
-  if (!bookID.match(/\d{1,6}/g)) return "That is not a valid number!";
+function getOverview(bookID, channel, callback) {
+  if (channel.type !== "dm" && !channel.nsfw) {
+    callback("This command is only allowed in NSFW channels!", undefined);
+    return;
+  }
+  if (bookID === undefined) {
+    callback("You did not provide a number!", undefined);
+    return;
+  }
+  if (!bookID.match(/\d{1,6}/g)) {
+    callback("That is not a valid number!", undefined);
+    return;
+  }
   api.getBook(Number(bookID)).then(book => {
     var parodies = book.tags.filter(tag => tag.type.type === "parody");
     var characters = book.tags.filter(tag => tag.type.type === "character");
@@ -32,7 +42,7 @@ module.exports = {
   help_description: `Gives title, tags, lang, author ʷʰʸ ᵈᵒᵉˢ ᵗʰᵉ ⁿʰᵉⁿᵗᵃᶦ⁻ᵃᵖᶦ ᵉˣᶦˢᵗ\n\`${pfx}nh {number}\`\nAn alternative is just \`!(number)\``,
 
   execute(client, message, args) {
-    getOverview(args[0], (error, overview) => {
+    getOverview(args[0], message.channel, (error, overview) => {
       if (error) message.channel.send(error);
       else message.channel.send(overview);
     });
