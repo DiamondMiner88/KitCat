@@ -68,6 +68,13 @@ const boolQuestionFilterArray = [
 	'🇫'
 ]
 
+const multipleQuestionFilterArray = [
+	'1️⃣',
+	'2️⃣',
+	'3️⃣',
+	'4️⃣'
+]
+
 module.exports = {
     command: "trivia",
     category: "fun",
@@ -103,9 +110,7 @@ module.exports = {
           .then((json) => {
 				var arrayAnswers = json.results[0].incorrect_answers;
 				arrayAnswers.push(json.results[0].correct_answer);
-				arrayAnswers.sort(function (a, b) {
-					return 0.5 - Math.random();
-				});
+				arrayAnswers = shuffle(arrayAnswers);
 				var answers = {
 					answers: arrayAnswers,
 					correct_answer: json.results[0].correct_answer,
@@ -145,12 +150,28 @@ module.exports = {
 					});
 				}
 				if (json.results[0].type === 'multiple') {
+					console.log(answers);
 					message.channel.send(embed)
 					.then(function(msg) {
 						msg.react('1️⃣');
 						msg.react('2️⃣');
 						msg.react('3️⃣');
 						msg.react('4️⃣');
+						const filter = (reaction, userperson) => {
+							return multipleQuestionFilterArray.includes(reaction.emoji.name) && userperson.id === message.author.id;
+						}
+						console.log(answers.correct_answer);
+						msg.awaitReactions(filter, { max: 1, time: 15000, errors: ['time'] }).then(collected => {
+							collected.each(reaction => {
+								if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) {
+									return message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+								} else {
+									return message.channel.send(`<@${user.id}>, incorrect. The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+								}
+							});
+						}).catch(err => {
+							return message.channel.send(`<@${user.id}>, you ran out of time!`);
+						});
 					}).catch(function() {
 						console.error("error");
 					});
@@ -158,6 +179,15 @@ module.exports = {
         	});
 	}
 }
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
 // You changed some crap here
 /*
  General Knowledge
