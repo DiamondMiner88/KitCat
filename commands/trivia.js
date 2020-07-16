@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const cmdCategories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').XmlEntities;
@@ -77,7 +78,7 @@ const multipleQuestionFilterArray = [
 
 module.exports = {
     command: "trivia",
-    category: "fun",
+    category: cmdCategories.fun,
     help_name: `:question: Trivia`,
     help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
     execute(client, message, args) {
