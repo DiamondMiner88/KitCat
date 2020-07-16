@@ -1,12 +1,13 @@
 const config = require("../config.json");
+const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const {
   DiscordAPIError
 } = require("discord.js");
-const pfx = config.prefix;
 
 module.exports = {
   command: "purge",
-  category: "moderation",
+  category: categories.moderation,
   help_name: `:wastebasket: Purge`,
   help_description: `Used to delete messages\n\`${pfx}purge {amount: default = ${config.default_purge_amnt}}\``,
 

@@ -18,6 +18,7 @@ require('./db.js');
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
+  if (file[0] == "_") continue;
   const command = require(path.join(__dirname, './commands', file));
   client.commands.set(command.command, command);
 }
@@ -71,7 +72,7 @@ client.on("message", async message => {
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix
 
   const command = client.commands.get(commandText);
-  if (command) command.execute(client, message, args);
+  if (command && command.command === commandText) command.execute(client, message, args);
 });
 
 client.login(config.token);

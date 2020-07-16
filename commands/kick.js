@@ -1,10 +1,11 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
 module.exports = {
   command: "kick",
-  category: "moderation",
+  category: categories.kick,
   help_name: `:leg: Kick`,
   help_description: `Used to kick members.\n\`${pfx}kick {member} {optional: reason}\``,
 

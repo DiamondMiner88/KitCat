@@ -1,9 +1,10 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 
 module.exports = {
   command: "ping",
-  category: "utils",
+  category: categories.utils,
   help_name: `Ping`,
   help_description: `Gets my latency and API latency.\n\`${pfx}ping\``,
 

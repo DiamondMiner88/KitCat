@@ -1,8 +1,8 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const Discord = require("discord.js");
 const minecarft = require("./ImageCommands/minecraft");
-const minecraft = require("./ImageCommands/minecraft");
 
 const ImageCmdHelp = [{
   name: "Minecraft Achievement",
@@ -11,7 +11,7 @@ const ImageCmdHelp = [{
 
 module.exports = {
   command: "image",
-  category: "fun",
+  category: categories.fun,
   help_name: `:camera: Photo Commands`,
   help_description: `Run photo commands to make custom photos.\n\`${pfx}image help\``,
 

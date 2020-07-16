@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const Discord = require("discord.js");
 const fs = require('fs');
 const {
@@ -11,7 +12,7 @@ var {
 
 module.exports = {
   command: "blacklist",
-  category: "utils",
+  category: categories.moderation,
   help_name: `Blacklist commands`,
   help_description: `For more commands on the blacklist do\n\`${pfx}blacklist help\``,
 

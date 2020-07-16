@@ -1,9 +1,10 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 
 module.exports = {
   command: "say",
-  category: "fun",
+  category: categories.fun,
   help_name: `say`,
   help_description: `Make the bot say whatever you want!\n\`${pfx}say {message}\``,
 

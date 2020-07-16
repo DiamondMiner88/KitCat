@@ -1,50 +1,38 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
 module.exports = {
   command: "help",
-  category: "utils",
+  category: categories.utils,
   help_name: `Help`,
   help_description: `What you're looking at right now.\n\`${pfx}help\``,
 
   execute(client, message, args) {
     if (args.length === 0) {
-      let embed = new Discord.MessageEmbed()
+      var embed = new Discord.MessageEmbed()
         .setColor(0x0099ff)
-        .setTitle("Command sections:")
-        .addField("Moderation Commands", `\`${pfx}help moderation\``)
-        .addField(":smile: Fun", `\`${pfx}help fun\``)
-        .addField(":tools: Utility Commands", `\`${pfx}help utils\``)
-        .addField(":loud_sound: Audio Clips", `\`${pfx}help soundboard\``);
+        .setTitle("Categories:");
+      for (var key in categories) {
+        // skip loop if the property is from prototype
+        if (!categories.hasOwnProperty(key)) continue;
+        var category = categories[key];
+        var desc = category.help_description !== "" ? category.help_description + "\n" + category.usage : category.usage;
+        embed.addField(category.help_name, desc);
+      }
       message.channel.send(embed);
     }
-    else if (args[0] === "moderation") {
-      let commands = client.commands.filter(command => command.category === "moderation");
-      let embed = new Discord.MessageEmbed()
-        .setColor(0x0099ff)
-        .setTitle("Moderation Commands")
-      commands.forEach((command) => {
-        embed.addField(command.help_name, command.help_description);
-      });
-      message.channel.send(embed);
+    else if (!categories[args[0]]) {
+      message.channel.send("Invalid category!");
     }
-    else if (args[0] === "fun") {
-      let commands = client.commands.filter(command => command.category === "fun");
-      let embed = new Discord.MessageEmbed()
+    else {
+      const commands = client.commands.filter(command => command.category === categories[args[0]]);
+      var embed = new Discord.MessageEmbed()
         .setColor(0x0099ff)
-        .setTitle(":smile: Fun")
-      commands.forEach((command) => {
-        embed.addField(command.help_name, command.help_description);
-      });
-      message.channel.send(embed);
-    }
-    else if (args[0] === "utils") {
-      let commands = client.commands.filter(command => command.category === "utils");
-      let embed = new Discord.MessageEmbed()
-        .setColor(0x0099ff)
-        .setTitle(":tools: Utility Commands")
-      commands.forEach((command) => {
+        .setTitle(categories[args[0]].help_name)
+        .setDescription(categories[args[0]].help_description);
+      commands.forEach(command => {
         embed.addField(command.help_name, command.help_description);
       });
       message.channel.send(embed);

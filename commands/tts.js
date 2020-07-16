@@ -1,9 +1,10 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 
 module.exports = {
   command: "tts",
-  category: "fun",
+  category: categories.utils,
   help_name: `:robot: TTS`,
   help_description: `Joins VC and says what you want it to say!\n\`${pfx}tts {text}\``,
 

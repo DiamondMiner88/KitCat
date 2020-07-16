@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 const effects = require("../config/sound_effects.json");
 
@@ -15,7 +16,7 @@ async function play_audio(audio_path, message) {
 
 module.exports = {
   command: "soundboard",
-  category: "fun",
+  category: categories.fun,
   help_name: `:loud_sound: Soundboard`,
   help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`${pfx}soundboard help\` for help with audio clips`,
 

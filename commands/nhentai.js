@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const {
   API
 } = require('nhentai-api');
@@ -37,7 +38,7 @@ function getOverview(bookID, channel, callback) {
 
 module.exports = {
   command: "nhentai",
-  category: "utils",
+  category: categories.utils,
   help_name: `haha nhentai overview`,
   help_description: `Gives title, tags, lang, author ʷʰʸ ᵈᵒᵉˢ ᵗʰᵉ ⁿʰᵉⁿᵗᵃᶦ⁻ᵃᵖᶦ ᵉˣᶦˢᵗ\n\`${pfx}nh {number}\`\nAn alternative is just \`!(number)\``,
 

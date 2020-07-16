@@ -1,10 +1,11 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 const fetch = require("node-fetch");
 
 module.exports = {
   command: "quote",
-  category: "fun",
+  category: categories.fun,
   help_name: `:innocent: Inspirational Quote`,
   help_description: `Gives an inspirational quote!\n\`${pfx}quote\``,
 

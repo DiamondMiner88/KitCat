@@ -1,9 +1,10 @@
 const config = require("../config.json");
 const pfx = config.prefix;
+const categories = require("./_CATEGORIES.js");
 
 module.exports = {
   command: "avatar",
-  category: "utils",
+  category: categories.utils,
   help_name: `Avatar`,
   help_description: `Get avatar of the user after the command. Can be a mention or a tag.\n\`${pfx}avatar {mention | user tag}\``,
 
