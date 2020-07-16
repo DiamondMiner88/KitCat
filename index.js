@@ -7,13 +7,11 @@ var client = new Discord.Client();
 const {
   imageHash
 } = require('image-hash');
-
 process.on("SIGINT", function() {
   console.log(`Exiting...`);
   client.destroy();
   process.exit();
 });
-
 require('./db.js');
 
 client.commands = new Discord.Collection();
