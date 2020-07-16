@@ -56,10 +56,10 @@ const triviaHelp = new Discord.MessageEmbed()
 module.exports = {
     command: "trivia",
     category: "fun",
-    help_name: `:question: Trivia`, 
-    help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`, 
+    help_name: `:question: Trivia`,
+    help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
     execute(client, message, args) {
-        if (args[0] === "help") {      
+        if (args[0] === "help") {
             return message.channel.send(triviaHelp);
         }
         var input = args.join(' ').split('`').filter(function(str) {
