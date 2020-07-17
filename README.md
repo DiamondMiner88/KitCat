@@ -3,6 +3,9 @@
 # Despacito Spider
 This is a Discord bot called Despacito Spider.
 
+## Commands
+Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/) website for the commands.
+
 ## Authors
 - [DiamondMiner88](https://github.com/DiamondMiner88)- _Dev_
 - [Nano-AI](https://github.com/Nano-AI) - _Dev_
