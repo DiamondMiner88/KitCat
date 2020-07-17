@@ -8,6 +8,10 @@ const {
   ReactionCollector
 } = require('discord.js')
 const decode = require('decode-html');
+var {
+  db
+} = require("../db.js");
+const currency = require("../oofcoin.js");
 
 const entities = new Entities();
 
@@ -177,10 +181,46 @@ module.exports = {
               }).then(collected => {
                 collected.each(reaction => {
                   if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) {
-                    return message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+										var earned = 0;
+										switch(difficulty){
+											case 'Easy':
+												earned = 1
+												break;
+											case 'Medium':
+												earned = 2;
+												break;
+											case 'Hard':
+												earned = 3;
+												break;
+										}
+										db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
+											console.error(err);
+										});
+										db.get("SELECT purse, bank, loan_left, loan_due FROM currency WHERE user=?", [user.id], (err, result) => {
+											message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+											` You earned ${earned} oofcoins!`);
+								    }
+										return;
                   }
                   else {
-                    return message.channel.send(`<@${user.id}>, incorrect. The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+										switch(difficulty){
+											if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) {
+												var lost = 0;
+												switch(difficulty){
+													case 'Easy':
+														lost = 1
+														break;
+													case 'Medium':
+														lost = 2;
+														break;
+													case 'Hard':
+														lost = 3;
+														break;
+												}
+												db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
+													console.error(err);
+												});
+                    		return message.channel.send(`<@${user.id}>, incorrect. The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
                   }
                 });
               }).catch(err => {
