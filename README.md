@@ -1,3 +1,6 @@
+![GitHub](https://img.shields.io/github/license/DiamondMiner88/despacito-spider?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/DiamondMiner88/despacito-spider)
+
 # Despacito Spider
 This is a Discord bot called Despacito Spider.
 
