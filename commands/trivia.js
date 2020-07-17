@@ -88,7 +88,7 @@ module.exports = {
   command: "trivia",
   category: cmdCategories.fun,
   help_name: `:question: Trivia`,
-  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
   // Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
   execute(client, message, args) {
     // console.log(decode(`Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?`))
