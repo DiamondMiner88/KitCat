@@ -5,6 +5,7 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').XmlEntities;
 const { ReactionCollector } = require('discord.js')
+const decode = require('decode-html');
 
 const entities = new Entities();
 
@@ -82,7 +83,9 @@ module.exports = {
     category: cmdCategories.fun,
     help_name: `:question: Trivia`,
     help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+	// Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
     execute(client, message, args) {
+		console.log(decode(`Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?`))
         if (args[0] === "help") {
             return message.channel.send(triviaHelp);
         }

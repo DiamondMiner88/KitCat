@@ -29,8 +29,11 @@ client.on("ready", () => {
 });
 
 client.on("guildMemberRemove", member => {
-  const general = member.guild.channels.cache.find(channel => channel.name === 'general');
-  if (general) welcome.send(`<@${member.user.id}> has left or been kicked from the server.`);
+	var general = member.guild.systemChannel;
+	console.log(general)
+	if (general === null) general = member.guild.channels.cache.find(channel => channel.name === 'welcome');
+	console.log(general)
+  	if (general) general.send(`<@${member.user.id}> has left the server.`);
 });
 
 client.on("messageReactionAdd", (messageReaction, user) => {
