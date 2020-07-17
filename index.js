@@ -25,7 +25,10 @@ for (const file of commandFiles) {
 
 client.on("ready", () => {
   console.log(`Bot is ready.`);
-  client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`)
+  client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
+  setInterval(() => {
+    require("./oofcoin.js").interest();
+  }, 8.64e+7); // 8.64e+7 is 1 day in Milliseconds
 });
 
 client.on("guildMemberRemove", member => {

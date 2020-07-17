@@ -50,7 +50,7 @@ module.exports = {
           .setColor(0x0099ff)
           .setTitle("Balance")
           .addField("Purse Balance", `${result.purse}©`)
-          .addField("Bank Balance", `${result.bank}©`);
+          .addField("Bank Balance", `${Math.floor(result.bank)}©`);
           if (result.loan_left) {
             embed.addField("Loan left to pay", `${result.loan_left}©`);
             embed.addField("When loan due", `${result.loan_left}©`);

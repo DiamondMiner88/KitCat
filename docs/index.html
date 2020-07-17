@@ -1,203 +1,202 @@
-<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <title>Despacito Spider</title>
-        <style>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 
-h1, h2, h3, h4, h5 {
-    font-weight: normal;
-}
-.image-item {
-    width: 125px;
-}
-.bg-netural {
-    background-color: white;
-}
-.row-content {
-    margin: 0px auto;
-    padding: 50px 0px 50px 0px;
-    border-bottom: 1px ridge;
-    min-height: 400px;
-}
-.jumbotron {
-    border-radius: 0 !important;
-}
-.row-header {
-    margin: 0px auto;
-    padding: 0px auto;
-}
-#commands {
-    font-size: 50px;
-}
-code {
-    background-color: #F2F2F2;
-}
-.smalltext {
-    font-size: small;
-    font-weight: bold;
-}
-.row-content-nb {
-    margin: 0px auto;
-    padding: 15px 0px;
-    min-height: auto;
-}
-.badge-right {
-    float: right;
-}
-        </style>
-    </head>
-    <body class="bg-netural">
-        <header class="jumbotron bg-danger text-white" id="">
-            <div class="container">
-                <div class="row row-header">
-                    <div class="col-12 col-sm-8">
-                        <h1 id="title" class="mt-0 mb-0">Despacito Spider Bot</h1>
-                        <p>The only thing this bot has is stupidity.</p>
-                    </div>
-                    <div class="col-12 col-sm align-self-center nopadding">
-                        <img src="./images/despacito.png" class="img-fluid image-item">
-                    </div>
-                </div>
-            </div>
-        </header>
+  <title>Despacito Spider</title>
+  <style>
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-weight: normal;
+    }
 
-        <div class="container">
-            <div class="row">
-                <div class="col-12 float-left">
-                    <h1 id="commands">Commands</h1>
-                </div>
-            </div>
-            <div id="accordion">
+    .image-item {
+      width: 125px;
+    }
 
-                <div class="row row-content-nb">
-                    <div class="col-12">
-                        <div class="col">
-                            <h1>Moderation</h1>
-                        </div>
-                        <custom-accordion data-id="blacklist" data-description="Blacklist's different things, example specific images." data-code="blacklist help"
-                            data-perms="Kick Members" data-title="Kick"></custom-accordion>
+    .bg-netural {
+      background-color: white;
+    }
 
-                        <custom-accordion data-id="purge" data-description="Purge text from a text channel." data-code="purge"
-                            data-perms="Manage Messages" data-title="Purge"></custom-accordion>
-                    </div>
-                </div>
+    .row-content {
+      margin: 0px auto;
+      padding: 50px 0px 50px 0px;
+      border-bottom: 1px ridge;
+      min-height: 400px;
+    }
 
-                <div class="row row-content-nb">
-                    <div class="col-12">
-                        <div class="col">
-                            <h1>Fun</h1>
-                        </div>
+    .jumbotron {
+      border-radius: 0 !important;
+    }
 
-                        <div id="accordion">
-                            <custom-accordion data-id="twozerofoureight" data-description="Play 2048 in Discord!" data-code="2048 help"
-                                data-title="The Game 2048"></custom-accordion>
+    .row-header {
+      margin: 0px auto;
+      padding: 0px auto;
+    }
 
-                            <custom-accordion data-id="eightball" data-description="Ask 8Ball a question." data-code="8ball {question}"
-                                data-title="8Ball"></custom-accordion>
+    #commands {
+      font-size: 50px;
+    }
 
-                            <custom-accordion data-id="photocommands" data-description="Make custom photos (only 1 made so far)" data-code="imag help"
-                                data-title="Photo Commands"></custom-accordion>
+    code {
+      background-color: #F2F2F2;
+    }
 
-                            <custom-accordion data-id="meme" data-description="Get a meme from r/dankmemes" data-code="meme"
-                                data-title="Memes"></custom-accordion>
+    .smalltext {
+      font-size: small;
+      font-weight: bold;
+    }
 
-                            <custom-accordion data-id="inspirationalquote" data-description="Get an inspirational quote to make your day better! :)" data-code="quote"
-                                data-title="Inspirational Quote"></custom-accordion>
+    .row-content-nb {
+      margin: 0px auto;
+      padding: 15px 0px;
+      min-height: auto;
+    }
 
-                            <custom-accordion data-id="say" data-description="Make the bot say whatever you want." data-code="say {message}"
-                                data-title="Say"></custom-accordion>
+    .badge-right {
+      float: right;
+    }
+  </style>
+</head>
 
-                            <custom-accordion data-id="soundboard" data-description="Play an audio clip from the ones we have!" data-code="soundboard help"
-                                data-title="Soundboard"></custom-accordion>
-
-                            <custom-accordion data-id="subreddit" data-description="Get a top post from a subreddit. (NSFW subreddits allowed in NSFW channels)" data-code="subreddit {subreddit}"
-                                data-title="Subreddit"></custom-accordion>
-
-                            <custom-accordion data-id="trivia" data-description="Asks a trivia question." data-code="oof trivia help"
-                                data-title="Trivia"></custom-accordion>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row row-content-nb">
-                    <div class="col-12">
-                        <div class="col">
-                            <h1>Utils</h1>
-                        </div>
-                        <custom-accordion data-id="avatar" data-description="Get avatar of the user. Can be a mention or a tag." data-code="avatar {mention | user tag (username#discriminator)}"
-                            data-title="Avatar"></custom-accordion>
-
-                        <custom-accordion data-id="help" data-description="The help command for the bot." data-code="help"
-                            data-title="Help"></custom-accordion>
-
-                        <custom-accordion data-id="nhentai" data-description="Gives title, tags, langugage, and author. ʷʰʸ ᵈᵒᵉˢ ᵗʰᵉ ⁿʰᵉⁿᵗᵃᶦ⁻ᵃᵖᶦ ᵉˣᶦˢᵗ" data-code="nhentai {number}"
-                            data-title="nHentai" data-warning="NSFW"></custom-accordion>
-
-                        <custom-accordion data-id="ping" data-description="Gives the bot's latency and API latency." data-code="ping"
-                            data-title="Ping"></custom-accordion>
-
-                        <custom-accordion data-id="tts" data-description="Joins VC and says what you want it to say." data-code="tts {text}"
-                            data-title="TTS"></custom-accordion>
-                    </div>
-                </div>
-
-                <div class="row row-content-nb">
-                    <div class="col-12">
-                        <div class="col">
-                            <h1>Oof Coin</h1>
-                        </div>
-                        <custom-accordion data-id="oofcoinbalance" data-description="Gets your's or the mentioned persion global balance of Oof Coin." data-code="oofcoin {optional: mention | user tag (username#discriminator)"
-                            data-title="Oof Coin Balance"></custom-accordion>
-                    </div>
-                </div>
-            </div>
+<body class="bg-netural">
+  <header class="jumbotron bg-danger text-white" id="">
+    <div class="container">
+      <div class="row row-header">
+        <div class="col-12 col-sm-8">
+          <h1 id="title" class="mt-0 mb-0">Despacito Spider Bot</h1>
+          <p>The only thing this bot has is stupidity.</p>
         </div>
-    </body>
+        <div class="col-12 col-sm align-self-center nopadding">
+          <img src="./images/despacito.png" class="img-fluid image-item">
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 float-left">
+        <h1 id="commands">Commands</h1>
+      </div>
+    </div>
+    <div id="accordion">
 
-        <script>
-            const prefix = "oof ";
-            function customTag(tagName,fn){
-                document.createElement(tagName);
-                //find all the tags occurrences (instances) in the document
-                var tagInstances = document.getElementsByTagName(tagName);
-                //for each occurrence run the associated function
-                for ( var i = 0; i < tagInstances.length; i++) {
-                    tagInstances[i].innerHTML = prefix;
-                }
-            }
+      <div class="row row-content-nb">
+        <div class="col-12">
+          <div class="col">
+            <h1>Moderation</h1>
+          </div>
+          <custom-accordion data-id="blacklist" data-description="Blacklist's different things, example specific images." data-code="blacklist help" data-perms="Kick Members" data-title="Kick"></custom-accordion>
 
-            function customAccordion() {
-                document.createElement("custom-accordion")
-                var tagInstances = document.getElementsByTagName('custom-accordion');
-                // console.log(tagInstances);
-                for (var i = 0; i < tagInstances.length; i++) {
-                    var id = tagInstances[i].getAttribute('data-id');
-                    var headid = tagInstances[i].getAttribute(id + '-head');
-                    var description = tagInstances[i].getAttribute('data-description');
-                    var code = tagInstances[i].getAttribute('data-code');
-                    var permissions = tagInstances[i].getAttribute('data-perms')
-                    var title = tagInstances[i].getAttribute('data-title')
-                    var warningTag = tagInstances[i].getAttribute('data-warning')
-                    var innerHTML = `
+          <custom-accordion data-id="purge" data-description="Purge text from a text channel." data-code="purge" data-perms="Manage Messages" data-title="Purge"></custom-accordion>
+        </div>
+      </div>
+
+      <div class="row row-content-nb">
+        <div class="col-12">
+          <div class="col">
+            <h1>Fun</h1>
+          </div>
+
+          <div id="accordion">
+            <custom-accordion data-id="twozerofoureight" data-description="Play 2048 in Discord!" data-code="2048 help" data-title="The Game 2048"></custom-accordion>
+
+            <custom-accordion data-id="eightball" data-description="Ask 8Ball a question." data-code="8ball {question}" data-title="8Ball"></custom-accordion>
+
+            <custom-accordion data-id="photocommands" data-description="Make custom photos (only 1 made so far)" data-code="imag help" data-title="Photo Commands"></custom-accordion>
+
+            <custom-accordion data-id="meme" data-description="Get a meme from r/dankmemes" data-code="meme" data-title="Memes"></custom-accordion>
+
+            <custom-accordion data-id="inspirationalquote" data-description="Get an inspirational quote to make your day better! :)" data-code="quote" data-title="Inspirational Quote"></custom-accordion>
+
+            <custom-accordion data-id="say" data-description="Make the bot say whatever you want." data-code="say {message}" data-title="Say"></custom-accordion>
+
+            <custom-accordion data-id="soundboard" data-description="Play an audio clip from the ones we have!" data-code="soundboard help" data-title="Soundboard"></custom-accordion>
+
+            <custom-accordion data-id="subreddit" data-description="Get a top post from a subreddit. (NSFW subreddits allowed in NSFW channels)" data-code="subreddit {subreddit}" data-title="Subreddit"></custom-accordion>
+
+            <custom-accordion data-id="trivia" data-description="Asks a trivia question." data-code="oof trivia help" data-title="Trivia"></custom-accordion>
+          </div>
+        </div>
+      </div>
+
+      <div class="row row-content-nb">
+        <div class="col-12">
+          <div class="col">
+            <h1>Utils</h1>
+          </div>
+          <custom-accordion data-id="avatar" data-description="Get avatar of the user. Can be a mention or a tag." data-code="avatar {mention | user tag (username#discriminator)}" data-title="Avatar"></custom-accordion>
+
+          <custom-accordion data-id="help" data-description="The help command for the bot." data-code="help" data-title="Help"></custom-accordion>
+
+          <custom-accordion data-id="nhentai" data-description="Gives title, tags, langugage, and author. ʷʰʸ ᵈᵒᵉˢ ᵗʰᵉ ⁿʰᵉⁿᵗᵃᶦ⁻ᵃᵖᶦ ᵉˣᶦˢᵗ" data-code="nhentai {number}" data-title="nHentai" data-warning="NSFW"></custom-accordion>
+
+          <custom-accordion data-id="ping" data-description="Gives the bot's latency and API latency." data-code="ping" data-title="Ping"></custom-accordion>
+
+          <custom-accordion data-id="tts" data-description="Joins VC and says what you want it to say." data-code="tts {text}" data-title="TTS"></custom-accordion>
+        </div>
+      </div>
+
+      <div class="row row-content-nb">
+        <div class="col-12">
+          <div class="col">
+            <h1>Oof Coin</h1>
+          </div>
+          <custom-accordion data-id="oofcoinbalance" data-description="Gets your's or the mentioned persion global balance of Oof Coin." data-code="oofcoin {optional: mention | user tag (username#discriminator)" data-title="Oof Coin Balance">
+          </custom-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<script>
+  const prefix = "oof ";
+
+  function customTag(tagName, fn) {
+    document.createElement(tagName);
+    //find all the tags occurrences (instances) in the document
+    var tagInstances = document.getElementsByTagName(tagName);
+    //for each occurrence run the associated function
+    for (var i = 0; i < tagInstances.length; i++) {
+      tagInstances[i].innerHTML = prefix;
+    }
+  }
+
+  function customAccordion() {
+    document.createElement("custom-accordion")
+    var tagInstances = document.getElementsByTagName('custom-accordion');
+    // console.log(tagInstances);
+    for (var i = 0; i < tagInstances.length; i++) {
+      var id = tagInstances[i].getAttribute('data-id');
+      var headid = tagInstances[i].getAttribute(id + '-head');
+      var description = tagInstances[i].getAttribute('data-description');
+      var code = tagInstances[i].getAttribute('data-code');
+      var permissions = tagInstances[i].getAttribute('data-perms')
+      var title = tagInstances[i].getAttribute('data-title')
+      var warningTag = tagInstances[i].getAttribute('data-warning')
+      var innerHTML = `
                     <div class="card mt-1 mb-1">
                         <div class="card-header" role="tab" id="${headid}">
                             <h3 class="mb-0"><a data-toggle="collapse" data-target="#${id}">${title}`
-                    if (warningTag != null) innerHTML += ` <span class="badge badge-danger badge-right ">${warningTag}</span>`;
-                    innerHTML += `
+      if (warningTag != null) innerHTML += ` <span class="badge badge-danger badge-right ">${warningTag}</span>`;
+      innerHTML += `
                     </a></h3>
                         </div>
                         <div class="collapse" id="${id}" data-parent="#accordion">
@@ -209,24 +208,25 @@ code {
                                     <br>
                                     <code>${prefix}${code}</code>
                                     <br>`
-                    if (permissions != null){
-                        innerHTML += `
+      if (permissions != null) {
+        innerHTML += `
                         <span class="smalltext">PERMISSIONS</span>
                         <br>
                         ${permissions}
                         `;
-                    }
-                    innerHTML += `
+      }
+      innerHTML += `
                                     </p>
                                 </div>
                             </div>
                         </div>
                     `;
-                    tagInstances[i].innerHTML = innerHTML;
-                }
-            }
+      tagInstances[i].innerHTML = innerHTML;
+    }
+  }
 
-            customTag("prefix");
-            customAccordion();
-        </script>
+  customTag("prefix");
+  customAccordion();
+</script>
+
 </html>
