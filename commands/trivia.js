@@ -203,7 +203,7 @@ module.exports = {
                     db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
                       if (err) console.log(err);
                     });
-                    message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+                    message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
                       `You earned ${earned} oofcoins.`);
                     return;
                   }
@@ -222,7 +222,7 @@ module.exports = {
                     db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
                       if (err) console.log(err);
                     });
-                    message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+                    message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
                       `You lost ${lost} oofcoins.`);
                     return;
                   }
@@ -242,7 +242,7 @@ module.exports = {
                 db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
                   console.error(err);
                 });
-                return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+                return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
                   `You lost ${lost} oofcoins.`);
               });
             }).catch(function() {
@@ -261,7 +261,6 @@ function shuffle(a) {
   return a;
 }
 
-// You changed some crap here
 /*
  General Knowledge
  Entertainment: Books
@@ -287,5 +286,4 @@ function shuffle(a) {
  Science: Gadgets
  Entertainment: Japanese Anime & Manga
  Entertainment: Cartoon & Animations
-select
 */
