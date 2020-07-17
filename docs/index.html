@@ -7,6 +7,8 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
   <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 
   <title>Despacito Spider</title>
@@ -65,6 +67,13 @@
     .badge-right {
       float: right;
     }
+		.em, .commandtype  {
+			font-size: 1.75rem !important;
+			vertical-align: middle !important;
+		}
+		.inlinetext {
+			display: inline-block !important;
+		}
   </style>
 </head>
 
@@ -93,8 +102,8 @@
 
       <div class="row row-content-nb">
         <div class="col-12">
-          <div class="col">
-            <h1>Moderation</h1>
+          <div class="col inlinetext">
+            <h1 class="commandtype"><i class="em em-no_entry_sign" aria-role="presentation" aria-label="NO ENTRY SIGN"></i> Moderation</h1>
           </div>
           <custom-accordion data-id="blacklist" data-description="Blacklist's different things, example specific images." data-code="blacklist help" data-perms="Kick Members" data-title="Kick"></custom-accordion>
 
@@ -104,8 +113,8 @@
 
       <div class="row row-content-nb">
         <div class="col-12">
-          <div class="col">
-            <h1>Fun</h1>
+          <div class="col inlinetext">
+            <h1 class="commandtype"><i class="em em-smile" aria-role="presentation" aria-label="SMILING FACE WITH OPEN MOUTH AND SMILING EYES"></i> Fun</h1>
           </div>
 
           <div id="accordion">
@@ -138,8 +147,8 @@
 
       <div class="row row-content-nb">
         <div class="col-12">
-          <div class="col">
-            <h1>Utils</h1>
+          <div class="col inlinetext">
+            <h1 class="commandtype"><i class="em em-hammer_and_wrench" aria-role="presentation" aria-label=""></i> Utils</h1>
           </div>
           <custom-accordion data-id="avatar" data-description="Get avatar of the user. Can be a mention or a tag." data-code="avatar {mention | user tag (username#discriminator)}" data-title="Avatar"></custom-accordion>
 
@@ -155,8 +164,8 @@
 
       <div class="row row-content-nb">
         <div class="col-12">
-          <div class="col">
-            <h1>Oof Coin</h1>
+          <div class="col inlinetext">
+            <h1 class="commandtype"><i class="em em-moneybag" aria-role="presentation" aria-label="MONEY BAG"></i> Oof Coin</h1>
           </div>
           <custom-accordion data-id="oofcoinbalance" data-description="Gets your's or the mentioned persion global balance of Oof Coin." data-code="balance {optional: mention | user tag (username#discriminator)" data-title="Balance">
           </custom-accordion>
