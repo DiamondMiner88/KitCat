@@ -4,6 +4,7 @@
 - [ ] 2048 - high score tracker
 - [ ] 2048 - combine tiles into an image to represent the grid and send that to the channel instead
 - [ ] Use a different trivia api because of html entities
+- [ ] Make it so users don't have to type a long message for trivia. Example `oof trivia easy`.
 - [ ] add guild-specific settings
  - [ ] specific command disallow (?)
  - [ ] custom prefix for guilds (cache prefix for guild upon one executing one command to lower sql selects?)

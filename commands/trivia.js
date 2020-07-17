@@ -69,6 +69,7 @@ const triviaHelp = new Discord.MessageEmbed()
   .addField('Categories', '`Any`, `General Knowledge`, `Entertainment: Books`, `Entertainment: Film`, `Entertainment: Music`, `Entertainment: Musicals & Theatres`, `Entertainment: Television`, `Entertainment: Video Games`, `Entertainment: Board Games`, `Science &amp; Nature`, `Science: Computers`, `Science: Mathematics`, `Mythology`, `Sports`, `Geography`, `History`, `Politics`, `Art`, `Celebrities`, `Animals`, `Vehicles`, `Entertainment: Comics`, `Science: Gadgets`, `Entertainment: Japanese Anime & Manga`, `Entertainment: Cartoon & Animations`')
   .addField('Difficulties', '`Any`, `Easy`, `Medium`, `Hard`')
   .addField('Type of Questions', '`Any`, `Multiple Choice`, `True False`')
+	.addField('Earn Money', '`Yes`, `No` (No by default)')
   .addField('Ussage', `\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\` or run \`${pfx}trivia\` for any category, any difficulty, and any type of question.`);;
 
 const boolQuestionFilterArray = [
@@ -87,10 +88,10 @@ module.exports = {
   command: "trivia",
   category: cmdCategories.fun,
   help_name: `:question: Trivia`,
-  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`{earn money}\`.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
   // Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
   execute(client, message, args) {
-    console.log(decode(`Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?`))
+    // console.log(decode(`Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?`))
     if (args[0] === "help") {
       return message.channel.send(triviaHelp);
     }
@@ -123,7 +124,7 @@ module.exports = {
           answers: arrayAnswers,
           correct_answer: json.results[0].correct_answer,
           incorrect_answers: json.results[0].incorrect_answers,
-          question: entities.decode(json.results[0].question)
+          question: entities.decode(json.results[0].question),
         };
         var embed = new Discord.MessageEmbed()
           .setColor('#00008B')
@@ -190,7 +191,7 @@ module.exports = {
 												earned = 2;
 												break;
 											case 'Hard':
-												earned = 3;
+												earned = 4;
 												break;
 										}
 										db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
@@ -198,33 +199,50 @@ module.exports = {
 										});
 										db.get("SELECT purse, bank, loan_left, loan_due FROM currency WHERE user=?", [user.id], (err, result) => {
 											message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
-											` You earned ${earned} oofcoins!`);
-								    }
+											`You earned ${earned} oofcoins.`);
+								    });
 										return;
                   }
-                  else {
+
+									else {
+										var lost = 0;
 										switch(difficulty){
-											if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) {
-												var lost = 0;
-												switch(difficulty){
-													case 'Easy':
-														lost = 1
-														break;
-													case 'Medium':
-														lost = 2;
-														break;
-													case 'Hard':
-														lost = 3;
-														break;
-												}
-												db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
-													console.error(err);
-												});
-                    		return message.channel.send(`<@${user.id}>, incorrect. The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
-                  }
+											case 'Easy':
+												break;
+											case 'Medium':
+												lost = 1;
+												break;
+											case 'Hard':
+												lost = 3;
+												break;
+										}
+										db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
+											console.error(err);
+										});
+										db.get("SELECT purse, bank, loan_left, loan_due FROM currency WHERE user=?", [user.id], (err, result) => {
+											message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+											`You lost ${lost} oofcoins.`);
+								    });
+                    return;
+									}
                 });
               }).catch(err => {
-                return message.channel.send(`<@${user.id}>, you ran out of time!`);
+								var lost = 0;
+								switch(difficulty){
+									case 'Easy':
+										break;
+									case 'Medium':
+										lost = 1;
+										break;
+									case 'Hard':
+										lost = 3;
+										break;
+								}
+								db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
+									console.error(err);
+								});
+                return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.` +
+								`You lost ${lost} oofcoins.`);
               });
             }).catch(function() {
               console.error("error");
