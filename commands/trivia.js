@@ -16,30 +16,31 @@ hard give 4 take away 3 if wrong
 
 // https://opentdb.com/api_config.php
 const categories = {
-    'generalknowledge':'any',
-    'entertainment:books':9,
-    'entertainment:film':10,
-    'entertainment:music':11,
-    'entertainment:musicals&theatres':12,
-    'entertainment:television':13,
-    'entertainment:videogames':14,
-    'entertainment:boardgames':15,
-    'science&amp;nature':16,
-    'science:computers':17,
-    'science:mathematics':18,
-    'mythology':19,
-    'sports':20,
-    'geography':21,
-    'history':22,
-    'politics':23,
-    'art':24,
-    'celebrities':25,
-    'animals':26,
-    'vehicles':27,
-    'entertainment:comics':28,
-    'science:gadgets':29,
-    'entertainment:japaneseanime&manga':30,
-    'entertainment:cartoon&animations':31
+	'any': 'any',
+    'generalknowledge':9,
+    'entertainment:books':10,
+    'entertainment:film':11,
+    'entertainment:music':12,
+    'entertainment:musicals&theatres':13,
+    'entertainment:television':14,
+    'entertainment:videogames':15,
+    'entertainment:boardgames':16,
+    'science&nature':17,
+    'science:computers':18,
+    'science:mathematics':19,
+    'mythology':20,
+    'sports':21,
+    'geography':22,
+    'history':23,
+    'politics':24,
+    'art':25,
+    'celebrities':26,
+    'animals':27,
+    'vehicles':28,
+    'entertainment:comics':29,
+    'science:gadgets':30,
+    'entertainment:japaneseanime&manga':31,
+    'entertainment:cartoon&animations':32
 }
 
 const selectedDifficulty = {
@@ -58,7 +59,7 @@ const selectedType = {
 const triviaHelp = new Discord.MessageEmbed()
     .setColor('#00008B')
     .setTitle('Trivia Help')
-    .addField('Categories', '`General Knowledge`, `Entertainment: Books`, `Entertainment: Film`, `Entertainment: Music`, `Entertainment: Musicals & Theatres`, `Entertainment: Television`, `Entertainment: Video Games`, `Entertainment: Board Games`, `Science &amp; Nature`, `Science: Computers`, `Science: Mathematics`, `Mythology`, `Sports`, `Geography`, `History`, `Politics`, `Art`, `Celebrities`, `Animals`, `Vehicles`, `Entertainment: Comics`, `Science: Gadgets`, `Entertainment: Japanese Anime & Manga`, `Entertainment: Cartoon & Animations`')
+    .addField('Categories', '`Any`, `General Knowledge`, `Entertainment: Books`, `Entertainment: Film`, `Entertainment: Music`, `Entertainment: Musicals & Theatres`, `Entertainment: Television`, `Entertainment: Video Games`, `Entertainment: Board Games`, `Science &amp; Nature`, `Science: Computers`, `Science: Mathematics`, `Mythology`, `Sports`, `Geography`, `History`, `Politics`, `Art`, `Celebrities`, `Animals`, `Vehicles`, `Entertainment: Comics`, `Science: Gadgets`, `Entertainment: Japanese Anime & Manga`, `Entertainment: Cartoon & Animations`')
     .addField('Difficulties', '`Any Difficulty`, `Easy`, `Medium`, `Hard`')
     .addField('Type of Questions', '`Any Type`, `Multiple Choice`, `True False`')
     .addField('Ussage', `\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\` or run \`${pfx}trivia\` for any category, any difficulty, and any type of question.`);
