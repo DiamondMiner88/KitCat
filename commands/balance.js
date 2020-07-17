@@ -9,7 +9,7 @@ const Discord = require("discord.js");
 
 function timestampToStr(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var year = a.getFullYear();
   var month = months[a.getMonth()];
   var date = a.getDate();
@@ -51,10 +51,10 @@ module.exports = {
           .setTitle("Balance")
           .addField("Purse Balance", `${result.purse}©`)
           .addField("Bank Balance", `${Math.floor(result.bank)}©`);
-          if (result.loan_left) {
-            embed.addField("Loan left to pay", `${result.loan_left}©`);
-            embed.addField("When loan due", `${result.loan_left}©`);
-          }
+        if (result.loan_left) {
+          embed.addField("Loan left to pay", `${result.loan_left}©`);
+          embed.addField("When loan due", `${result.loan_left}©`);
+        }
         message.channel.send(embed);
       }
     });

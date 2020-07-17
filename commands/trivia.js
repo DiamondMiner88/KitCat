@@ -122,7 +122,7 @@ module.exports = {
         if (difficulty === undefined) {
           var difficulty = json.results[0].difficulty.charAt(0).toUpperCase() + json.results[0].difficulty.slice(1);
         }
-				console.log("difficulty: " + difficulty);
+        console.log("difficulty: " + difficulty);
         var arrayAnswers = json.results[0].incorrect_answers;
         arrayAnswers.push(json.results[0].correct_answer);
         arrayAnswers = shuffle(arrayAnswers);
@@ -211,7 +211,7 @@ module.exports = {
                     var lost = 0;
                     switch (difficulty) {
                       case 'Easy':
-											break;
+                        break;
                       case 'Medium':
                         lost = 1;
                         break;
