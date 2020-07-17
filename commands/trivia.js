@@ -44,14 +44,14 @@ const categories = {
 }
 
 const selectedDifficulty = {
-    'anydifficulty': 'any',
+    'any': 'any',
     'easy': 'easy',
     'medium': 'medium',
     'hard': 'hard'
 }
 
 const selectedType = {
-    'anytype': 'any',
+    'any': 'any',
     'multiplechoice': 'multiple',
     'truefalse': 'boolean'
 }
@@ -60,8 +60,8 @@ const triviaHelp = new Discord.MessageEmbed()
     .setColor('#00008B')
     .setTitle('Trivia Help')
     .addField('Categories', '`Any`, `General Knowledge`, `Entertainment: Books`, `Entertainment: Film`, `Entertainment: Music`, `Entertainment: Musicals & Theatres`, `Entertainment: Television`, `Entertainment: Video Games`, `Entertainment: Board Games`, `Science &amp; Nature`, `Science: Computers`, `Science: Mathematics`, `Mythology`, `Sports`, `Geography`, `History`, `Politics`, `Art`, `Celebrities`, `Animals`, `Vehicles`, `Entertainment: Comics`, `Science: Gadgets`, `Entertainment: Japanese Anime & Manga`, `Entertainment: Cartoon & Animations`')
-    .addField('Difficulties', '`Any Difficulty`, `Easy`, `Medium`, `Hard`')
-    .addField('Type of Questions', '`Any Type`, `Multiple Choice`, `True False`')
+    .addField('Difficulties', '`Any`, `Easy`, `Medium`, `Hard`')
+    .addField('Type of Questions', '`Any`, `Multiple Choice`, `True False`')
     .addField('Ussage', `\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\` or run \`${pfx}trivia\` for any category, any difficulty, and any type of question.`);
 ;
 
