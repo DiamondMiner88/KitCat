@@ -32,13 +32,15 @@ async function getTopPost(message, subreddit_name) {
       break;
     }
   }
-  // if (postToUse.subreddit.over_18 && !message.channel.nsfw) {
-  //   message.channel.send(`The subreddit is NSFW. Run this command in a NSFW channel to get the post.`);
+
+  // if (postToUse.subreddit.over_18 === true && !message.channel.nsfw) {
+  //   message.channel.send(`The subreddit you chose is NSFW. Run this command in a NSFW channel to get the post.`);
   // }
   // else if (postToUse.over_18 && !message.channel.nsfw) {
   //   message.channel.send(`The post was NSFW while this channel is not. Getting a new post, hold on...`);
   //   getTopPost(message, subreddit_name);
   // }
+  postToUse.upvote();
   const Discord = require("discord.js");
   let embed = new Discord.MessageEmbed()
     .setColor("white")

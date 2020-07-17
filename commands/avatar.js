@@ -1,6 +1,7 @@
 const config = require("../config.json");
 const pfx = config.prefix;
 const categories = require("./_CATEGORIES.js");
+const Discord = require('discord.js');
 
 module.exports = {
   command: "avatar",
@@ -22,27 +23,15 @@ module.exports = {
         return;
       }
     }
-    message.channel.send({
-      embed: {
-        color: 0x0099ff,
-        title: 'Avatar',
-        fields: [{
-          name: `${target_user.tag}'s Avatar`,
-          value: target_user.avatarURL({
-            format: "png"
-          })
-        }],
-        image: {
-          url: target_user.avatarURL({
-            format: "png"
-          })
-        },
-        timestamp: new Date(),
-        footer: {
-          text: `${message.author.tag} Executed: \`${message.content}\``,
-          icon_url: message.author.avatarURL
-        }
-      }
-    });
+    const logMsg = new Discord.MessageEmbed()
+      .setTitle(`Avatar`)
+      .setColor(0x0099ff)
+      .addField(`${target_user.tag}'s Avatar`, target_user.avatarURL({
+        format: "png"
+      }))
+      .setImage(target_user.avatarURL({
+        format: "png"
+      }));
+    message.channel.send(logMsg);
   }
 }
