@@ -40,7 +40,7 @@ module.exports = {
   execute(client, message, args) {
     var content;
     var inlinefields;
-    var query = message.toString().toLower();
+    var query = args.toString().toLower();
     waApi.getFull(query).then((queryresult) => {
         content = getPodContent(queryresult);
         wolframEmbed = {
