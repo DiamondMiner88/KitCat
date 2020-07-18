@@ -75,7 +75,7 @@ module.exports = {
          let val = embeddedimg[i].imgsrc;
          wolframEmbed.fields.push({name: `${nm}`, image: `{url: ${val}}`, inline:true});
        }
-       message.channel.send(wolframEmbed);
+       message.channel.send({embed:wolframEmbed});
     }).catch(console.error); 
   }
 }
