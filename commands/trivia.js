@@ -1,6 +1,5 @@
 const config = require("../config.json");
 const pfx = config.prefix;
-const cmdCategories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').XmlEntities;
@@ -86,12 +85,10 @@ const multipleQuestionFilterArray = [
 
 module.exports = {
   command: "trivia",
-  category: cmdCategories.fun,
+  category: require("./_CATEGORIES.js").fun,
   help_name: `:question: Trivia`,
   help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
-  // Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
   execute(client, message, args) {
-    // console.log(decode(`Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?`))
     if (args[0] === "help") {
       return message.channel.send(triviaHelp);
     }
@@ -101,7 +98,7 @@ module.exports = {
     var url = `https://opentdb.com/api.php?amount=1`;
     var user = message.author;
     var difficulty;
-    if (args.length != 0) {
+    if (args.length > 0) {
       var category = categories[input[0].toLowerCase().replace(/\s+/g, '')];
       difficulty = selectedDifficulty[input[1].toLowerCase().replace(/\s+/g, '')];
       var toq = selectedType[input[2].toLowerCase().replace(/\s+/g, '')];
@@ -109,20 +106,18 @@ module.exports = {
       if (category === undefined) return message.channel.send("You provided an invalid category!");
       if (difficulty === undefined) return message.channel.send("You provided an invalid difficulty!");
       if (toq === undefined) return message.channel.send("You provided an invalid type of question!")
-      if (category != "any") url += `&category=${category}`;
-      if (difficulty != "any") url += `&difficulty=${difficulty}`;
-      if (toq != "any") url += `&type=${toq}`;
+      if (category !== "any") url += `&category=${category}`;
+      if (difficulty !== "any") url += `&difficulty=${difficulty}`;
+      if (toq !== "any") url += `&type=${toq}`;
     }
-    console.log(difficulty);
     fetch(url, {
-        method: 'Get'
+        method: 'GET'
       })
-      .then(res => res.json())
-      .then((json) => {
-        if (difficulty === undefined) {
+      .then(response => response.json())
+      .then(json => {
+        if (!difficulty) {
           var difficulty = json.results[0].difficulty.charAt(0).toUpperCase() + json.results[0].difficulty.slice(1);
         }
-        console.log("difficulty: " + difficulty);
         var arrayAnswers = json.results[0].incorrect_answers;
         arrayAnswers.push(json.results[0].correct_answer);
         arrayAnswers = shuffle(arrayAnswers);
@@ -132,10 +127,11 @@ module.exports = {
           incorrect_answers: json.results[0].incorrect_answers,
           question: entities.decode(json.results[0].question),
         };
+
         var embed = new Discord.MessageEmbed()
           .setColor('#00008B')
           .setTitle("Trivia Question!")
-          .addField("Category", json.results[0].category, true)
+          .addField("Category", json.results[0].category, true);
         if (json.results[0].type === 'boolean') embed.addField("Type", "True / False", true);
         if (json.results[0].type === 'multiple') embed.addField("Type", "Multiple Choice", true);
         embed.addField("Difficulty", json.results[0].difficulty.charAt(0).toUpperCase() + json.results[0].difficulty.slice(1), true)
@@ -144,7 +140,7 @@ module.exports = {
           `.\nRespond with the corresponding Emoji to answer the question!`);
         if (json.results[0].type === 'boolean') {
           message.channel.send(embed)
-            .then(function(msg) {
+            .then(msg => {
               msg.react('🇹');
               msg.react('🇫');
               const filter = (reaction, userperson) => {
@@ -170,7 +166,6 @@ module.exports = {
             });
         }
         if (json.results[0].type === 'multiple') {
-          console.log(answers);
           message.channel.send(embed)
             .then(function(msg) {
               msg.react('1️⃣');
@@ -180,52 +175,42 @@ module.exports = {
               const filter = (reaction, userperson) => {
                 return multipleQuestionFilterArray.includes(reaction.emoji.name) && userperson.id === message.author.id;
               }
-              console.log(answers.correct_answer);
               msg.awaitReactions(filter, {
                 max: 1,
                 time: 15000,
                 errors: ['time']
               }).then(collected => {
                 collected.each(reaction => {
-                  if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) {
-                    var earned = 0;
-                    switch (difficulty) {
-                      case 'Easy':
-                        earned = 1
-                        break;
-                      case 'Medium':
-                        earned = 2;
-                        break;
-                      case 'Hard':
-                        earned = 4;
-                        break;
+                  const coinRates = {
+                    'Easy': {
+                      lose: 1,
+                      win: 2
+                    },
+                    "Medium": {
+                      lose: 3,
+                      win: 4
+                    },
+                    "Hard": {
+                      lose: 4,
+                      win: 6
                     }
-                    db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [earned, user.id], (err) => {
-                      if (err) console.log(err);
-                    });
-                    message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
-                      `You earned ${earned} oofcoins.`);
-                    return;
                   }
-                  else {
-                    var lost = 0;
-                    switch (difficulty) {
-                      case 'Easy':
-                        break;
-                      case 'Medium':
-                        lost = 1;
-                        break;
-                      case 'Hard':
-                        lost = 3;
-                        break;
+
+                  var coinsEarned = 0;
+                  if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) coinsEarned = coinRates[difficulty].win;
+                  else coinsEarned = coinRates[difficulty].lose;
+
+                  if (coinsEarned > 0) message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\nYou earned ${coinsEarned} oofcoins.`);
+                  else message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\n You lost ${coinsEarned} oofcoins.`);
+                  
+                  db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [coinsEarned, user.id], err => {
+                    if (err) {
+                      console.log(err);
+                      message.channel.send("Error trying to adjust your coin value!");
                     }
-                    db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
-                      if (err) console.log(err);
-                    });
-                    message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
-                      `You lost ${lost} oofcoins.`);
-                    return;
-                  }
+
+                  });
+
                 });
               }).catch(err => {
                 var lost = 0;
