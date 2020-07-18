@@ -2,7 +2,7 @@ const config = require("../config.json");
 const pfx = config.prefix;
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
-const Entities = require('html-entities').XmlEntities;
+const Entities = require('html-entities').AllHtmlEntities;
 const {
   ReactionCollector
 } = require('discord.js')
@@ -83,6 +83,10 @@ const multipleQuestionFilterArray = [
   '4️⃣'
 ]
 
+const decodeHtmlCharCodes = str =>
+  str.replace(/(&#(\d+);)/g, (match, capture, charCode) =>
+    String.fromCharCode(charCode));
+
 module.exports = {
   command: "trivia",
   category: require("./_CATEGORIES.js").fun,
@@ -126,7 +130,7 @@ module.exports = {
           answers: arrayAnswers,
           correct_answer: json.results[0].correct_answer,
           incorrect_answers: json.results[0].incorrect_answers,
-          question: entities.decode(json.results[0].question),
+          question: json.results[0].question,
         };
 
         var embed = new Discord.MessageEmbed()
@@ -136,8 +140,8 @@ module.exports = {
         if (json.results[0].type === 'boolean') embed.addField("Type", "True / False", true);
         if (json.results[0].type === 'multiple') embed.addField("Type", "Multiple Choice", true);
         embed.addField("Difficulty", json.results[0].difficulty.charAt(0).toUpperCase() + json.results[0].difficulty.slice(1), true)
-          .addField("Question", answers.question);
-        if (json.results[0].type === 'multiple') embed.addField(`Options`, `1: \`${answers.answers[0]}\`, 2: \`${answers.answers[1]}\`, 3: \`${answers.answers[2]}\`, 4: \`${answers.answers[3]}\`` +
+          .addField("Question", entities.decode(answers.question));
+        if (json.results[0].type === 'multiple') embed.addField(`Options`, `1: \`${entities.decode(answers.answers[0])}\`, 2: \`${entities.decode(answers.answers[1])}\`, 3: \`${entities.decode(answers.answers[2])}\`, 4: \`${entities.decode(answers.answers[3])}\`` +
           `.\nRespond with the corresponding Emoji to answer the question!`);
         if (json.results[0].type === 'boolean') {
           message.channel.send(embed)
@@ -155,10 +159,10 @@ module.exports = {
               }).then(collected => {
                 collected.each(reaction => {
                   if ((reaction._emoji.name === '🇫' && answers.correct_answer === 'False') || (reaction._emoji.name === '🇹' && answers.correct_answer === 'True')) {
-                    return message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+                    return message.channel.send(`<@${user.id}>, correct! \`${entities.decode(answers.question)}\` is \`${answers.correct_answer}\``);
                   }
                   else {
-                    return message.channel.send(`<@${user.id}>, incorrect. The answer to \`${answers.question}\` is \`${answers.correct_answer}\``);
+                    return message.channel.send(`<@${user.id}>, incorrect. \`${entities.decode(answers.question)}\` is \`${answers.correct_answer}\``);
                   }
                 });
               }).catch(err => {
@@ -201,8 +205,8 @@ module.exports = {
                   if (reaction._emoji.name === multipleQuestionFilterArray[answers.answers.indexOf(answers.correct_answer)]) coinsEarned = coinRates[difficulty].win;
                   else coinsEarned = coinRates[difficulty].lose;
 
-                  if (coinsEarned > 0) message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\nYou earned ${coinsEarned} oofcoins.`);
-                  else message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\n You lost ${coinsEarned} oofcoins.`);
+                  if (coinsEarned > 0) message.channel.send(`<@${user.id}>, correct! The answer to \`${entities.decode(answers.question)}\` is \`${answers.correct_answer}\`.\nYou earned ${coinsEarned} oofcoins.`);
+                  else message.channel.send(`<@${user.id}>, incorrect! The answer to \`${entities.decode(answers.question)}\` is \`${answers.correct_answer}\`.\n You lost ${coinsEarned} oofcoins.`);
 
                   db.run("UPDATE currency SET bank = bank + ? WHERE user = ?", [coinsEarned, user.id], err => {
                     if (err) {
@@ -229,7 +233,7 @@ module.exports = {
                 db.run("UPDATE currency SET bank = bank - ? WHERE user = ?", [lost, user.id], (err) => {
                   console.error(err);
                 });
-                return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +
+                return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${entities.decode(answers.question)}\` is \`${answers.correct_answer}\`. ` +
                   `You lost ${lost} oofcoins.`);
               });
             }).catch(function() {
