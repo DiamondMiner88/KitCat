@@ -184,15 +184,15 @@ module.exports = {
                 collected.each(reaction => {
                   const coinRates = {
                     'Easy': {
-                      lose: 1,
+                      lose: -1,
                       win: 2
                     },
                     "Medium": {
-                      lose: 3,
+                      lose: -3,
                       win: 4
                     },
                     "Hard": {
-                      lose: 4,
+                      lose: -4,
                       win: 6
                     }
                   }
