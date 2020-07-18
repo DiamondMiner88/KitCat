@@ -87,7 +87,8 @@ module.exports = {
   command: "trivia",
   category: require("./_CATEGORIES.js").fun,
   help_name: `:question: Trivia`,
-  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+  help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+  // Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
   execute(client, message, args) {
     if (args[0] === "help") {
       return message.channel.send(triviaHelp);
@@ -202,7 +203,7 @@ module.exports = {
 
                   if (coinsEarned > 0) message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\nYou earned ${coinsEarned} oofcoins.`);
                   else message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\n You lost ${coinsEarned} oofcoins.`);
-                  
+
                   db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [coinsEarned, user.id], err => {
                     if (err) {
                       console.log(err);
