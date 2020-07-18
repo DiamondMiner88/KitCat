@@ -15,10 +15,8 @@ CREATE TABLE IF NOT EXISTS "image_blacklist" (
 const currency_tbl = `
 CREATE TABLE IF NOT EXISTS "currency" (
 	"user"	INTEGER NOT NULL,
-	"purse"	INTEGER NOT NULL DEFAULT 50,
-	"bank"	INTEGER NOT NULL DEFAULT 0,
-	"loan_left"	INTEGER,
-	"loan_due"	INTEGER,
+	"bank"	INTEGER NOT NULL DEFAULT 30,
+	"daily_last_claimed_at" INTEGER,
 	PRIMARY KEY("user")
 );`;
 

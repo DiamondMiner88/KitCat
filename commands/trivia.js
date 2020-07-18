@@ -204,7 +204,7 @@ module.exports = {
                   if (coinsEarned > 0) message.channel.send(`<@${user.id}>, correct! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\nYou earned ${coinsEarned} oofcoins.`);
                   else message.channel.send(`<@${user.id}>, incorrect! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`.\n You lost ${coinsEarned} oofcoins.`);
 
-                  db.run("UPDATE currency SET purse = purse + ? WHERE user = ?", [coinsEarned, user.id], err => {
+                  db.run("UPDATE currency SET bank = bank + ? WHERE user = ?", [coinsEarned, user.id], err => {
                     if (err) {
                       console.log(err);
                       message.channel.send("Error trying to adjust your coin value!");
@@ -217,15 +217,16 @@ module.exports = {
                 var lost = 0;
                 switch (difficulty) {
                   case 'Easy':
-                    break;
-                  case 'Medium':
                     lost = 1;
                     break;
-                  case 'Hard':
+                  case 'Medium':
                     lost = 3;
                     break;
+                  case 'Hard':
+                    lost = 4;
+                    break;
                 }
-                db.run("UPDATE currency SET purse = purse - ? WHERE user = ?", [lost, user.id], (err) => {
+                db.run("UPDATE currency SET bank = bank - ? WHERE user = ?", [lost, user.id], (err) => {
                   console.error(err);
                 });
                 return message.channel.send(`<@${user.id}>, you ran out of time! The answer to \`${answers.question}\` is \`${answers.correct_answer}\`. ` +

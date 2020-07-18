@@ -9,6 +9,6 @@ module.exports = {
   help_description: `DESCRIPTON OF COMMAND FOR HELP COMMAND`,
 
   execute(client, message, args) {
-    // This gets called when the command is equal the file name without ".js" and #command on line 5 here
+    // This gets called when the command is equal the file name without ".js" and #command on line 6 here
   }
 }

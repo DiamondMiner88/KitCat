@@ -40,7 +40,7 @@ module.exports = {
 
     currency.checkForProfile(target_user);
 
-    db.get("SELECT purse, bank, loan_left, loan_due FROM currency WHERE user=?", [target_user.id], (err, result) => {
+    db.get("SELECT bank, daily_last_claimed_at FROM currency WHERE user=?", [target_user.id], (err, result) => {
       if (err) {
         console.log("Error retrieving currency data: " + err);
         message.channel.send("Something went wrong trying to retrieve the data.");
@@ -49,12 +49,7 @@ module.exports = {
         var embed = new Discord.MessageEmbed()
           .setColor(0x0099ff)
           .setTitle("Balance")
-          .addField("Purse Balance", `${result.purse}©`)
           .addField("Bank Balance", `${Math.floor(result.bank)}©`);
-        if (result.loan_left) {
-          embed.addField("Loan left to pay", `${result.loan_left}©`);
-          embed.addField("When loan due", `${result.loan_left}©`);
-        }
         message.channel.send(embed);
       }
     });
