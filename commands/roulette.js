@@ -38,6 +38,10 @@ module.exports = {
 		if (users.length === 1) return message.channel.send("You can't play Russian Roulette by yourself.");
 		// console.log(users);
 		var randomUsers = shuffle(users);
+		var randomUserId = [];
+		for (var number in randomUsers) {
+			randomUserId.push(randomUsers[number].id);
+		}
 		var playing = true;
 		var playerCount = 0;
 		var chamber = [0, 0, 0, 0, 0, 0];
@@ -46,25 +50,40 @@ module.exports = {
 		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
 			message.channel.awaitMessages(response => response.content.split(' ')[0] === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) && 
 				max: 1,
-				time: 20000,
+				time: 30000,
 				erros: ['time']
 			})
 			.then((collected) => {
+				// console.log(collected);
 				var response = collected.first().content.split(' ');
-				message.channel.send('Spinning the revolver...')
-				chamber = shuffle(chamber);
+				var author = collected.first().author;
 				if (response[1] === 'myself') {
 					if (chamber[0] === 1) {
-						message.channel.send('You died, the chamber had a bullet in it.')
+						message.channel.send(':boom: You died, the chamber had a bullet in it.');
+						randomUserId.splice(randomUserId.indexOf(author.id), 1);
+						randomUser.splice(randomUserId.indexOf(author.id), 1);
 					} else {
-						message.channel.send('You survived, the bullet was not in the chamber.')
+						message.channel.send('*Click* You survived, the bullet was not in the chamber.')
 					}
 				} else {
-					console.log(collected.first().mentions.users.first().id);
+					// console.log(collected.first().mentions.users.first().id);
+					var deadPerson = collected.first().mentions.users.first();
+					if (deadPerson === undefined) {
+						message.channel.send(`You didn't provide a valid user.`)
+					} else {
+						if (chamber[0] === 1) {
+							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
+							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
+							randomUser.splice(randomUserId.indexOf(deadPerson.id), 1);
+						}
+						if (chamber[0] === 0) {
+							message.channel.send(`*Click* The chamber was empty.`)
+						}
+					}
 				} 
 			})
 			.catch((err) => {
-				message.channel.send(`Someone shot ${randomUsers[playerCount]} because they took too long.`);
+				message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
 				console.error(err);
 			});
 		});
