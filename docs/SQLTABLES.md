@@ -1,4 +1,4 @@
-Image Blacklist:
+## Image Blacklist
 ```sql
 CREATE TABLE IF NOT EXISTS "image_blacklist" (
   "hash"	TEXT NOT NULL UNIQUE, -- Image's hash
@@ -8,4 +8,14 @@ CREATE TABLE IF NOT EXISTS "image_blacklist" (
   "url"	INTEGER, -- URL to discord attachment
   PRIMARY KEY("hash")
 );
+```
+
+## Currency
+```sql
+CREATE TABLE IF NOT EXISTS "currency" (
+	"user"	INTEGER NOT NULL, -- user id
+	"bank"	INTEGER NOT NULL DEFAULT 30, -- amnt of coins they have
+	"daily_last_claimed_at" INTEGER, -- last claimed thier daily reward at
+	PRIMARY KEY("user")
+)
 ```

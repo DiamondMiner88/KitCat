@@ -66,14 +66,6 @@ client.on("message", async message => {
 
   require("./reddit.js").linkImagesFromPosts(message);
 
-  const nHmatches = message.content.matchAll(/\((\d{1,6})\)/g);
-  for (const match of nHmatches) {
-    require("./commands/nhentai.js").getOverview(match[1], message.channel, (error, overview) => {
-      if (error) message.channel.send(error);
-      else message.channel.send(overview);
-    });
-  }
-
   if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
   const args = message.content.slice(pfx.length).trim().split(/ +/g); // args is an array of text after the command that were seperated by a whitespace
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix

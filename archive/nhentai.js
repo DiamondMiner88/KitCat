@@ -51,3 +51,12 @@ module.exports = {
 
   getOverview
 }
+
+// for index.js
+// const nHmatches = message.content.matchAll(/\((\d{1,6})\)/g);
+// for (const match of nHmatches) {
+//   require("./commands/nhentai.js").getOverview(match[1], message.channel, (error, overview) => {
+//     if (error) message.channel.send(error);
+//     else message.channel.send(overview);
+//   });
+// }
