@@ -21,6 +21,7 @@ module.exports = {
         var desc = category.help_description !== "" ? category.help_description + "\n" + category.usage : category.usage;
         embed.addField(category.help_name, desc);
       }
+			embed.addField("Issues", "See an issue? Report it [here](https://github.com/DiamondMiner88/despacito-spider/labels/Bot%20Error).")
       message.channel.send(embed);
     }
     else if (!categories[args[0]]) {

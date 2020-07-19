@@ -5,6 +5,7 @@ const path = require('path');
 const Discord = require("discord.js");
 
 var client = new Discord.Client();
+
 const {
   imageHash
 } = require('image-hash');
