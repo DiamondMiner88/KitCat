@@ -28,7 +28,7 @@ module.exports = {
       message.channel.send("Invalid category!");
     }
     else {
-      const commands = client.commands.filter(command => command.category === categories[args[0]]);
+      const commands = client.commands.filter(command => command.category === categories[args[0]]).filter(command => !command.unlisted);
       var embed = new Discord.MessageEmbed()
         .setColor(0x0099ff)
         .setTitle(categories[args[0]].help_name)

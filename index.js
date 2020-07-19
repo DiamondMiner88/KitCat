@@ -3,12 +3,21 @@ const pfx = config.prefix;
 const fs = require('fs');
 const path = require('path');
 const Discord = require("discord.js");
-
 var client = new Discord.Client();
-
 const {
   imageHash
 } = require('image-hash');
+
+if (process.platform === "win32") {
+  var rl = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  rl.on("SIGINT", function () {
+    process.emit("SIGINT");
+  });
+}
 process.on("SIGINT", function() {
   console.log(`Exiting...`);
   client.destroy();

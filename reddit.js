@@ -12,6 +12,15 @@ const reddit = new snoowrap({
 
 var reddit_submission_ids = [];
 var reddit_idlist_starttime = new Date().getTime();
+
+
+/**
+ * getTopPost - Gets the top post of a subreddit that has not been gotten yet for the guild
+ *
+ * @param  {Message} message Message this was executed from
+ * @param  {String} subreddit_name subreddit name
+ * @returns {void}
+ */
 async function getTopPost(message, subreddit_name) {
   // reset id list if its been a day
   // id list is to prevent returning the same post

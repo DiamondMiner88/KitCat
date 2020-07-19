@@ -9,6 +9,13 @@ module.exports = {
   help_name: `Avatar`,
   help_description: `Get avatar of the user after the command. Can be a mention or a tag.\n\`${pfx}avatar {mention | user tag}\``,
 
+
+  /**
+   * execute - Gets the avatar of the user that's in args[0]
+   *
+   * @param  {String} args [{Mention | User tag}]
+   * @returns {void}
+   */
   execute(client, message, args) {
     if (args[0] === undefined) {
       message.channel.send(`You need to mention someone or put their tag.`);
