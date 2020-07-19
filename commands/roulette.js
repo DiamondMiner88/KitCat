@@ -15,7 +15,7 @@ module.exports = {
 			return message.channel.send(new Discord.MessageEmbed()
 				.setTitle('Russian Roulette Help')
 				.addField('Start Game', `Start the game by typing \`${pfx}roulette {users}\`.`)
-				.addField('Rules', `When it's your turn, you can do 2 things. Spin the chamber`)
+				.addField('Rules', `When it's your turn, you can do 2 things. Try your luck by running \`shoot myself\` or try to shoot someone else by running \`shoot {user}\`.`)
 			);
 		}
 		var users_nofilter = message.mentions.members.first(message.mentions.members.size);
@@ -24,13 +24,10 @@ module.exports = {
 		// console.log(removeCopies([1, 1, 2, 2, 2, 2, 2, 3]))
 		if (users_nofilter.length === 1) return message.channel.send("You can't play Russian Roulette by yourself.");
 		var users_id = [];
-		var users_mentions = [];
 		for (var number in users_nofilter) {
 			users_id.push(users_nofilter[number].id);
-			users_mentions.push(users_nofilter[number.id]);
 		}
 		users_id = removeCopies(users_id);
-		users_mentions = removeCopies(users_mentions);
 		var users = [];
 		for (var number in users_id) {
 			users.push(client.users.cache.get(users_id[number]));
@@ -42,49 +39,99 @@ module.exports = {
 		for (var number in randomUsers) {
 			randomUserId.push(randomUsers[number].id);
 		}
-		var playing = true;
-		var playerCount = 0;
-		var chamber = [0, 0, 0, 0, 0, 0];
-		chamber[Math.floor((Math.random() * chamber.length))] = 1;
-		message.channel.send('Gun has been loaded.');
-		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
-			message.channel.awaitMessages(response => response.content.split(' ')[0] === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) && 
-				max: 1,
-				time: 30000,
-				erros: ['time']
-			})
-			.then((collected) => {
-				// console.log(collected);
-				var response = collected.first().content.split(' ');
-				var author = collected.first().author;
-				if (response[1] === 'myself') {
-					if (chamber[0] === 1) {
-						message.channel.send(':boom: You died, the chamber had a bullet in it.');
-						randomUserId.splice(randomUserId.indexOf(author.id), 1);
-						randomUser.splice(randomUserId.indexOf(author.id), 1);
-					} else {
-						message.channel.send('*Click* You survived, the bullet was not in the chamber.')
+
+		message.channel.send(`React with :ok: if you want to play ${users.join(', ')}.`)
+		.then(msg => {
+			msg.react('🆗');
+			const filter = (reaction, user) => {
+				return reaction.emoji.name === '🆗' && users_id.includes(user.id);
+			};
+			var allReacted = false;
+			msg.awaitReactions(filter, { // Sets await awaitReactions
+				max: users.length,
+				time: 20000, // 20 seconds
+				errors: ['time'] // Throws error, if time runs out
+			}).then(collected => {
+				collected.each(reaction => {
+					console.log(reaction);
+					if (reaction.count - 1 == users.length) {
+						message.channel.send('The game will start in a while...')
+						allReacted = true;
 					}
-				} else {
-					// console.log(collected.first().mentions.users.first().id);
-					var deadPerson = collected.first().mentions.users.first();
-					if (deadPerson === undefined) {
-						message.channel.send(`You didn't provide a valid user.`)
-					} else {
-						if (chamber[0] === 1) {
-							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
-							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
-							randomUser.splice(randomUserId.indexOf(deadPerson.id), 1);
-						}
-						if (chamber[0] === 0) {
-							message.channel.send(`*Click* The chamber was empty.`)
-						}
+				});
+			}).catch(err => {
+				if (!allReacted) return message.channel.send('Enough people did not react to play.');
+				message.channel.send('Starting Game...');
+				var randomUsers = shuffle(users);
+				var playerCount = 0;
+				var chamber = [0, 0, 0, 0, 0, 0];
+				chamber[Math.floor((Math.random() * chamber.length))] = 1;
+				console.log(chamber);
+				message.channel.send('Gun has been loaded.');
+				message.channel.send(`<@${randomUsers[playerCount].id}> has the gun. You have 2 options. Try your luck on yourself, or try to try it on someone else. You have 10 seconds\n\`shoot myself\` or \`shoot {mentioned user}\``);
+				var collecter = new Discord.MessageCollector(message.channel, m => randomUsers[playerCount].id, { time: 10000 });
+				var doneMove = false;
+				collecter.on('collect', message => {
+					console.log(message);
+				});
+				collector.on('end', collected => {
+					console.log(collected);
+					if (!doneMove) {
+						message.channel.send(`<@${randomUsers}> you took too long, so someone shot you.`);
+						randomUsers.filter(e => e !== randomUsers);
 					}
-				} 
-			})
-			.catch((err) => {
-				message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
-				console.error(err);
+				});
+				if (randomUsers.length === 1) {
+					return message.channel.send(`<@${randomUsers[0].id}> has won the game.`);
+				}
+
+				var playerCount = 0;
+				var chamber = [0, 0, 0, 0, 0, 0];
+				chamber[Math.floor((Math.random() * chamber.length))] = 1;
+				message.channel.send('Gun has been loaded.');
+				message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
+					message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) &&
+						max: 1,
+						time: 30000,
+						erros: ['time']
+					})
+					.then((collected) => {
+						// console.log(collected);
+						var response = collected.first().content.split(' ');
+						var author = collected.first().author;
+						var done = false;
+						if (response[1].toLowerCase() === 'myself') {
+							done = true;
+							if (chamber[0] === 1) {
+								message.channel.send('*Boom* You died, the chamber had a bullet in it.');
+								randomUserId.splice(randomUserId.indexOf(author.id), 1);
+								randomUser.splice(randomUserId.indexOf(author.id), 1);
+							} else {
+								message.channel.send('*Click* You survived, the bullet was not in the chamber.')
+							}
+						} else {
+							// console.log(collected.first().mentions.users.first().id);
+							var deadPerson = collected.first().mentions.users.first();
+							if (deadPerson === undefined) {
+								message.channel.send(`You didn't provide a valid user.`)
+							} else {
+								done = true;
+								if (chamber[0] === 1) {
+									message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
+									randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
+									randomUser.splice(randomUserId.indexOf(deadPerson.id), 1);
+								}
+								if (chamber[0] === 0) {
+									message.channel.send(`*Click* The chamber was empty.`)
+								}
+							}
+						}
+					})
+					.catch((err) => {
+						message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
+						console.error(err);
+					});
+				});
 			});
 		});
   }
