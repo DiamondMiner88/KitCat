@@ -14,8 +14,8 @@ function embedData (src, podtitle) {
 function getSubpodContent (pod) {
     const subpodContent = pod.subpods.map(subpod => {
         embeddedimg.push(new embedData(subpod.img.src, pod.title));
-        console.log(embeddedimg[embeddedimg.length-1].podtitle);
-        console.log(embeddedimg[embeddedimg.length-1].imgsrc);
+        // console.log(embeddedimg[embeddedimg.length-1].podtitle);
+        // console.log(embeddedimg[embeddedimg.length-1].imgsrc);
     });
     return embeddedimg[embeddedimg.length-1];
 }
@@ -39,7 +39,7 @@ module.exports = {
   execute(client, message, args) {
     var query = "";
     for(var i = 0; i < args.length; i++) {
-      console.log(args[i].toString());
+      // console.log(args[i].toString());
       query = query.concat(args[i].toString()+' ');
     }
     waApi.getFull(query).then((queryresult) => {
