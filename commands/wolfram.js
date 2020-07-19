@@ -3,7 +3,8 @@ const pfx = config.prefix;
 const categories = require("./_CATEGORIES.js");
 const WolframAlphaAPI = require('wolfram-alpha-api');
 const waApi = WolframAlphaAPI('3K5593-UJEWH5VHRJ'); //I can just turn this into an environmental variable later. Im gonna need a gitignore on .env files
-var wolframEmbed;
+const Discord = require('discord.js');
+var wolframEmbed = new Array();
 var embeddedimg = new Array();
 
 function embedData (src, podtitle) {
@@ -15,7 +16,6 @@ function getSubpodContent (pod) {
         embeddedimg.push(new embedData(subpod.img.src, pod.title));
         console.log(embeddedimg[embeddedimg.length-1].podtitle);
         console.log(embeddedimg[embeddedimg.length-1].imgsrc);
-
     });
     return embeddedimg[embeddedimg.length-1];
 }
@@ -27,24 +27,25 @@ function getPodContent (queryresult) {
     output = pods.map((pod) => {
         return getSubpodContent(pod);
     }).join('\n');
-    console.log(output);
     return output;
 }
 
 module.exports = {
-  command: "wolframalpha",
+  command: "wolfram",
   category: categories.utils,
   help_name: `oof wolfram [query]`,
   help_description: `Ask a mathematical or analytical question you want answered`,
 
   execute(client, message, args) {
-    var content;
-    var inlinefields;
-    var query = args.toString().toLower();
+    var query = "";
+    for(var i = 0; i < args.length; i++) {
+      console.log(args[i].toString());
+      query = query.concat(args[i].toString()+' ');
+    }
     waApi.getFull(query).then((queryresult) => {
         content = getPodContent(queryresult);
-        wolframEmbed = {
-          color: 0x0099ff,
+        wolframEmbed.push ({
+          color: 0xec0000,
           title: 'Wolfram|Alpha Computing',
           description: 'Natural language query results: ',
           thumbnail: {
@@ -54,28 +55,40 @@ module.exports = {
             {
               name: 'Your Prompt/Query:',
               value: query,
-            },
-            {
-              name: '\u200b',
-              value: '\u200b',
-              inline: false
-            },
-          ],
-          image: {
-            url: 'https://i.imgur.com/wSTFkRM.png',
-          },
-          timestamp: new Date(),
-          footer: {
-            text: 'Info provided by Wolfram|Alpha API',
-            icon_url: 'https://www.wolframalpha.com/_next/static/images/share_3G6HuGr6.png',
-          },
-       };
-       for(var i = 0; i < embeddedimg.length; i++) {
+            }
+          ]
+       });
+       for(var i = 1; i < embeddedimg.length; i++) {
          let nm = embeddedimg[i].podtitle;
          let val = embeddedimg[i].imgsrc;
-         wolframEmbed.fields.push({name: `${nm}`, image: `{url: ${val}}`, inline:true});
+         let fullEmbed = {
+           color: 0xec0000,
+           image: {
+            url: val
+           },
+           fields: [
+            {
+              name: nm,
+              value: 'In visual format:'
+            }
+           ],
+         };
+         wolframEmbed.push(fullEmbed);
        }
-       message.channel.send({embed:wolframEmbed});
+       wolframEmbed.push({	
+         timestamp: new Date(),
+         footer: {
+          text: 'Data provided by Wolfram Alpha API',
+          icon_url: 'https://www.wolframalpha.com/_next/static/images/share_3G6HuGr6.png',
+         }
+       });
+       for(var i = 0; i < wolframEmbed.length; i++) {
+         message.channel.send({embed:wolframEmbed[i]});
+       }
     }).catch(console.error); 
+    wolframEmbed = [];
+    embeddedimg = [];
+    wolframEmbed.length = 0;
+    embeddedimg.length = 0;
   }
 }
