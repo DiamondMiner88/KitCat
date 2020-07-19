@@ -3,13 +3,25 @@ const pfx = config.prefix;
 const categories = require("./_CATEGORIES.js");
 const Discord = require("discord.js");
 
-// guildID: gameData
+
+/**
+ * The current running games. If one has ended, the data is set to undefined
+ * {@Snowflake} guildID : {JSON object} game data
+ */
 var games = {};
 
-async function updateBoard(channel, isGameOver) {
+// TODO: redo the display, possible using an edited image
+/**
+ * updateBoard - Displays the current board
+ *
+ * @param  {Channel} channel Channel the game is running in
+ * @param  {Boolean} gameOver If the game is over, prints stats and final board, otherwise just prints board and current score
+ * @returns {}
+ */
+async function updateBoard(channel, gameOver) {
   const data = games[channel.guild.id];
   var board = ``;
-  if (!isGameOver) board += `Score: ${data.score}\n`;
+  if (!gameOver) board += `Score: ${data.score}\n`;
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
       if (data.tiles[x + "," + y] === undefined) board += "- ";
@@ -18,7 +30,7 @@ async function updateBoard(channel, isGameOver) {
     board += "\n";
   }
   var m = await channel.send(board);
-  if (!isGameOver) {
+  if (!gameOver) {
     games[channel.guild.id].lastDisplayMsg = m;
     m.react('🔼');
     m.react('🔽');
@@ -31,12 +43,28 @@ async function updateBoard(channel, isGameOver) {
   }
 }
 
+
+/**
+ * addNewTile - Adds a new tile to the board. 90% it is a 2, 10% it is a 4, only places in empty tiles. If no empty tiles exist, will do nothing.
+ *
+ * @param  {String} guildID Guild ID of the guild that contains the game you want to add a tile to
+ * @returns {void}
+ */
 function addNewTile(guildID) {
   var emptyTileNames = Object.keys(games[guildID].tiles).filter(tileName => games[guildID].tiles[tileName] === undefined);
+  if (emptyTileNames.length === 0) return;
   const tileIndex = Math.floor(Math.random() * emptyTileNames.length)
   games[guildID].tiles[emptyTileNames[tileIndex]] = Math.random() < 0.9 ? 2 : 4;
 }
 
+
+/**
+ * newGame - description
+ *
+ * @param  {Snowflake} channel Channel the command was executed in
+ * @param  {Number} size Size of the board. ie. 4 = a 4x4 board
+ * @returns {void}
+ */
 function newGame(channel, size) {
   const data = {
     size: size,
@@ -56,8 +84,15 @@ function newGame(channel, size) {
   updateBoard(channel, false);
 }
 
-function isGameOver(channel) {
-  const data = games[channel.guild.id];
+
+/**
+ * isGameOver - Checks if you cannot move anymore
+ *
+ * @param  {Guild} guild Guild that contains the game
+ * @returns {Boolean} True if you cannot move, False otherwise
+ */
+function isGameOver(guild) {
+  const data = games[guild.id];
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
       const curTile = data.tiles[x + "," + y];
@@ -71,6 +106,14 @@ function isGameOver(channel) {
   return true;
 }
 
+
+/**
+ * moveTiles - Moves/Merges the tiles like in the real game
+ *
+ * @param  {Channel} channel The channel the game was started in
+ * @param  {type} direction One of these: 🔼🔽◀️▶️
+ * @returns {void}
+ */
 function moveTiles(channel, direction) {
   var data = games[channel.guild.id];
   var mergedTiles = [];
@@ -79,7 +122,7 @@ function moveTiles(channel, direction) {
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
-            //if tile is empty, skip it
+            // if tile is empty, skip it
             if (data.tiles[x + "," + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (data.tiles[x + "," + y] === data.tiles[x + "," + (y - 1)] && !mergedTiles.includes(x + "," + y)) {
@@ -106,7 +149,7 @@ function moveTiles(channel, direction) {
       for (i = 0; i < 3; i++) {
         for (y = data.size - 1; y >= 0; y--) {
           for (x = 0; x < data.size; x++) {
-            //if tile is empty, skip it
+            // if tile is empty, skip it
             if (data.tiles[x + "," + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (data.tiles[x + "," + y] === data.tiles[x + "," + (y + 1)] && !mergedTiles.includes(x + "," + y)) {
@@ -133,7 +176,7 @@ function moveTiles(channel, direction) {
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
-            //if tile is empty, skip it
+            // if tile is empty, skip it
             if (data.tiles[x + "," + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (data.tiles[x + "," + y] === data.tiles[(x - 1) + "," + y] && !mergedTiles.includes(x + "," + y)) {
@@ -160,7 +203,7 @@ function moveTiles(channel, direction) {
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = data.size - 1; x >= 0; x--) {
-            //if tile is empty, skip it
+            // if tile is empty, skip it
             if (data.tiles[x + "," + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (data.tiles[x + "," + y] === data.tiles[(x + 1) + "," + y] && !mergedTiles.includes(x + "," + y)) {
@@ -188,7 +231,7 @@ function moveTiles(channel, direction) {
     data.moves++;
     games[channel.guild.id] = data;
     addNewTile(channel.guild.id);
-    updateBoard(channel, isGameOver(channel));
+    updateBoard(channel, isGameOver(channel.guild));
   }
 }
 
@@ -229,6 +272,15 @@ module.exports = {
     }
   },
 
+
+  /**
+   * onReactionAdded - Should be called every time the {@Client} gets a onReactionAdded event called
+   * Then calls {@moveTiles} if message matches and the user that added reaction isn't a bot
+   *
+   * @param  {MessageReaction} messageReaction The provided message reaction
+   * @param  {User} user User that added the reaction
+   * @returns {void}
+   */
   onReactionAdded(messageReaction, user) {
     if (user.bot) return;
     if (games[messageReaction.message.guild.id] === undefined) return;

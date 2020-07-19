@@ -1,4 +1,3 @@
-
 const config = require("../config.json");
 const pfx = config.prefix;
 const categories = require("./_CATEGORIES.js");
@@ -10,5 +9,6 @@ module.exports = {
   help_description: `help description`,
 
   execute(client, message, args) {
+
   }
 }

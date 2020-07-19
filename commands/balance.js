@@ -7,6 +7,13 @@ var {
 const currency = require("../oofcoin.js");
 const Discord = require("discord.js");
 
+
+/**
+ * timestampToStr - Makes a Unix timestamp into a readable date and time
+ *
+ * @param  {Number} UNIX_timestamp
+ * @returns {String}
+ */
 function timestampToStr(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -26,6 +33,13 @@ module.exports = {
   help_name: `Oof coin Balance`,
   help_description: `Gets the your or the mention user's global balance of oof coin.\n\`${pfx}balance {optional: mention | username#discriminator}\``,
 
+
+  /**
+   * execute - Gets the user's bank balance that is in args[0]
+   *
+   * @param  {String} args [{Mention | User tag}]
+   * @returns {void}
+   */
   execute(client, message, args) {
     let target_user = message.mentions.users.first();
     if (!args[0]) target_user = message.author;
