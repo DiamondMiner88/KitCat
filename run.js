@@ -9,7 +9,7 @@ function startBot() {
   bot.stderr.on('data', data => console.error(data.toString()));
 
   bot.on('close', code => {
-    if (code === 5001) startBot();
+    if (code === 2) startBot();
   });
 }
 

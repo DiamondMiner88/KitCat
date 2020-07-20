@@ -12,7 +12,7 @@ module.exports = {
       const command = args.shift();
       switch (command) {
         case "restart":
-          process.exit(5001);
+          process.exit(2);
           break;
         case "exit":
           process.exit(0);
@@ -32,7 +32,7 @@ module.exports = {
             }, () => {
               npm.commands.install([], function(err, d) {
                 if (err) message.channel.send(err + "\nAborting restart.");
-                else process.exit(5001);
+                else process.exit(2);
               });
             });
           });
