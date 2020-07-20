@@ -10,7 +10,7 @@ module.exports = {
 
   async execute(client, message, args) {
     var channel = message.member.voice.channel;
-    if (message.member.voice.channel) {
+    if (message.member.voice.channel && message.member.roles.some(role => role.name === 'DJ')) {
       if (args.join(" ").length > 200) {
         message.channel.send("Text exceeds 200 character limit.");
         return;
