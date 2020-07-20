@@ -3,7 +3,7 @@ const { spawn } = require('child_process');
 var bot;
 
 function startBot() {
-  bot = spawn('node', ["index.js"]);
+  bot = spawn('node', ["bot.js"]);
 
   bot.stdout.on('data', data => console.log(data.toString()));
   bot.stderr.on('data', data => console.error(data.toString()));
