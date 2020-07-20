@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 module.exports = {
   command: "roulette",
   category: categories.games,
-  help_name: `:gun: Russian Roulette`,
+  help_name: `:gun: Russian Roulette (STILL WORK IN PROGESS)`,
   help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
 
   execute(client, message, args) {
