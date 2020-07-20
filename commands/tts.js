@@ -10,7 +10,7 @@ module.exports = {
 
   async execute(client, message, args) {
     var channel = message.member.voice.channel;
-    if (message.member.voice.channel && message.member.roles.some(role => role.name === 'DJ')) {
+    if (message.member.voice.channel && message.member.roles.cache.some(role => role.name === 'DJ')) {
       if (args.join(" ").length > 200) {
         message.channel.send("Text exceeds 200 character limit.");
         return;
@@ -42,7 +42,7 @@ module.exports = {
       */
     }
     else {
-      message.channel.send("You aren't in a voice channel!");
+      message.channel.send("Either you aren't in a voice channel, or you ain't a DJ");
     }
   }
 }
