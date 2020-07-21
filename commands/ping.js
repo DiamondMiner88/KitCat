@@ -8,7 +8,6 @@ module.exports = {
   help_name: `Ping`,
   help_description: `Gets my latency and API latency.\n\`${pfx}ping\``,
 
-
   /**
    * Calculates ping between sending a message and editing it, giving a round-trip latency.
    * The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)

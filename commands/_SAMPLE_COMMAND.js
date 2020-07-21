@@ -7,6 +7,7 @@ module.exports = {
   category: categories.utils,
   help_name: `help name`,
   help_description: `help description`,
+  unlisted: false,
 
   execute(client, message, args) {
 

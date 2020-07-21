@@ -1,20 +1,18 @@
 const config = require("./config.json");
 const pfx = config.prefix;
-const fs = require('fs');
 const path = require('path');
 const Discord = require("discord.js");
+
 var client = new Discord.Client();
-const {
-  imageHash
-} = require('image-hash');
+
+require('./db.js');
 
 if (process.platform === "win32") {
   var rl = require("readline").createInterface({
     input: process.stdin,
     output: process.stdout
   });
-
-  rl.on("SIGINT", function () {
+  rl.on("SIGINT", function() {
     process.emit("SIGINT");
   });
 }
@@ -23,10 +21,10 @@ process.on("SIGINT", function() {
   client.destroy();
   process.exit();
 });
-require('./db.js');
+
 
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
+const commandFiles = require("fs").readdirSync(path.join(__dirname, '/commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   if (file[0] == "_") continue;
   const command = require(path.join(__dirname, './commands', file));
@@ -36,9 +34,6 @@ for (const file of commandFiles) {
 client.on("ready", () => {
   console.log(`Bot is ready.`);
   client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
-  setInterval(() => {
-    require("./oofcoin.js").interest();
-  }, 8.64e+7); // 8.64e+7 is 1 day in Milliseconds
 });
 
 client.on("guildMemberRemove", member => {
@@ -59,7 +54,7 @@ client.on("message", async message => {
   if (message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)) url = message.content;
   if (url !== undefined) {
     if (url.toLowerCase().indexOf("png", url.length - 3) !== -1) {
-      imageHash(url, 16, true, (error, hash) => {
+      require('image-hash').imageHash(url, 16, true, (error, hash) => {
         if (error) throw error;
         require("./db.js").db.get("SELECT * FROM image_blacklist WHERE hash=?", [hash], (err, result) => {
           if (err) console.log("Error trying get data: " + err);
