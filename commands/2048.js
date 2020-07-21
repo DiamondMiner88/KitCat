@@ -1,8 +1,5 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
+const pfx = require("../config/config.json").prefix;
 const Discord = require("discord.js");
-
 
 /**
  * The current running games. If one has ended, the data is set to undefined
@@ -237,7 +234,7 @@ function moveTiles(channel, direction) {
 
 module.exports = {
   command: "2048",
-  category: categories.games,
+  category: require("./_CATEGORIES.js").games,
   help_name: `:1234: The game 2048`,
   help_description: `Play 2048 in Discord\n\`${pfx}2048 help\``,
   guildOnly: true,

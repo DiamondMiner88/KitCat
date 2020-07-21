@@ -1,4 +1,4 @@
-const pfx = require("../config.json").prefix;
+const pfx = require("../config/config.json").prefix;
 
 /**
  * Are used in the "category" variable in commands.

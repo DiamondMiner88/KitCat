@@ -1,5 +1,4 @@
-const config = require("../config.json");
-const pfx = config.prefix;
+const pfx = require("../config/config.json").prefix;
 const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
@@ -23,7 +22,7 @@ module.exports = {
         var desc = category.help_description !== "" ? category.help_description + "\n" + category.usage : category.usage;
         embed.addField(category.help_name, desc);
       }
-			embed.addField("Issues", "See an issue? Report it [here](https://github.com/DiamondMiner88/despacito-spider/labels/Bot%20Error).")
+			embed.addField("Issues", `See an issue? Report it [here](${require("../package.json").bugs.url}).`)
       message.channel.send(embed);
     }
     else if (!categories[args[0]]) {

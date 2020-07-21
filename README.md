@@ -13,14 +13,12 @@ Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/
 - [BerkM125](https://github.com/BerkM125) - _Dev_
 
 ## TODO
-- [ ] move `/config.json` to `/config/config.json` and adjust paths for all files]
+- [ ] Commands: roulette, purgechannel, claim, text, wolfram
 - [ ] 2048 - high score tracker
 - [ ] 2048 - combine tiles into an image to represent the grid and send that to the channel instead
-- [ ] add guild-specific settings
-- [ ] Fix errors thrown in roulette.js
- - [ ] specific command disallow (?)
- - [ ] custom prefix for guilds (cache prefix for guild upon one executing one command to lower sql selects?)
- - add more here
+- [ ] add guild-specific settings as table
+ - Owner can disable certain commands ***Command settings (not the guild settings) are done, time for the interface/api***
+ - Additional prefixes
 
 ## License
 This project is licensed under the [GNU Affero General Public License v3.0](https://choosealicense.com/licenses/agpl-3.0/). See [LICENSE](https://github.com/DiamondMiner88/despacito-spider/blob/master/LICENSE) for details.

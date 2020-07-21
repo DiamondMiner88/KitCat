@@ -1,11 +1,10 @@
-const config = require("../config.json");
+const config = require("../config/config.json");
 const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
 module.exports = {
   command: "roulette",
-  category: categories.games,
+  category: require("./_CATEGORIES.js").games,
   help_name: `:gun: Russian Roulette`,
   help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
   guildOnly: true,
@@ -141,7 +140,7 @@ function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bull
 			})
 			.catch((err) => {
 				if (!playedTurn){
-					message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`); 
+					message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
 					randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
 					randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
 				}

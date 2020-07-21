@@ -1,6 +1,5 @@
-const config = require("../config.json");
+const config = require("../config/config.json");
 const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
 const colors = [
@@ -30,7 +29,7 @@ const help = new Discord.MessageEmbed()
 
 module.exports = {
   command: "text",
-  category: categories.utils,
+  category: require("./_CATEGORIES.js").utils,
   help_name: `Text`,
   help_description: `Changes your text. Run \`${pfx}text help\``,
   guildOnly: false, // TODO: i have no idea what this command does, so edit this later

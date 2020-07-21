@@ -1,12 +1,10 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
+const pfx = require("../config/config.json").prefix;
 
 module.exports = {
   command: "meme",
-  category: categories.fun,
+  category: require("./_CATEGORIES.js").fun,
   help_name: `:joy: Memes`,
-  help_description: `Get a meme from r/${config.memes_subreddit}\n\`${pfx}meme\``,
+  help_description: `Get a meme from r/memes\n\`${pfx}meme\``,
   guildOnly: false,
   unlisted: false,
 

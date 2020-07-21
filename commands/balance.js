@@ -1,9 +1,5 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
-var {
-  db
-} = require("../db.js");
+const pfx = require("../config/config.json").prefix;
+var db = require("../db.js").db;
 const currency = require("../oofcoin.js");
 const Discord = require("discord.js");
 
@@ -29,7 +25,7 @@ function timestampToStr(UNIX_timestamp) {
 
 module.exports = {
   command: "balance",
-  category: categories.oofcoin,
+  category: require("./_CATEGORIES.js").oofcoin,
   help_name: `Oof coin Balance`,
   help_description: `Gets the your or the mention user's global balance of oof coin.\n\`${pfx}balance {optional: mention | username#discriminator}\``,
   guildOnly: false,
