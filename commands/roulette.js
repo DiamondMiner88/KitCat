@@ -90,7 +90,7 @@ function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bull
 					if (chamber[bulletCount] === 1) {
 						message.channel.send('*Boom* You died, the chamber had a bullet in it.');
 						randomUserId.splice(randomUserId.indexOf(author.id), 1);
-						randomUsers.splice(randomUserId.indexOf(author.id), 1);
+						randomUsers.splice(randomUserId.indexOf(author), 1);
 						if (randomUsers.length != 1) {
 							message.channel.send('Added a bullet and spinning the revolver.');
 							chamber = shuffle(chamber);
@@ -112,7 +112,7 @@ function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bull
 						if (chamber[bulletCount] === 1) {
 							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
 							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
-							randomUsers.splice(randomUserId.indexOf(deadPerson.id), 1);
+							randomUsers.splice(randomUserId.indexOf(deadPerson), 1);
 							if (randomUsers.length != 1) {
 								message.channel.send('Added a bullet and spinning the revolver.');
 								chamber = shuffle(chamber);
