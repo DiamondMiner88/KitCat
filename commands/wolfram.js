@@ -3,9 +3,10 @@ const pfx = config.prefix;
 const categories = require("./_CATEGORIES.js");
 const WolframAlphaAPI = require('wolfram-alpha-api');
 const waApi = WolframAlphaAPI('3K5593-UJEWH5VHRJ'); //I can just turn this into an environmental variable later. Im gonna need a gitignore on .env files
-const Discord = require('discord.js');
+const fs = require('fs');
 var wolframEmbed = new Array();
 var embedded = new Array();
+var imgresultslimit;
 
 function embedData (src, podtitle) {
     this.imgsrc = src;
@@ -33,6 +34,15 @@ function getPodContent (queryresult, restype) {
     return output;
 }
 
+function setResultsLimit () {
+  var fsjson;
+  fs.readFile(__dirname+'/botsettings.json', function(err, data) {
+    if(err) throw err;
+    fsjson = JSON.parse(data);
+    imgresultslimit = parseInt(fsjson["wolfram-image-limit"]);
+  });
+}
+
 module.exports = {
   command: "wolfram",
   category: categories.utils,
@@ -43,6 +53,7 @@ module.exports = {
     var query = "";
     var textembed = new Array();
     var gbType = 'text';
+    setResultsLimit();
     for(var i = 0; i < args.length; i++) {
       //console.log(args[i].toString());
       query = query.concat(args[i].toString()+' ');
@@ -67,7 +78,7 @@ module.exports = {
           }
         ]
      });
-     if(embedded.length < 7) {
+     if(embedded.length < imgresultslimit) {
         gbType = 'img';
         embedded = [];
         embedded.length = 0;
