@@ -8,7 +8,8 @@ module.exports = {
   category: categories.utils,
   help_name: `Avatar`,
   help_description: `Get avatar of the user after the command. Can be a mention or a tag.\n\`${pfx}avatar {mention | user tag}\``,
-
+  guildOnly: false,
+  unlisted: false,
 
   /**
    * execute - Gets the avatar of the user that's in args[0]

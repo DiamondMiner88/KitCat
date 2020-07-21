@@ -240,6 +240,8 @@ module.exports = {
   category: categories.games,
   help_name: `:1234: The game 2048`,
   help_description: `Play 2048 in Discord\n\`${pfx}2048 help\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
     switch (args[0]) {

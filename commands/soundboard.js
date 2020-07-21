@@ -19,6 +19,8 @@ module.exports = {
   category: categories.fun,
   help_name: `:loud_sound: Soundboard`,
   help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`${pfx}soundboard help\` for help with audio clips`,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
     if (args[0] === "help") {

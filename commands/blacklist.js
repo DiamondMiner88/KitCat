@@ -15,6 +15,8 @@ module.exports = {
   category: categories.moderation,
   help_name: `Blacklist commands`,
   help_description: `For more commands on the blacklist do\n\`${pfx}blacklist help\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
     if (!message.member.hasPermission("MANAGE_MESSAGES")) {

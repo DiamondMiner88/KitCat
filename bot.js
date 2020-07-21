@@ -49,6 +49,7 @@ client.on("messageReactionAdd", (messageReaction, user) => {
 })
 
 client.on("message", async message => {
+  // Checks for blacklisted image attachments or cdn urls
   var url = undefined;
   if (message.attachments.size > 0) url = message.attachments.first().url;
   if (message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)) url = message.content;
@@ -68,14 +69,13 @@ client.on("message", async message => {
 
   if (message.author.bot) return;
 
-  require("./reddit.js").linkImagesFromPosts(message);
-
   if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
-  const args = message.content.slice(pfx.length).trim().split(/ +/g); // args is an array of text after the command that were seperated by a whitespace
+  const args = message.content.slice(pfx.length).trim().split(" "); // args is an array of text after the command that were seperated by a whitespace
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix
 
   const command = client.commands.get(commandText);
-  if (command && command.command === commandText) command.execute(client, message, args);
+  if (command && command.guildOnly && message.channel.type !== 'text') message.channel.send("This command only works in Guild Text Channels!");
+  else if (command && command.command === commandText) command.execute(client, message, args);
 });
 
 client.login(config.token);

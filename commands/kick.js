@@ -8,12 +8,12 @@ module.exports = {
   category: categories.moderation,
   help_name: `:leg: Kick`,
   help_description: `Used to kick members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
-    if (!message.member.hasPermission("KICK_MEMBERS")) {
-      message.channel.send("You do not have the permission to kick members.");
-      return;
-    }
+    if (!message.member.hasPermission("KICK_MEMBERS")) return message.author.send("You do not have the permission to kick members.");
+    if (!args[0]) return message.channel.send("You did not mention a user to kick!");
 
     let target_user = message.mentions.users.first();
     if (!target_user) {

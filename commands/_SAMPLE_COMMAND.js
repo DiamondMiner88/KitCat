@@ -7,6 +7,7 @@ module.exports = {
   category: categories.utils,
   help_name: `help name`,
   help_description: `help description`,
+  guildOnly: false,
   unlisted: false,
 
   execute(client, message, args) {

@@ -25,7 +25,7 @@ const help = new Discord.MessageEmbed()
     .addField('Orange Text', 'Changes the color of your text to orange.', true)
     .addField('Red Text', 'Changes the color of your text to red.', true)
     */
-    // .addField('Green Text', `Changes the text you send to a green color`)    
+    // .addField('Green Text', `Changes the text you send to a green color`)
 ;
 
 module.exports = {
@@ -33,6 +33,8 @@ module.exports = {
   category: categories.utils,
   help_name: `Text`,
   help_description: `Changes your text. Run \`${pfx}text help\``,
+  guildOnly: false, // TODO: i have no idea what this command does, so edit this later
+  unlisted: false,
 
   execute(client, message, args) {
     if (args[0] === 'help') {
@@ -72,7 +74,7 @@ function caseFunction (message, text) {
         if (Math.random() >= 0.5) {
             output += text[char].toUpperCase()
         } else {
-            output += text[char].toLowerCase(); 
+            output += text[char].toLowerCase();
         }
     }
     output += `\n- ${message.author}`

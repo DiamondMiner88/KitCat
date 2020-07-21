@@ -4,17 +4,17 @@ const categories = require("./_CATEGORIES.js");
 const Discord = require('discord.js');
 
 module.exports = {
-  command: "ban",
+  command: "sban",
   category: categories.moderation,
   help_name: `:no_entry: Silent ban`,
   help_description: `Used to silently ban members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
     message.delete();
-    if (!message.member.hasPermission("BAN_MEMBERS")) {
-      message.author.send("You do not have the permission to ban members.");
-      return;
-    }
+    if (!message.member.hasPermission("BAN_MEMBERS")) return message.author.send("You do not have the permission to ban members.");
+    if (!args[0]) return message.author.send("You did not mention a user to ban!");
 
     let target_user = message.mentions.users.first();
     if (!target_user) {

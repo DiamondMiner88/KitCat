@@ -8,12 +8,12 @@ module.exports = {
   category: categories.moderation,
   help_name: `:no_entry: Ban`,
   help_description: `Used to ban members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
-    if (!message.member.hasPermission("BAN_MEMBERS")) {
-      message.channel.send("You do not have the permission to ban members.");
-      return;
-    }
+    if (!message.member.hasPermission("BAN_MEMBERS")) return message.author.send("You do not have the permission to ban members.");
+    if (!args[0]) return message.channel.send("You did not mention a user to ban!");
 
     let target_user = message.mentions.users.first();
     if (!target_user) {

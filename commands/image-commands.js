@@ -14,6 +14,8 @@ module.exports = {
   category: categories.fun,
   help_name: `:camera: Photo Commands`,
   help_description: `Run photo commands to make custom photos.\n\`${pfx}image help\``,
+  guildOnly: false,
+  unlisted: false,
 
   execute(client, message, args) {
     if (args.length === 0) {

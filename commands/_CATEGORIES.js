@@ -1,5 +1,8 @@
 const pfx = require("../config.json").prefix;
 
+/**
+ * Are used in the "category" variable in commands.
+ */
 module.exports = {
   moderation: {
     help_name: ":no_entry_sign: Moderation",
@@ -21,9 +24,9 @@ module.exports = {
     help_description: "",
     usage: `\`${pfx}help oofcoin\``
   },
-	games: {
-		help_name: ":game_die: Games",
-		help_description: "",
-		usage: `\`${pfx}help games\``
-	}
+  games: {
+    help_name: ":game_die: Games",
+    help_description: "",
+    usage: `\`${pfx}help games\``
+  }
 }
