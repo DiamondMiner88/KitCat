@@ -42,54 +42,12 @@ module.exports = {
 		for (var number in randomUsers) {
 			randomUserId.push(randomUsers[number].id);
 		}
-		var playing = true;
 		var playerCount = 0;
+		var bulletCount = 0;
 		var chamber = [0, 0, 0, 0, 0, 0];
 		chamber[Math.floor((Math.random() * chamber.length))] = 1;
-		message.channel.send('Gun has been loaded.');
-		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
-			message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) && 
-				max: 1,
-				time: 30000,
-				erros: ['time']
-			})
-			.then((collected) => {
-				if (randomUser.length === 1) return message.channel.send(`${randomUser[0]} won the game.`);
-				// console.log(collected);
-				var response = collected.first().content.split(' ');
-				var author = collected.first().author;
-				if (response[1].toLowerCase() === 'myself') {
-					done = true;
-					if (chamber[0] === 1) {
-						message.channel.send('*Boom* You died, the chamber had a bullet in it.');
-						randomUserId.splice(randomUserId.indexOf(author.id), 1);
-						randomUser.splice(randomUserId.indexOf(author.id), 1);
-					} else {
-						message.channel.send('*Click* You survived, the bullet was not in the chamber.')
-					}
-				} else {
-					// console.log(collected.first().mentions.users.first().id);
-					var deadPerson = collected.first().mentions.users.first();
-					if (deadPerson === undefined) {
-						message.channel.send(`You didn't provide a valid user.`)
-					} else {
-						done = true;
-						if (chamber[0] === 1) {
-							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
-							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
-							randomUser.splice(randomUserId.indexOf(deadPerson.id), 1);
-						}
-						if (chamber[0] === 0) {
-							message.channel.send(`*Click* The chamber was empty.`)
-						}
-					}
-				} 
-			})
-			.catch((err) => {
-				message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
-				console.error(err);
-			});
-		});
+		// chamber = shuffle(chamber);
+		playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
   }
 }
 
@@ -106,6 +64,77 @@ function shuffle(a) {
   }
   return a;
 }
+
+function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount) {
+	console.log(chamber);
+	console.log(bulletCount);
+	randomUsers.push(randomUsers[0]);
+	randomUsers.splice(0, 1);
+	randomUserId.push(randomUsers[0]);
+	var playedTurn = false;
+		if (randomUsers.length === 1) return message.channel.send(`${randomUsers[0]} won the game.`);
+		message.channel.send('Gun has been loaded.');
+		randomUserId.splice(0, 1);
+		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
+			message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) && 
+				max: 1,
+				time: 30000,
+				erros: ['time']
+			})
+			.then((collected) => {
+				// console.log(collected);
+				var response = collected.first().content.split(' ');
+				var author = collected.first().author;
+				if (response[1].toLowerCase() === 'myself' || collected.first().mentions.users.first() === randomUsers[playerCount]) {
+					done = true;
+					if (chamber[bulletCount] === 1) {
+						message.channel.send('*Boom* You died, the chamber had a bullet in it.');
+						randomUserId.splice(randomUserId.indexOf(author.id), 1);
+						randomUsers.splice(randomUserId.indexOf(author.id), 1);
+						if (randomUsers.length != 1) {
+							message.channel.send('Added a bullet and spinning the revolver.');
+							chamber = shuffle(chamber);
+						}
+					} else {
+						message.channel.send('*Click* You survived, the bullet was not in the chamber.')
+					}
+					playedTurn = true;
+					bulletCount += 1;
+					playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
+					return;
+				} else {
+					// console.log(collected.first().mentions.users.first().id);
+					var deadPerson = collected.first().mentions.users.first();
+					if (deadPerson === undefined) {
+						message.channel.send(`You didn't provide a valid user.`)
+					} else {
+						done = true;
+						if (chamber[bulletCount] === 1) {
+							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
+							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
+							randomUsers.splice(randomUserId.indexOf(deadPerson.id), 1);
+							if (randomUsers.length != 1) {
+								message.channel.send('Added a bullet and spinning the revolver.');
+								chamber = shuffle(chamber);
+							}
+						}
+						if (chamber[bulletCount] === 0) {
+							message.channel.send(`*Click* The chamber was empty.`)
+						}
+						playedTrun = true;
+						bulletCount += 1;
+						playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
+						return;
+					}
+				} 
+			})
+			.catch((err) => {
+				if (!playedTurn) message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
+				console.error(err);
+			});
+		});
+}
+
 /*
 while (playing) {
 	if (randomUsers.length === 1) {
