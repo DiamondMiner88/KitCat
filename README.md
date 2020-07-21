@@ -17,6 +17,7 @@ Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/
 - [ ] 2048 - high score tracker
 - [ ] 2048 - combine tiles into an image to represent the grid and send that to the channel instead
 - [ ] add guild-specific settings
+- [ ] Fix errors thrown in roulette.js
  - [ ] specific command disallow (?)
  - [ ] custom prefix for guilds (cache prefix for guild upon one executing one command to lower sql selects?)
  - add more here
