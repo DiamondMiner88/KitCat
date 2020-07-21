@@ -8,6 +8,8 @@ module.exports = {
   category: categories.games,
   help_name: `:gun: Russian Roulette`,
   help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
+  guildOnly: true,
+  unlisted: false,
 
   execute(client, message, args) {
 		// console.log(message.mentions.members.first(message.mentions.members.size));
@@ -48,7 +50,7 @@ module.exports = {
 		chamber[Math.floor((Math.random() * chamber.length))] = 1;
 		message.channel.send('Gun has been loaded.');
 		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
-			message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) && 
+			message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) &&
 				max: 1,
 				time: 30000,
 				erros: ['time']
@@ -83,7 +85,7 @@ module.exports = {
 							message.channel.send(`*Click* The chamber was empty.`)
 						}
 					}
-				} 
+				}
 			})
 			.catch((err) => {
 				message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);

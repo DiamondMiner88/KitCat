@@ -7,6 +7,8 @@ module.exports = {
   category: categories.utils,
   help_name: `:robot: TTS`,
   help_description: `Joins VC and says what you want it to say!\n\`${pfx}tts {text}\``,
+  guildOnly: true,
+  unlisted: false,
 
   async execute(client, message, args) {
     var channel = message.member.voice.channel;

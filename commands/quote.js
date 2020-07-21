@@ -8,6 +8,8 @@ module.exports = {
   category: categories.fun,
   help_name: `:innocent: Inspirational Quote`,
   help_description: `Gives an inspirational quote!\n\`${pfx}quote\``,
+  guildOnly: false,
+  unlisted: false,
 
   async execute(client, message, args) {
     // https://github.com/lukePeavey/quotable#readme

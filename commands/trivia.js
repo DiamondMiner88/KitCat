@@ -7,19 +7,12 @@ const {
   ReactionCollector
 } = require('discord.js')
 const decode = require('decode-html');
+const currency = require("../oofcoin.js");
+
 var {
   db
 } = require("../db.js");
-const currency = require("../oofcoin.js");
-
 const entities = new Entities();
-
-/*
-easy questions give you 1 coin
-medium give 2 take away 1 if wrong
-hard give 4 take away 3 if wrong
-*/
-
 // https://opentdb.com/api_config.php
 const categories = {
   'any': 'any',
@@ -48,20 +41,17 @@ const categories = {
   'entertainment:japaneseanime&manga': 31,
   'entertainment:cartoon&animations': 32
 }
-
 const selectedDifficulty = {
   'any': 'any',
   'easy': 'easy',
   'medium': 'medium',
   'hard': 'hard'
 }
-
 const selectedType = {
   'any': 'any',
   'multiplechoice': 'multiple',
   'truefalse': 'boolean'
 }
-
 const triviaHelp = new Discord.MessageEmbed()
   .setColor('#00008B')
   .setTitle('Trivia Help')
@@ -70,12 +60,10 @@ const triviaHelp = new Discord.MessageEmbed()
   .addField('Type of Questions', '`Any`, `Multiple Choice`, `True False`')
   // .addField('Earn Money', '`Yes`, `No` (No by default)')
   .addField('Ussage', `\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\` or run \`${pfx}trivia\` for any category, any difficulty, and any type of question.`);;
-
 const boolQuestionFilterArray = [
   '🇹',
   '🇫'
 ]
-
 const multipleQuestionFilterArray = [
   '1️⃣',
   '2️⃣',
@@ -83,16 +71,14 @@ const multipleQuestionFilterArray = [
   '4️⃣'
 ]
 
-const decodeHtmlCharCodes = str =>
-  str.replace(/(&#(\d+);)/g, (match, capture, charCode) =>
-    String.fromCharCode(charCode));
-
 module.exports = {
   command: "trivia",
   category: require("./_CATEGORIES.js").fun,
   help_name: `:question: Trivia`,
   help_description: `Asks a trivia question!\n\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\`. If you get the question right, you earn oof coins, if you get it wrong, you loose oof coins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
-  // Llanfair&shy;pwllgwyngyll&shy;gogery&shy;chwyrn&shy;drobwll&shy;llan&shy;tysilio&shy;gogo&shy;goch is located on which Welsh island?
+  guildOnly: false,
+  unlisted: false,
+
   execute(client, message, args) {
     currency.checkForProfile(message.author);
     if (args[0] === "help") {

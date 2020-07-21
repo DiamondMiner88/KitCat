@@ -7,6 +7,8 @@ module.exports = {
   category: categories.fun,
   help_name: `:joy: Memes`,
   help_description: `Get a meme from r/${config.memes_subreddit}\n\`${pfx}meme\``,
+  guildOnly: false,
+  unlisted: false,
 
   execute(client, message, args) {
     require("../reddit.js").getTopPost(message, "memes");

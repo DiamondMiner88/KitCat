@@ -8,7 +8,8 @@ module.exports = {
   category: categories.fun,
   help_name: `:8ball: 8Ball`,
   help_description: `Ask it a question, and it will give you an answer.\n\`${pfx}8ball {question}\``,
-
+  guildOnly: false,
+  unlisted: false,
 
   /**
    * execute - Gets random string from /config/8ball.json and sends message

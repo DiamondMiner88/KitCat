@@ -8,6 +8,8 @@ module.exports = {
   category: categories.utils,
   help_name: `Help`,
   help_description: `What you're looking at right now.\n\`${pfx}help\``,
+  guildOnly: false,
+  unlisted: false,
 
   execute(client, message, args) {
     if (args.length === 0) {

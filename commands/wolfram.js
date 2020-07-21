@@ -15,7 +15,7 @@ function getSubpodContent (pod, restype) {
     const subpodContent = pod.subpods.map(subpod => {
         if(restype.includes('img'))
           embedded.push(new embedData(subpod.img.src, pod.title));
-        else if(restype.includes('text')) 
+        else if(restype.includes('text'))
           embedded.push(new embedData(subpod.plaintext, pod.title));
     });
     return embedded[embedded.length-1];
@@ -38,6 +38,8 @@ module.exports = {
   category: categories.utils,
   help_name: `oof wolfram [query]`,
   help_description: `Ask a mathematical or analytical question you want answered`,
+  guildOnly: false,
+  unlisted: false,
 
   execute(client, message, args) {
     var query = "";
@@ -76,11 +78,11 @@ module.exports = {
      for(var i = 1; i < embedded.length; i++) {
       let nm = embedded[i].podtitle;
       if(!nm.includes('line')){
-       let val = embedded[i].imgsrc; 
+       let val = embedded[i].imgsrc;
        if(val === '') {
          val = '\u200b';
          nm = val;
-       }  
+       }
        let fieldJSON = {
          name: nm,
          value: val
@@ -119,7 +121,7 @@ module.exports = {
          if(val === '') {
           val = '\u200b';
           nm = val;
-         }  
+         }
          let fullEmbed = {
            color: 0xec0000,
            image: {
@@ -134,7 +136,7 @@ module.exports = {
          };
          wolframEmbed.push(fullEmbed);
        }
-       wolframEmbed.push({	
+       wolframEmbed.push({
          timestamp: new Date(),
          footer: {
           text: 'Data provided by Wolfram Alpha API',

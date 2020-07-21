@@ -5,6 +5,7 @@ const { spawn } = require('child_process');
 
 module.exports = {
   command: "dev",
+  guildOnly: false,
   unlisted: true,
 
   async execute(client, message, args) {

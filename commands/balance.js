@@ -32,7 +32,8 @@ module.exports = {
   category: categories.oofcoin,
   help_name: `Oof coin Balance`,
   help_description: `Gets the your or the mention user's global balance of oof coin.\n\`${pfx}balance {optional: mention | username#discriminator}\``,
-
+  guildOnly: false,
+  unlisted: false,
 
   /**
    * execute - Gets the user's bank balance that is in args[0]

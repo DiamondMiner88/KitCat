@@ -7,6 +7,8 @@ module.exports = {
   category: categories.utils,
   help_name: `Ping`,
   help_description: `Gets my latency and API latency.\n\`${pfx}ping\``,
+  guildOnly: false,
+  unlisted: false,
 
   /**
    * Calculates ping between sending a message and editing it, giving a round-trip latency.
