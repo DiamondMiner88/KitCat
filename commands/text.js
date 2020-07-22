@@ -31,7 +31,7 @@ module.exports = {
   command: "text",
   category: require("./_CATEGORIES.js").utils,
   help_name: `Text`,
-  help_description: `Changes your text. Run \`${pfx}text help\``,
+  help_description: `Changes your text.\n\`${pfx}text help\``,
   guildOnly: false, // TODO: i have no idea what this command does, so edit this later
   unlisted: false,
 

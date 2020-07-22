@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
-  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 
   <title>Despacito Spider</title>
   <style>
@@ -108,9 +107,19 @@
           <div class="col inlinetext">
             <h1 class="commandtype"><i class="em em-no_entry_sign" aria-role="presentation" aria-label="NO ENTRY SIGN"></i> Moderation</h1>
           </div>
-          <custom-accordion data-id="blacklist" data-description="Blacklist's different things, example specific images." data-code="blacklist help" data-perms="Kick Members" data-title="Kick"></custom-accordion>
+          <custom-accordion data-id="ban" data-description="Ban users. (duh)" data-code="ban {mention | username#discriminator} {optional: reason}" data-perms="Ban Members" data-title="Ban"></custom-accordion>
 
-          <custom-accordion data-id="purge" data-description="Purge text from a text channel." data-code="purge" data-perms="Manage Messages" data-title="Purge"></custom-accordion>
+          <custom-accordion data-id="blacklist" data-description="Blacklist's different things, example specific images." data-code="blacklist help" data-perms="Manage Messages" data-title="Blacklist Commands"></custom-accordion>
+          
+          <custom-accordion data-id="kick" data-description="Kick users. (duh)" data-code="kick {mention | username#discriminator} {optional: reason}" data-perms="Kick Members" data-title="Kick"></custom-accordion>
+
+		  <custom-accordion data-id="purge" data-description="Purge said amount of messages from a text channel." data-code="purge {amount: default = 5}" data-perms="Manage Messages" data-title="Purge"></custom-accordion>
+		  
+		  <custom-accordion data-id="purgechannel" data-description="Used to delete to wipe all messages in a channel. <b>This command deletes and makes a new channel in the exact same spot</b>." data-code="purgechannel" data-perms="Manage Messages" data-title="Purge Channel"></custom-accordion>
+
+		  <custom-accordion data-id="silentban" data-description="Used to silently ban members. (Doesn't show in chat)" data-code="sban {mention | username#discriminator} {optional: reason}" data-perms="Ban members" data-title="Silent Ban"></custom-accordion>
+
+		  <custom-accordion data-id="silentkick" data-description="Used to silently kick members. (Doesn't show in chat)" data-code="skick {mention | username#discriminator} {optional: reason}" data-perms="Kick members" data-title="Silent Kick"></custom-accordion>
         </div>
       </div>
 
@@ -121,17 +130,15 @@
           </div>
 
           <div id="accordion">
-            <custom-accordion data-id="twozerofoureight" data-description="Play 2048 in Discord!" data-code="2048 help" data-title="The Game 2048"></custom-accordion>
+            <!---->
 
             <custom-accordion data-id="eightball" data-description="Ask 8Ball a question." data-code="8ball {question}" data-title="8Ball"></custom-accordion>
 
-            <custom-accordion data-id="photocommands" data-description="Make custom photos (only 1 made so far)" data-code="imag help" data-title="Photo Commands"></custom-accordion>
+            <custom-accordion data-id="photocommands" data-description="Make custom photos. (Only 1 made so far)" data-code="imag help" data-title="Photo Commands"></custom-accordion>
 
-            <custom-accordion data-id="meme" data-description="Get a meme from r/dankmemes" data-code="meme" data-title="Memes"></custom-accordion>
+            <custom-accordion data-id="meme" data-description="Get a meme from r/memes" data-code="meme" data-title="Memes"></custom-accordion>
 
             <custom-accordion data-id="inspirationalquote" data-description="Get an inspirational quote to make your day better! :)" data-code="quote" data-title="Inspirational Quote"></custom-accordion>
-
-            <custom-accordion data-id="say" data-description="Make the bot say whatever you want." data-code="say {message}" data-title="Say"></custom-accordion>
 
             <custom-accordion data-id="soundboard" data-description="Play an audio clip from the ones we have!" data-code="soundboard help" data-title="Soundboard"></custom-accordion>
 
@@ -155,14 +162,27 @@
           <custom-accordion data-id="avatar" data-description="Get avatar of the user. Can be a mention or a tag." data-code="avatar {mention | user tag (username#discriminator)}" data-title="Avatar"></custom-accordion>
 
           <custom-accordion data-id="help" data-description="The help command for the bot." data-code="help" data-title="Help"></custom-accordion>
+			  
+		  <custom-accordion data-id="ping" data-description="Gives the bot's latency and API latency." data-code="ping" data-title="Ping"></custom-accordion>
 
-          <custom-accordion data-id="nhentai" data-description="Gives title, tags, langugage, and author. ʷʰʸ ᵈᵒᵉˢ ᵗʰᵉ ⁿʰᵉⁿᵗᵃᶦ⁻ᵃᵖᶦ ᵉˣᶦˢᵗ" data-code="nhentai {number}" data-title="nHentai" data-warning="NSFW"></custom-accordion>
+          <custom-accordion data-id="text" data-description="Changes specified text." data-code="text help" data-title="text"></custom-accordion>
 
-          <custom-accordion data-id="ping" data-description="Gives the bot's latency and API latency." data-code="ping" data-title="Ping"></custom-accordion>
-
-          <custom-accordion data-id="tts" data-description="Joins VC and says what you want it to say." data-code="tts {text}" data-title="TTS"></custom-accordion>
+		  <custom-accordion data-id="tts" data-description="Joins VC and says what you want it to say." data-code="tts {text}" data-title="TTS" data-perms="DJ Role"></custom-accordion>
+		  
+		  <custom-accordion data-id="wofram" data-description="Ask a mathematical or analytical question you want answered." data-code="wolfram {query}" data-title="Wolfram"></custom-accordion>
+        </div>
+	  </div>
+	  
+	  <div class="row row-content-nb">
+        <div class="col-12">
+          <div class="col inlinetext">
+            <h1 class="commandtype"><i class="em em-game_die" aria-role="presentation" aria-label="GAME DIE"></i> Games</h1>
+          </div>
+		  <custom-accordion data-id="twozerofoureight" data-description="Play 2048 in Discord!" data-code="2048 help" data-title="The Game 2048"></custom-accordion>
+		  <custom-accordion data-id="roulette" data-description="Play Russian Roulette in Discord." data-code="roulette help" data-title="Russian Roulette"></custom-accordion>
         </div>
       </div>
+	</div>
 
       <div class="row row-content-nb">
         <div class="col-12">
@@ -171,11 +191,9 @@
           </div>
           <custom-accordion data-id="oofcoinbalance" data-description="Gets your's or the mentioned persion global balance of Oof Coin." data-code="balance {optional: mention | user tag (username#discriminator)" data-title="Balance">
           </custom-accordion>
-
-          <custom-accordion data-id="oofcoindeposit" data-description="Deposit the money you have to the bank and earn %2 intrest every week." data-code="deposit {coin amount}" data-title="Deposit"></custom-accordion>
         </div>
-      </div>
-    </div>
+	  </div>
+	
   </div>
 </body>
 
