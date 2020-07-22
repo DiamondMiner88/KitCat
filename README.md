@@ -12,6 +12,9 @@ Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/
 - [Nano-AI](https://github.com/Nano-AI) - _Dev_
 - [BerkM125](https://github.com/BerkM125) - _Dev_
 
+## Reminders
+- Change the prefix in index.html, and also change the href for the discord button to the invite link.
+
 ## TODO
 - [ ] Commands: roulette, purgechannel, claim, text, wolfram
 - [ ] 2048 - high score tracker
