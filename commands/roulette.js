@@ -67,21 +67,20 @@ function shuffle(a) {
   return a;
 }
 
-function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount, invalidTurn = false) {
+function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount) {
 	/*
 	console.log(chamber);
 	console.log(bulletCount);
 	console.log(randomUsers + ' ' + randomUserId);
 	*/
-	if (invalidTurn) {
-
-	}
+	console.log(randomUsers + ' ' + randomUserId);
 	var playedTurn = false;
 		if (randomUsers.length === 1) return message.channel.send(`${randomUsers[0]} won the game.`);
 		randomUsers.push(randomUsers[0]);
 		randomUsers.splice(0, 1);
-		randomUserId.push(randomUsers[0]);
-		randomUserId.splice(0, 1)
+		randomUserId.push(randomUsersId[0]);
+		randomUserId.splice(0, 1);
+		console.log(randomUsers + ' ' + randomUserId);
 		message.channel.send('Gun has been loaded.');
 		randomUserId.splice(0, 1);
 		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
