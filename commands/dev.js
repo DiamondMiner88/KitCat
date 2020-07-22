@@ -1,6 +1,4 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
+const pfx = require("../config/config.json").prefix;
 const { spawn } = require('child_process');
 
 module.exports = {

@@ -1,11 +1,9 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
+const pfx = require("../config/config.json").prefix;
 const Discord = require('discord.js');
 
 module.exports = {
   command: "ban",
-  category: categories.moderation,
+  category: require("./_CATEGORIES.js").moderation,
   help_name: `:no_entry: Ban`,
   help_description: `Used to ban members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
   guildOnly: true,

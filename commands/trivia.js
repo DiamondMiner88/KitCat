@@ -1,4 +1,4 @@
-const config = require("../config.json");
+const config = require("../config/config.json");
 const pfx = config.prefix;
 const Discord = require('discord.js');
 const fetch = require('node-fetch');

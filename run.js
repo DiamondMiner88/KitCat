@@ -1,5 +1,12 @@
 const { spawn } = require('child_process');
 
+try {
+  require("./config/config.json")
+} catch (e) {
+  console.error("You do not have /config/config.json. Please rename config-exmaple.json to config.json and fill out the fields.");
+  process.exit(1);
+}
+
 var bot;
 
 function startBot() {

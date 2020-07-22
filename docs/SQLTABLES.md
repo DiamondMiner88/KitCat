@@ -19,3 +19,30 @@ CREATE TABLE IF NOT EXISTS "currency" (
 	PRIMARY KEY("user")
 )
 ```
+
+## Commands
+```sql
+CREATE TABLE IF NOT EXISTS "commands" (
+	"guild"	INTEGER NOT NULL,
+	"8ball"	TEXT NOT NULL DEFAULT 'enabled',
+	"2048"	TEXT NOT NULL DEFAULT 'enabled',
+	"ban"	TEXT NOT NULL DEFAULT 'enabled',
+	"sban"	TEXT NOT NULL DEFAULT 'enabled',
+	"kick"	TEXT NOT NULL DEFAULT 'enabled',
+	"skick"	TEXT NOT NULL DEFAULT 'enabled',
+	"purge"	TEXT NOT NULL DEFAULT 'enabled',
+	"purgechannel"	TEXT NOT NULL DEFAULT 'enabled',
+	"image"	TEXT NOT NULL DEFAULT 'enabled',
+	"meme"	TEXT NOT NULL DEFAULT 'enabled',
+	"subreddit"	TEXT NOT NULL DEFAULT 'enabled',
+	"ping"	TEXT NOT NULL DEFAULT 'enabled',
+	"quote"	TEXT NOT NULL DEFAULT 'enabled',
+	"roulette"	TEXT NOT NULL DEFAULT 'enabled',
+	"soundboard"	TEXT NOT NULL DEFAULT 'enabled',
+	"tts"	TEXT DEFAULT 'enabled',
+	"trivia"	TEXT DEFAULT 'enabled',
+	"wolfram"	TEXT DEFAULT 'enabled',
+	"text"	TEXT DEFAULT 'enabled',
+	PRIMARY KEY("guild")
+);
+```

@@ -1,6 +1,5 @@
-const config = require("../config.json");
+const config = require("../config/config.json");
 const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
 const WolframAlphaAPI = require('wolfram-alpha-api');
 const waApi = WolframAlphaAPI('3K5593-UJEWH5VHRJ'); //I can just turn this into an environmental variable later. Im gonna need a gitignore on .env files
 const fs = require('fs');
@@ -45,7 +44,7 @@ function setResultsLimit () {
 
 module.exports = {
   command: "wolfram",
-  category: categories.utils,
+  category: require("./_CATEGORIES.js").utils,
   help_name: `oof wolfram [query]`,
   help_description: `Ask a mathematical or analytical question you want answered`,
   guildOnly: false,

@@ -1,4 +1,4 @@
-const config = require("./config.json");
+const config = require("./config/config.json");
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs')
 
@@ -20,16 +20,45 @@ CREATE TABLE IF NOT EXISTS "currency" (
 	PRIMARY KEY("user")
 );`;
 
+const commands_tbl = `
+CREATE TABLE IF NOT EXISTS "commands" (
+	"guild"	INTEGER NOT NULL,
+	"8ball"	TEXT NOT NULL DEFAULT 'enabled',
+	"2048"	TEXT NOT NULL DEFAULT 'enabled',
+	"ban"	TEXT NOT NULL DEFAULT 'enabled',
+	"sban"	TEXT NOT NULL DEFAULT 'enabled',
+	"kick"	TEXT NOT NULL DEFAULT 'enabled',
+	"skick"	TEXT NOT NULL DEFAULT 'enabled',
+	"purge"	TEXT NOT NULL DEFAULT 'enabled',
+	"purgechannel"	TEXT NOT NULL DEFAULT 'enabled',
+	"image"	TEXT NOT NULL DEFAULT 'enabled',
+	"meme"	TEXT NOT NULL DEFAULT 'enabled',
+	"subreddit"	TEXT NOT NULL DEFAULT 'enabled',
+	"ping"	TEXT NOT NULL DEFAULT 'enabled',
+	"quote"	TEXT NOT NULL DEFAULT 'enabled',
+	"roulette"	TEXT NOT NULL DEFAULT 'enabled',
+	"soundboard"	TEXT NOT NULL DEFAULT 'enabled',
+	"tts"	TEXT DEFAULT 'enabled',
+	"trivia"	TEXT DEFAULT 'enabled',
+	"wolfram"	TEXT DEFAULT 'enabled',
+	"text"	TEXT DEFAULT 'enabled',
+	PRIMARY KEY("guild")
+);`;
+
 var db = new sqlite3.Database('./data.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) console.error(err.message);
 });
 
-db.run(image_blacklist_tbl, [], (err) => {
-  if (err) console.log(`Error creating image_blacklist_tbl: ${err}`);
+db.run(image_blacklist_tbl, [], err => {
+  if (err) console.log(`Error creating table: ${err}`);
 });
 
-db.run(currency_tbl, [], (err) => {
-  if (err) console.log(`Error creating currency_tbl: ${err}`);
+db.run(currency_tbl, [], err => {
+  if (err) console.log(`Error creating table: ${err}`);
+});
+
+db.run(commands_tbl, [], err => {
+  if (err) console.log(`Error creating table: ${err}`);
 });
 
 module.exports = {

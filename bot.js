@@ -1,11 +1,11 @@
-const config = require("./config.json");
+const config = require("./config/config.json");
 const pfx = config.prefix;
 const path = require('path');
 const Discord = require("discord.js");
+var db = require('./db.js').db;
 
 var client = new Discord.Client();
 
-require('./db.js');
 
 if (process.platform === "win32") {
   var rl = require("readline").createInterface({
@@ -75,7 +75,29 @@ client.on("message", async message => {
 
   const command = client.commands.get(commandText);
   if (command && command.guildOnly && message.channel.type !== 'text') message.channel.send("This command only works in Guild Text Channels!");
-  else if (command && command.command === commandText) command.execute(client, message, args);
+  else if (command && command.command === commandText) {
+    db.get("SELECT * FROM commands WHERE guild=?", [message.guild.id], (err, result) => {
+      if (err) {
+        console.log("Error retrieving command data\n" + err.message);
+        message.channel.send("Error retrieving command data\n" + err.message);
+      }
+      else {
+        const other = {
+          mode: 'enabled'
+        }
+
+        if (!result) {
+          db.run("INSERT INTO commands (guild) VALUES(?)", [message.guild.id], err => {
+            if (err) console.log("Error trying to add settings for guild: " + err);
+          });
+        }
+        else other.mode = result[commandText];
+
+        if (other.mode === 'disabled') message.channel.send("This command has been disabled on this server.");
+        else command.execute(client, message, args, other);
+      }
+    });
+  }
 });
 
 client.login(config.token);

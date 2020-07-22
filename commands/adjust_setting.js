@@ -1,6 +1,5 @@
-const config = require("../config.json");
+const config = require("../config/config.json");
 const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
 const fs = require('fs');
 var fsjson = {};
 var fscontent;
@@ -23,14 +22,14 @@ function changeSetting (setting, value) {
 
 module.exports = {
   command: "adjust_setting",
-  category: categories.utils,
+  category: require("./_CATEGORIES.js").utils,
   help_name: `adjust_setting`,
   help_description: `adjust one of the listed bot settings: \n-Wolfram image result limit`,
 
   execute(client, message, args) {
     var concenatedargs = "";
     var settingsdata = [];
-    for(var i = 0; i < args.length; i++) 
+    for(var i = 0; i < args.length; i++)
       concenatedargs = concenatedargs.concat(args[i]);
     settingsdata = concenatedargs.split(':');
     //console.log(concenatedargs);
