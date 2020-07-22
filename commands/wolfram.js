@@ -45,8 +45,8 @@ function setResultsLimit () {
 module.exports = {
   command: "wolfram",
   category: require("./_CATEGORIES.js").utils,
-  help_name: `:wolf: Wolfram`,
-  help_description: `Ask a mathematical or analytical question you want answered.`,
+  help_name: `oof wolfram [query]`,
+  help_description: `Ask a mathematical or analytical question you want answered`,
   guildOnly: false,
   unlisted: false,
 
