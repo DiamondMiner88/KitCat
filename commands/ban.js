@@ -5,7 +5,7 @@ module.exports = {
   command: "ban",
   category: require("./_CATEGORIES.js").moderation,
   help_name: `:no_entry: Ban`,
-  help_description: `Used to ban members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
+  help_description: `Used to ban members.\n\`${pfx}ban {mention | username#discriminator} {optional: reason}\``,
   guildOnly: true,
   unlisted: false,
 

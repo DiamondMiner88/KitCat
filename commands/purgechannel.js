@@ -7,7 +7,7 @@ const {
 module.exports = {
   command: "purgechannel",
   category: require("./_CATEGORIES.js").moderation,
-  help_name: `:wastebasket: Purge`,
+  help_name: `:wastebasket: Purge Channel`,
   help_description: `Used to delete to wipe all messages in a channel\n\`${pfx}purgechannel\`\n***This command deletes and makes a new channel in the exact same spot***`,
   guildOnly: true,
   unlisted: false,

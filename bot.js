@@ -6,7 +6,6 @@ var db = require('./db.js').db;
 
 var client = new Discord.Client();
 
-
 if (process.platform === "win32") {
   var rl = require("readline").createInterface({
     input: process.stdin,
@@ -38,9 +37,6 @@ client.on("ready", () => {
 
 client.on("guildMemberRemove", member => {
   var general = member.guild.systemChannel;
-  console.log(general)
-  if (general === null) general = member.guild.channels.cache.find(channel => channel.name === 'welcome');
-  console.log(general)
   if (general) general.send(`<@${member.user.id}> has left the server.`);
 });
 
