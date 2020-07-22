@@ -53,7 +53,7 @@ module.exports = {
 
     db.get("SELECT bank, daily_last_claimed_at FROM currency WHERE user=?", [target_user.id], (err, result) => {
       if (err) {
-        console.log("Error retrieving currency data: " + err);
+        console.log("Error retrieving currency data: " + err.message);
         message.channel.send("Something went wrong trying to retrieve the data.");
       }
       else {
