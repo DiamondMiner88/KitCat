@@ -1,10 +1,8 @@
-const config = require("../config.json");
-const pfx = config.prefix;
-const categories = require("./_CATEGORIES.js");
+const pfx = require("../config/config.json").prefix;
 
 module.exports = {
   command: "say",
-  category: categories.fun,
+  category: require("./_CATEGORIES.js").fun,
   help_name: `say`,
   help_description: `Make the bot say whatever you want!\n\`${pfx}say {message}\``,
   guildOnly: false,

@@ -67,7 +67,4 @@ app.post('/sql/run', (req, res) => {
   }
 });
 
-var server = app.listen(4000, () => {
-  var host = server.address().address
-  var port = server.address().port
-});
+var server = app.listen(4000);
