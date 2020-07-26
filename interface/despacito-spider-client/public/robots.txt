@@ -1,0 +1,5 @@
+# https://www.robotstxt.org/robotstxt.html
+# Allow root page (/) to be crawled, but everything else blocked
+user-agent: *
+Allow: /$
+Disallow: /
