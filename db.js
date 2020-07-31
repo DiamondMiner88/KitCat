@@ -1,6 +1,6 @@
-const config = require("./config/config.json");
+const config = require('./config/config.json');
 const sqlite3 = require('sqlite3').verbose();
-const fs = require('fs')
+const fs = require('fs');
 
 const image_blacklist_tbl = `
 CREATE TABLE IF NOT EXISTS "image_blacklist" (
@@ -49,18 +49,18 @@ var db = new sqlite3.Database('./data.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN
   if (err) console.error(err.message);
 });
 
-db.run(image_blacklist_tbl, [], err => {
+db.run(image_blacklist_tbl, [], (err) => {
   if (err) console.log(`Error creating table: ${err}`);
 });
 
-db.run(currency_tbl, [], err => {
+db.run(currency_tbl, [], (err) => {
   if (err) console.log(`Error creating table: ${err}`);
 });
 
-db.run(commands_tbl, [], err => {
+db.run(commands_tbl, [], (err) => {
   if (err) console.log(`Error creating table: ${err}`);
 });
 
 module.exports = {
-  db,
-}
+  db
+};

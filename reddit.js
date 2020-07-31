@@ -1,5 +1,5 @@
 const snoowrap = require('snoowrap');
-const config = require("./config/config.json");
+const config = require('./config/config.json');
 const pfx = config.prefix;
 
 const reddit = new snoowrap({
@@ -7,12 +7,11 @@ const reddit = new snoowrap({
   clientId: config.reddit_client_id,
   clientSecret: config.reddit_client_secret,
   username: config.reddit_username,
-  password: config.reddit_password,
+  password: config.reddit_password
 });
 
 var reddit_submission_ids = [];
 var reddit_idlist_starttime = new Date().getTime();
-
 
 /**
  * getTopPost - Gets the top post of a subreddit that has not been gotten yet for the guild
@@ -50,9 +49,9 @@ async function getTopPost(message, subreddit_name) {
   //   getTopPost(message, subreddit_name);
   // }
   postToUse.upvote();
-  const Discord = require("discord.js");
+  const Discord = require('discord.js');
   let embed = new Discord.MessageEmbed()
-    .setColor("white")
+    .setColor('white')
     .setAuthor(`u/${postToUse.author.name}`)
     .setTitle(postToUse.title)
     .setURL(`https://reddit.com${postToUse.permalink}`)

@@ -5,12 +5,12 @@ class _Home extends Component {
   render() {
     return (
       <div>
-        <NavBar location={this.props.location} history={this.props.history}/>
+        <NavBar location={this.props.location} history={this.props.history} />
         <div className="container">
           <p>Add stuff here</p>
         </div>
       </div>
-    )
+    );
   }
 }
 

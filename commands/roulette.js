@@ -1,61 +1,67 @@
-const config = require("../config/config.json");
+const config = require('../config/config.json');
 const pfx = config.prefix;
 const Discord = require('discord.js');
 
 module.exports = {
-  command: "roulette",
-  category: require("./_CATEGORIES.js").games,
+  command: 'roulette',
+  category: require('./_CATEGORIES.js').games,
   help_name: `:gun: Russian Roulette`,
   help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
   guildOnly: true,
   unlisted: false,
 
   execute(client, message, args) {
-		// console.log(message.mentions.members.first(message.mentions.members.size));
-		if (args[0] === 'help') {
-			return message.channel.send(new Discord.MessageEmbed()
-				.setTitle('Russian Roulette Help')
-				.addField('Start Game', `Start the game by typing \`${pfx}roulette {users}\`.`)
-				.addField('Rules', `When it's your turn, you can do 2 things. Try your luck by running \`shoot myself\` or try to shoot someone else by running \`shoot {user}\`.`)
-			);
-		}
-		var users_nofilter = message.mentions.members.first(message.mentions.members.size);
-		users_nofilter.push(message.author);
-		// message.channel.send(users_nofilter);
-		// console.log(removeCopies([1, 1, 2, 2, 2, 2, 2, 3]))
-		if (users_nofilter.length === 1) return message.channel.send("You can't play Russian Roulette by yourself.");
-		var users_id = [];
-		var users_mentions = [];
-		for (var number in users_nofilter) {
-			users_id.push(users_nofilter[number].id);
-			users_mentions.push(users_nofilter[number.id]);
-		}
-		users_id = removeCopies(users_id);
-		users_mentions = removeCopies(users_mentions);
-		var users = [];
-		for (var number in users_id) {
-			users.push(client.users.cache.get(users_id[number]));
-		}
-		if (users.length === 1) return message.channel.send("You can't play Russian Roulette by yourself.");
-		// console.log(users);
-		var randomUsers = shuffle(users);
-		var randomUserId = [];
-		for (var number in randomUsers) {
-			randomUserId.push(randomUsers[number].id);
-		}
-		var playerCount = 0;
-		var bulletCount = 0;
-		var chamber = [0, 0, 0, 0, 0, 0];
-		chamber[Math.floor((Math.random() * chamber.length))] = 1;
-		// chamber = shuffle(chamber);
-		playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
+    // console.log(message.mentions.members.first(message.mentions.members.size));
+    if (args[0] === 'help') {
+      return message.channel.send(
+        new Discord.MessageEmbed()
+          .setTitle('Russian Roulette Help')
+          .addField('Start Game', `Start the game by typing \`${pfx}roulette {users}\`.`)
+          .addField(
+            'Rules',
+            `When it's your turn, you can do 2 things. Try your luck by running \`shoot myself\` or try to shoot someone else by running \`shoot {user}\`.`
+          )
+      );
+    }
+    var users_nofilter = message.mentions.members.first(message.mentions.members.size);
+    users_nofilter.push(message.author);
+    // message.channel.send(users_nofilter);
+    // console.log(removeCopies([1, 1, 2, 2, 2, 2, 2, 3]))
+    if (users_nofilter.length === 1)
+      return message.channel.send("You can't play Russian Roulette by yourself.");
+    var users_id = [];
+    var users_mentions = [];
+    for (var number in users_nofilter) {
+      users_id.push(users_nofilter[number].id);
+      users_mentions.push(users_nofilter[number.id]);
+    }
+    users_id = removeCopies(users_id);
+    users_mentions = removeCopies(users_mentions);
+    var users = [];
+    for (var number in users_id) {
+      users.push(client.users.cache.get(users_id[number]));
+    }
+    if (users.length === 1)
+      return message.channel.send("You can't play Russian Roulette by yourself.");
+    // console.log(users);
+    var randomUsers = shuffle(users);
+    var randomUserId = [];
+    for (var number in randomUsers) {
+      randomUserId.push(randomUsers[number].id);
+    }
+    var playerCount = 0;
+    var bulletCount = 0;
+    var chamber = [0, 0, 0, 0, 0, 0];
+    chamber[Math.floor(Math.random() * chamber.length)] = 1;
+    // chamber = shuffle(chamber);
+    playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
   }
-}
+};
 
 function removeCopies(array) {
-	return array.filter(function(elem, pos) {
-		return array.indexOf(elem) == pos;
-	});
+  return array.filter(function (elem, pos) {
+    return array.indexOf(elem) == pos;
+  });
 }
 
 function shuffle(a) {
@@ -67,85 +73,104 @@ function shuffle(a) {
 }
 
 function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount) {
-	/*
+  /*
 	console.log(chamber);
 	console.log(bulletCount);
 	console.log(randomUsers + ' ' + randomUserId);
 	*/
-	console.log(randomUsers + ' ' + randomUserId);
-	var playedTurn = false;
-		if (randomUsers.length === 1) return message.channel.send(`${randomUsers[0]} won the game.`);
-		randomUsers.push(randomUsers[0]);
-		randomUsers.splice(0, 1);
-		randomUserId.push(randomUsersId[0]);
-		randomUserId.splice(0, 1);
-		console.log(randomUsers + ' ' + randomUserId);
-		message.channel.send('Gun has been loaded.');
-		randomUserId.splice(0, 1);
-		message.channel.send(`${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`).then(() => {
-			message.channel.awaitMessages(response => response.content.split(' ')[0].toLowerCase() === 'shoot' && response.author.id === randomUsers[playerCount].id, { // console.log(response.author.id + ' ' + randomUsers[playerCount].id) &&
-				max: 1,
-				time: 30000,
-				erros: ['time']
-			})
-			.then((collected) => {
-				// console.log(collected);
-				var response = collected.first().content.split(' ');
-				var author = collected.first().author;
-				if (response[1].toLowerCase() === 'myself' || collected.first().mentions.users.first() === randomUsers[playerCount] || response[1][1] === 'm') {
-					done = true;
-					if (chamber[bulletCount] === 1) {
-						message.channel.send('*Boom* You died, the chamber had a bullet in it.');
-						randomUserId.splice(randomUserId.indexOf(author.id), 1);
-						randomUsers.splice(randomUserId.indexOf(author), 1);
-						if (randomUsers.length != 1) {
-							message.channel.send('Added a bullet and spinning the revolver.');
-							chamber = shuffle(chamber);
-						}
-					} else {
-						message.channel.send('*Click* You survived, the bullet was not in the chamber.')
-					}
-					playedTurn = true;
-					bulletCount += 1;
-					playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount, true);
-					return;
-				} else {
-					// console.log(collected.first().mentions.users.first().id);
-					var deadPerson = collected.first().mentions.users.first();
-					if (deadPerson === undefined) {
-						message.channel.send(`Someone shot you becaues you didn't provide a valid user.`);
-						randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
-						randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
-					} else {
-						done = true;
-						if (chamber[bulletCount] === 1) {
-							message.channel.send(`*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`);
-							randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
-							randomUsers.splice(randomUserId.indexOf(deadPerson), 1);
-							if (randomUsers.length != 1) {
-								message.channel.send('Added a bullet and spinning the revolver.');
-								chamber = shuffle(chamber);
-							}
-						}
-						if (chamber[bulletCount] === 0) {
-							message.channel.send(`*Click* The chamber was empty.`)
-						}
-						playedTrun = true;
-						bulletCount += 1;
-						playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
-						return;
-					}
-				}
-			})
-			.catch((err) => {
-				if (!playedTurn){
-					message.channel.send(`*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`);
-					randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
-					randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
-				}
-				console.error(err);
-			});
-		});
+  console.log(randomUsers + ' ' + randomUserId);
+  var playedTurn = false;
+  if (randomUsers.length === 1) return message.channel.send(`${randomUsers[0]} won the game.`);
+  randomUsers.push(randomUsers[0]);
+  randomUsers.splice(0, 1);
+  randomUserId.push(randomUsersId[0]);
+  randomUserId.splice(0, 1);
+  console.log(randomUsers + ' ' + randomUserId);
+  message.channel.send('Gun has been loaded.');
+  randomUserId.splice(0, 1);
+  message.channel
+    .send(
+      `${randomUsers[playerCount]} has the gun. Do you want to try to shoot yourself or someone else?`
+    )
+    .then(() => {
+      message.channel
+        .awaitMessages(
+          (response) =>
+            response.content.split(' ')[0].toLowerCase() === 'shoot' &&
+            response.author.id === randomUsers[playerCount].id,
+          {
+            // console.log(response.author.id + ' ' + randomUsers[playerCount].id) &&
+            max: 1,
+            time: 30000,
+            erros: ['time']
+          }
+        )
+        .then((collected) => {
+          // console.log(collected);
+          var response = collected.first().content.split(' ');
+          var author = collected.first().author;
+          if (
+            response[1].toLowerCase() === 'myself' ||
+            collected.first().mentions.users.first() === randomUsers[playerCount] ||
+            response[1][1] === 'm'
+          ) {
+            done = true;
+            if (chamber[bulletCount] === 1) {
+              message.channel.send('*Boom* You died, the chamber had a bullet in it.');
+              randomUserId.splice(randomUserId.indexOf(author.id), 1);
+              randomUsers.splice(randomUserId.indexOf(author), 1);
+              if (randomUsers.length != 1) {
+                message.channel.send('Added a bullet and spinning the revolver.');
+                chamber = shuffle(chamber);
+              }
+            } else {
+              message.channel.send('*Click* You survived, the bullet was not in the chamber.');
+            }
+            playedTurn = true;
+            bulletCount += 1;
+            playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount, true);
+            return;
+          } else {
+            // console.log(collected.first().mentions.users.first().id);
+            var deadPerson = collected.first().mentions.users.first();
+            if (deadPerson === undefined) {
+              message.channel.send(`Someone shot you becaues you didn't provide a valid user.`);
+              randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
+              randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
+            } else {
+              done = true;
+              if (chamber[bulletCount] === 1) {
+                message.channel.send(
+                  `*Boom* ${deadPerson} got killed by ${randomUsers[playerCount]}.`
+                );
+                randomUserId.splice(randomUserId.indexOf(deadPerson.id), 1);
+                randomUsers.splice(randomUserId.indexOf(deadPerson), 1);
+                if (randomUsers.length != 1) {
+                  message.channel.send('Added a bullet and spinning the revolver.');
+                  chamber = shuffle(chamber);
+                }
+              }
+              if (chamber[bulletCount] === 0) {
+                message.channel.send(`*Click* The chamber was empty.`);
+              }
+              playedTrun = true;
+              bulletCount += 1;
+              playTurn(message, chamber, playerCount, randomUsers, randomUserId, bulletCount);
+              return;
+            }
+          }
+        })
+        .catch((err) => {
+          if (!playedTurn) {
+            message.channel.send(
+              `*Boom* Someone shot ${randomUsers[playerCount]} because they took too long.`
+            );
+            randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
+            randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
+          }
+          console.error(err);
+        });
+    });
 }
 
 /*

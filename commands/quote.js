@@ -1,9 +1,9 @@
-const pfx = require("../config/config.json").prefix;
-const fetch = require("node-fetch");
+const pfx = require('../config/config.json').prefix;
+const fetch = require('node-fetch');
 
 module.exports = {
-  command: "quote",
-  category: require("./_CATEGORIES.js").fun,
+  command: 'quote',
+  category: require('./_CATEGORIES.js').fun,
   help_name: `:innocent: Inspirational Quote`,
   help_description: `Gives an inspirational quote!\n\`${pfx}quote\``,
   guildOnly: false,
@@ -15,4 +15,4 @@ module.exports = {
     const data = await response.json();
     message.channel.send(`"${data.content}"\n- ${data.author}`);
   }
-}
+};

@@ -1,8 +1,8 @@
-const pfx = require("../config/config.json").prefix;
+const pfx = require('../config/config.json').prefix;
 
 module.exports = {
-  command: "say",
-  category: require("./_CATEGORIES.js").fun,
+  command: 'say',
+  category: require('./_CATEGORIES.js').fun,
   help_name: `say`,
   help_description: `Make the bot say whatever you want!\n\`${pfx}say {message}\``,
   guildOnly: false,
@@ -10,7 +10,7 @@ module.exports = {
 
   execute(client, message, args) {
     if (args.length == 0) message.author.send("You didn't provide a message to say!");
-    else message.channel.send(args.join(" "));
+    else message.channel.send(args.join(' '));
     message.delete();
   }
-}
+};

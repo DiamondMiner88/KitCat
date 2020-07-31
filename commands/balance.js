@@ -1,8 +1,7 @@
-const pfx = require("../config/config.json").prefix;
-var db = require("../db.js").db;
-const currency = require("../oofcoin.js");
-const Discord = require("discord.js");
-
+const pfx = require('../config/config.json').prefix;
+var db = require('../db.js').db;
+const currency = require('../oofcoin.js');
+const Discord = require('discord.js');
 
 /**
  * timestampToStr - Makes a Unix timestamp into a readable date and time
@@ -24,8 +23,8 @@ function timestampToStr(UNIX_timestamp) {
 }
 
 module.exports = {
-  command: "balance",
-  category: require("./_CATEGORIES.js").oofcoin,
+  command: 'balance',
+  category: require('./_CATEGORIES.js').oofcoin,
   help_name: `Oof coin Balance`,
   help_description: `Gets the your or the mention user's global balance of oof coin.\n\`${pfx}balance {optional: mention | username#discriminator}\``,
   guildOnly: false,
@@ -41,8 +40,10 @@ module.exports = {
     let target_user = message.mentions.users.first();
     if (!args[0]) target_user = message.author;
     else if (!target_user) {
-      let matching_users = client.users.cache.filter(user => user.username === args[0].split("#")[0]);
-      target_user = matching_users.find(user => user.discriminator === args[0].split("#")[1]);
+      let matching_users = client.users.cache.filter(
+        (user) => user.username === args[0].split('#')[0]
+      );
+      target_user = matching_users.find((user) => user.discriminator === args[0].split('#')[1]);
       if (!target_user) {
         message.channel.send('Member to kick not found.');
         return;
@@ -51,18 +52,21 @@ module.exports = {
 
     currency.checkForProfile(target_user);
 
-    db.get("SELECT bank, daily_last_claimed_at FROM currency WHERE user=?", [target_user.id], (err, result) => {
-      if (err) {
-        console.log("Error retrieving currency data: " + err.message);
-        message.channel.send("Something went wrong trying to retrieve the data.");
+    db.get(
+      'SELECT bank, daily_last_claimed_at FROM currency WHERE user=?',
+      [target_user.id],
+      (err, result) => {
+        if (err) {
+          console.log('Error retrieving currency data: ' + err.message);
+          message.channel.send('Something went wrong trying to retrieve the data.');
+        } else {
+          var embed = new Discord.MessageEmbed()
+            .setColor(0x0099ff)
+            .setTitle('Balance')
+            .addField('Bank Balance', `${Math.floor(result.bank)}©`);
+          message.channel.send(embed);
+        }
       }
-      else {
-        var embed = new Discord.MessageEmbed()
-          .setColor(0x0099ff)
-          .setTitle("Balance")
-          .addField("Bank Balance", `${Math.floor(result.bank)}©`);
-        message.channel.send(embed);
-      }
-    });
+    );
   }
-}
+};

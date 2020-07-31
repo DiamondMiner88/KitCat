@@ -8,6 +8,6 @@ export default class home extends Component {
         <h1>404 - Not Found</h1>
         <Link to="/">Go back home</Link>
       </div>
-    )
+    );
   }
 }

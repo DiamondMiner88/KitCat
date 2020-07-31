@@ -1,8 +1,8 @@
-const pfx = require("../config/config.json").prefix;
+const pfx = require('../config/config.json').prefix;
 
 module.exports = {
-  command: "tts",
-  category: require("./_CATEGORIES.js").utils,
+  command: 'tts',
+  category: require('./_CATEGORIES.js').utils,
   help_name: `:robot: TTS`,
   help_description: `Joins VC and says what you want it to say!\n\`${pfx}tts {text}\``,
   guildOnly: true,
@@ -12,20 +12,20 @@ module.exports = {
     var channel = message.member.voice.channel;
     if (
       message.member.voice.channel &&
-      message.member.roles.cache.some((role) => role.name === "DJ")
+      message.member.roles.cache.some((role) => role.name === 'DJ')
     ) {
-      if (args.join(" ").length > 200) {
-        message.channel.send("Text exceeds 200 character limit.");
+      if (args.join(' ').length > 200) {
+        message.channel.send('Text exceeds 200 character limit.');
         return;
       }
       const channel = message.member.voice.channel;
       const connection = await message.member.voice.channel.join();
       var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
-        args.join(" ")
+        args.join(' ')
       )}&tl=en&client=tw-ob`;
       // message.channel.send(url);
       const dispatcher = connection.play(url);
-      dispatcher.on("finish", () => {
+      dispatcher.on('finish', () => {
         channel.leave();
       });
       /*
@@ -46,9 +46,7 @@ module.exports = {
       });
       */
     } else {
-      message.channel.send(
-        "Either you aren't in a voice channel, or you ain't a DJ"
-      );
+      message.channel.send("Either you aren't in a voice channel, or you ain't a DJ");
     }
   }
 };

@@ -4,7 +4,7 @@ import './App.css';
 
 //Material-UI
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 // Pages
 import _Home from './pages/_Home';
@@ -32,16 +32,16 @@ const theme = createMuiTheme({
 function App(props) {
   return (
     <MuiThemeProvider theme={theme}>
-    <div className="App">
-      <Router>
-        <Switch>
-          <Route exact path="/" component={_Home} />
-          <Route exact path="/token" component={_Login} />
-          <Route exact path="/guild/:guildID" component={Guild} />
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
-    </div>
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route exact path="/" component={_Home} />
+            <Route exact path="/token" component={_Login} />
+            <Route exact path="/guild/:guildID" component={Guild} />
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
+      </div>
     </MuiThemeProvider>
   );
 }
