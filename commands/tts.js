@@ -10,19 +10,24 @@ module.exports = {
 
   async execute(client, message, args) {
     var channel = message.member.voice.channel;
-    if (message.member.voice.channel && message.member.roles.cache.some(role => role.name === 'DJ')) {
+    if (
+      message.member.voice.channel &&
+      message.member.roles.cache.some((role) => role.name === "DJ")
+    ) {
       if (args.join(" ").length > 200) {
         message.channel.send("Text exceeds 200 character limit.");
         return;
       }
       const channel = message.member.voice.channel;
       const connection = await message.member.voice.channel.join();
-      var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(args.join(" "))}&tl=en&client=tw-ob`;
+      var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
+        args.join(" ")
+      )}&tl=en&client=tw-ob`;
       // message.channel.send(url);
       const dispatcher = connection.play(url);
       dispatcher.on("finish", () => {
         channel.leave();
-      })
+      });
       /*
       var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(args.join(" "))}&tl=en&client=tw-ob`;
       var options = {
@@ -40,9 +45,10 @@ module.exports = {
           channel.leave();
       });
       */
-    }
-    else {
-      message.channel.send("Either you aren't in a voice channel, or you ain't a DJ");
+    } else {
+      message.channel.send(
+        "Either you aren't in a voice channel, or you ain't a DJ"
+      );
     }
   }
-}
+};

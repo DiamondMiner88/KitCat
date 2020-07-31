@@ -1,5 +1,6 @@
 {
   "client_id": "",
   "client_secret": "",
-  "redirect_uri": ""
+  "redirect_uri": "",
+  "botapi_url": ""
 }

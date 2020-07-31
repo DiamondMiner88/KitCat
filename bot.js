@@ -33,6 +33,7 @@ for (const file of commandFiles) {
 client.on("ready", () => {
   console.log(`Bot is ready.`);
   client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
+  require('./api.js').startExpress(client);
 });
 
 client.on("guildMemberRemove", member => {

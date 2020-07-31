@@ -1,0 +1,8 @@
+{
+    "prettier.printWidth": 100,
+    "prettier.trailingComma": "none",
+    "prettier.singleQuote": true,
+    "files.exclude": {
+        "**/package-lock.json": true
+    }
+}

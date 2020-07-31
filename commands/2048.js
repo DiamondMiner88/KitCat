@@ -1,5 +1,7 @@
-const pfx = require("../config/config.json").prefix;
-const Discord = require("discord.js");
+const pfx = require('../config/config.json').prefix;
+const Discord = require('discord.js');
+const path = require('path');
+const { createCanvas, loadImage } = require('canvas');
 
 /**
  * The current running games. If one has ended, the data is set to undefined
@@ -7,7 +9,6 @@ const Discord = require("discord.js");
  */
 var games = {};
 
-// TODO: redo the display, possible using an edited image
 /**
  * updateBoard - Displays the current board
  *
@@ -17,29 +18,41 @@ var games = {};
  */
 async function updateBoard(channel, gameOver) {
   const data = games[channel.guild.id];
-  var board = ``;
-  if (!gameOver) board += `Score: ${data.score}\n`;
+  var canvas = createCanvas(data.size * 214, data.size * 214);
+  var ctx = canvas.getContext('2d');
+
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
-      if (data.tiles[x + "," + y] === undefined) board += "- ";
-      else board += data.tiles[x + "," + y] + " ";
+      if (data.tiles[x + ',' + y] === undefined) continue;
+      await loadImage(
+        path.join(__dirname, `/../assets/2048/tiles/${data.tiles[x + ',' + y].toString()}.PNG`)
+      ).then((image) => {
+        ctx.drawImage(image, x * 214, y * 214);
+      });
     }
-    board += "\n";
   }
-  var m = await channel.send(board);
+
+  const embed = new Discord.MessageEmbed()
+    .setTitle(`:two::zero::four::eight:`)
+    .setDescription(`Score: ${data.score} | Moves: ${data.moves}`)
+    .setColor(0x0099ff)
+    .setImage('attachment://grid.png');
+
+  var m = await channel.send({
+    embed: embed,
+    files: [{ attachment: canvas.createPNGStream(), name: 'grid.png' }]
+  });
   if (!gameOver) {
     games[channel.guild.id].lastDisplayMsg = m;
     m.react('🔼');
     m.react('🔽');
     m.react('◀️');
     m.react('▶️');
-  }
-  else {
+  } else {
     games[channel.guild.id].lastDisplayMsg = undefined;
-    channel.send("\nYour score was " + games[channel.guild.id].score + " and you moved " + games[channel.guild.id].moves + " times.");
+    channel.send('Game over!');
   }
 }
-
 
 /**
  * addNewTile - Adds a new tile to the board. 90% it is a 2, 10% it is a 4, only places in empty tiles. If no empty tiles exist, will do nothing.
@@ -48,12 +61,13 @@ async function updateBoard(channel, gameOver) {
  * @returns {void}
  */
 function addNewTile(guildID) {
-  var emptyTileNames = Object.keys(games[guildID].tiles).filter(tileName => games[guildID].tiles[tileName] === undefined);
+  var emptyTileNames = Object.keys(games[guildID].tiles).filter(
+    (tileName) => games[guildID].tiles[tileName] === undefined
+  );
   if (emptyTileNames.length === 0) return;
-  const tileIndex = Math.floor(Math.random() * emptyTileNames.length)
+  const tileIndex = Math.floor(Math.random() * emptyTileNames.length);
   games[guildID].tiles[emptyTileNames[tileIndex]] = Math.random() < 0.9 ? 2 : 4;
 }
-
 
 /**
  * newGame - description
@@ -72,7 +86,7 @@ function newGame(channel, size) {
   };
   for (x = 0; x < size; x++) {
     for (y = 0; y < size; y++) {
-      data.tiles[x + "," + y] = undefined;
+      data.tiles[x + ',' + y] = undefined;
     }
   }
   games[channel.guild.id] = data;
@@ -80,7 +94,6 @@ function newGame(channel, size) {
   addNewTile(channel.guild.id);
   updateBoard(channel, false);
 }
-
 
 /**
  * isGameOver - Checks if you cannot move anymore
@@ -92,17 +105,16 @@ function isGameOver(guild) {
   const data = games[guild.id];
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
-      const curTile = data.tiles[x + "," + y];
-      if (data.tiles[x + "," + y] === undefined) return false;
-      if (data.tiles[x + "," + y - 1] === curTile) return false;
-      if (data.tiles[x + "," + y + 1] === curTile) return false;
-      if (data.tiles[x + 1 + "," + y] === curTile) return false;
-      if (data.tiles[x - 1 + "," + y] === curTile) return false;
+      const curTile = data.tiles[x + ',' + y];
+      if (data.tiles[x + ',' + y] === undefined) return false;
+      if (data.tiles[x + ',' + y - 1] === curTile) return false;
+      if (data.tiles[x + ',' + y + 1] === curTile) return false;
+      if (data.tiles[x + 1 + ',' + y] === curTile) return false;
+      if (data.tiles[x - 1 + ',' + y] === curTile) return false;
     }
   }
   return true;
 }
-
 
 /**
  * moveTiles - Moves/Merges the tiles like in the real game
@@ -115,108 +127,120 @@ function moveTiles(channel, direction) {
   var data = games[channel.guild.id];
   var mergedTiles = [];
   switch (direction) {
-    case "🔼":
+    case '🔼':
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + "," + y] === undefined) continue;
+            if (data.tiles[x + ',' + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
-            else if (data.tiles[x + "," + y] === data.tiles[x + "," + (y - 1)] && !mergedTiles.includes(x + "," + y)) {
-              const value = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              data.tiles[x + "," + (y - 1)] = value * 2;
+            else if (
+              data.tiles[x + ',' + y] === data.tiles[x + ',' + (y - 1)] &&
+              !mergedTiles.includes(x + ',' + y)
+            ) {
+              const value = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              data.tiles[x + ',' + (y - 1)] = value * 2;
               data.score += value * 2;
-              mergedTiles.push(x + "," + (y - 1));
+              mergedTiles.push(x + ',' + (y - 1));
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x + "," + (y - 1)] === undefined && y !== 0) {
-              data.tiles[x + "," + (y - 1)] = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              if (mergedTiles.includes(x + "," + y)) {
-                mergedTiles.splice(mergedTiles.indexOf(x + "," + y), 1);
-                mergedTiles.push(x + "," + (y - 1));
+            else if (data.tiles[x + ',' + (y - 1)] === undefined && y !== 0) {
+              data.tiles[x + ',' + (y - 1)] = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              if (mergedTiles.includes(x + ',' + y)) {
+                mergedTiles.splice(mergedTiles.indexOf(x + ',' + y), 1);
+                mergedTiles.push(x + ',' + (y - 1));
               }
             }
           }
         }
       }
       break;
-    case "🔽":
+    case '🔽':
       for (i = 0; i < 3; i++) {
         for (y = data.size - 1; y >= 0; y--) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + "," + y] === undefined) continue;
+            if (data.tiles[x + ',' + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
-            else if (data.tiles[x + "," + y] === data.tiles[x + "," + (y + 1)] && !mergedTiles.includes(x + "," + y)) {
-              const value = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              data.tiles[x + "," + (y + 1)] = value * 2;
+            else if (
+              data.tiles[x + ',' + y] === data.tiles[x + ',' + (y + 1)] &&
+              !mergedTiles.includes(x + ',' + y)
+            ) {
+              const value = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              data.tiles[x + ',' + (y + 1)] = value * 2;
               data.score += value * 2;
-              mergedTiles.push(x + "," + (y + 1));
+              mergedTiles.push(x + ',' + (y + 1));
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x + "," + (y + 1)] === undefined && y !== data.size - 1) {
-              data.tiles[x + "," + (y + 1)] = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              if (mergedTiles.includes(x + "," + y)) {
-                mergedTiles.splice(mergedTiles.indexOf(x + "," + y), 1);
-                mergedTiles.push(x + "," + (y + 1));
+            else if (data.tiles[x + ',' + (y + 1)] === undefined && y !== data.size - 1) {
+              data.tiles[x + ',' + (y + 1)] = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              if (mergedTiles.includes(x + ',' + y)) {
+                mergedTiles.splice(mergedTiles.indexOf(x + ',' + y), 1);
+                mergedTiles.push(x + ',' + (y + 1));
               }
             }
           }
         }
       }
       break;
-    case "◀️":
+    case '◀️':
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + "," + y] === undefined) continue;
+            if (data.tiles[x + ',' + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
-            else if (data.tiles[x + "," + y] === data.tiles[(x - 1) + "," + y] && !mergedTiles.includes(x + "," + y)) {
-              const value = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              data.tiles[(x - 1) + "," + y] = value * 2;
+            else if (
+              data.tiles[x + ',' + y] === data.tiles[x - 1 + ',' + y] &&
+              !mergedTiles.includes(x + ',' + y)
+            ) {
+              const value = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              data.tiles[x - 1 + ',' + y] = value * 2;
               data.score += value * 2;
-              mergedTiles.push((x - 1) + "," + y);
+              mergedTiles.push(x - 1 + ',' + y);
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[(x - 1) + "," + y] === undefined && x !== 0) {
-              data.tiles[(x - 1) + "," + y] = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              if (mergedTiles.includes(x + "," + y)) {
-                mergedTiles.splice(mergedTiles.indexOf(x + "," + y), 1);
-                mergedTiles.push((x - 1) + "," + y);
+            else if (data.tiles[x - 1 + ',' + y] === undefined && x !== 0) {
+              data.tiles[x - 1 + ',' + y] = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              if (mergedTiles.includes(x + ',' + y)) {
+                mergedTiles.splice(mergedTiles.indexOf(x + ',' + y), 1);
+                mergedTiles.push(x - 1 + ',' + y);
               }
             }
           }
         }
       }
       break;
-    case "▶️":
+    case '▶️':
       for (i = 0; i < 3; i++) {
         for (y = 0; y < data.size; y++) {
           for (x = data.size - 1; x >= 0; x--) {
             // if tile is empty, skip it
-            if (data.tiles[x + "," + y] === undefined) continue;
+            if (data.tiles[x + ',' + y] === undefined) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
-            else if (data.tiles[x + "," + y] === data.tiles[(x + 1) + "," + y] && !mergedTiles.includes(x + "," + y)) {
-              const value = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              data.tiles[(x + 1) + "," + y] = value * 2;
+            else if (
+              data.tiles[x + ',' + y] === data.tiles[x + 1 + ',' + y] &&
+              !mergedTiles.includes(x + ',' + y)
+            ) {
+              const value = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              data.tiles[x + 1 + ',' + y] = value * 2;
               data.score += value * 2;
-              mergedTiles.push((x + 1) + "," + y);
+              mergedTiles.push(x + 1 + ',' + y);
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[(x + 1) + "," + y] === undefined && x !== data.size - 1) {
-              data.tiles[(x + 1) + "," + y] = data.tiles[x + "," + y];
-              data.tiles[x + "," + y] = undefined;
-              if (mergedTiles.includes(x + "," + y)) {
-                mergedTiles.splice(mergedTiles.indexOf(x + "," + y), 1);
-                mergedTiles.push((x + 1) + "," + y);
+            else if (data.tiles[x + 1 + ',' + y] === undefined && x !== data.size - 1) {
+              data.tiles[x + 1 + ',' + y] = data.tiles[x + ',' + y];
+              data.tiles[x + ',' + y] = undefined;
+              if (mergedTiles.includes(x + ',' + y)) {
+                mergedTiles.splice(mergedTiles.indexOf(x + ',' + y), 1);
+                mergedTiles.push(x + 1 + ',' + y);
               }
             }
           }
@@ -233,8 +257,8 @@ function moveTiles(channel, direction) {
 }
 
 module.exports = {
-  command: "2048",
-  category: require("./_CATEGORIES.js").games,
+  command: '2048',
+  category: require('./_CATEGORIES.js').games,
   help_name: `:1234: 2048`,
   help_description: `Play 2048 in Discord\n\`${pfx}2048 help\``,
   guildOnly: true,
@@ -242,35 +266,38 @@ module.exports = {
 
   execute(client, message, args) {
     switch (args[0]) {
-      case "help":
+      case 'help':
         var embed = new Discord.MessageEmbed()
           .setColor(0x0099ff)
-          .setTitle("2048 commands:")
-          .addField("help", `What you're looking at right now.\n\`${pfx}2048 help\``)
-          .addField("new", `Start a new game. *This cancels any current game*\n\`${pfx}2048 new {optional size: default: 4}\``)
-          .addField("stop", `End the current game\n\`${pfx}2048 stop\``);
+          .setTitle('2048 commands:')
+          .addField('help', `What you're looking at right now.\n\`${pfx}2048 help\``)
+          .addField(
+            'new',
+            `Start a new game. *This cancels any current game*\n\`${pfx}2048 new {optional size: default: 4}\``
+          )
+          .addField('stop', `End the current game\n\`${pfx}2048 stop\``);
         message.channel.send(embed);
         break;
-      case "new":
+      case 'new':
         if (args[1] === undefined) {
           message.channel.send("You didn't provide a size, using the default which is 4...");
           newGame(message.channel, 4);
-        }
-        else {
-          if (isNaN(args[1])) message.channel.send("The size you provided was not a number");
-          else if (Number(args[1]) > 10) message.channel.send("The maximum supported size is 10.");
+        } else {
+          if (isNaN(args[1])) message.channel.send('The size you provided was not a number');
+          else if (Number(args[1]) > 10) message.channel.send('The maximum supported size is 10.');
           else newGame(message.channel, Number(args[1]));
         }
         break;
-      case "stop":
+      case 'stop':
         updateBoard(message.channel, true);
         break;
       default:
-        message.channel.send(`You didn't provide a valid subcommand! Do \`${pfx}2048 help\` for subcommands.`);
+        message.channel.send(
+          `You didn't provide a valid subcommand! Do \`${pfx}2048 help\` for subcommands.`
+        );
         break;
     }
   },
-
 
   /**
    * onReactionAdded - Should be called every time the {@Client} gets a onReactionAdded event called
@@ -287,4 +314,4 @@ module.exports = {
       moveTiles(messageReaction.message.channel, messageReaction._emoji.name);
     }
   }
-}
+};
