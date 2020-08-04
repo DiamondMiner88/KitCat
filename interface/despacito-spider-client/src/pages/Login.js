@@ -13,6 +13,7 @@ function Login(props) {
       })
         .then((res) => res.json())
         .then((json) => {
+          console.log(json)
           if (json.access_token)
             cookies.set('access-token', json.access_token, { path: '/', maxAge: 604000, sameSite: 'strict' });
           props.history.push(`/`);

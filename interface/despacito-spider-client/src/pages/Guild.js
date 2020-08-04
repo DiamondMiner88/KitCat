@@ -63,7 +63,6 @@ function Guild(props) {
       .then((json) => {
         if (json.message) setErrors(errors.concat([json.message]));
         else {
-          console.log(json);
           setModified({
             commands: {},
             settings: {}
