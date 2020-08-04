@@ -21,8 +21,10 @@ exports.token = functions.https.onRequest((request, response) => {
       method: 'POST',
       body: data
     })
-      .then((res) => res.json())
-      .then((json) => response.json(json));
+      .then((res) => res.json()
+      )
+      .then((json) => {response.json(json)})
+      .catch(err => console.error(err));
   }
 });
 
