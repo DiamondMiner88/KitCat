@@ -63,11 +63,11 @@ function Guilds(props) {
       fetchData();
     } else props.history.push('/');
   }, []);
-  const guildsArr = [];
+  // const guildsArr = [];
   const guildItems = [];
 
   for (var guild in guilds) {
-    guildsArr.push({[guild]: guilds[guild]})
+    // guildsArr.push({[guild]: guilds[guild]})
     guildItems.push(
       <Card className={classes.root}>
       <div>
