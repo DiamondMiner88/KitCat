@@ -129,7 +129,6 @@ function Guild(props) {
           })}
         </div>
       )}
-      {console.log(errors)}
     </div>
   );
 }
