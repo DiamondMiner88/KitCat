@@ -13,7 +13,7 @@ app.use(
 );
 
 app.get('/guild/:guildID', (req, res) => {
-  if (!req.headers['token-type'] && !req.headers['access-token']) {
+  if (!req.headers['access-token']) {
     res.status(400).json({
       message: 'Missing authentication.'
     });
@@ -22,7 +22,7 @@ app.get('/guild/:guildID', (req, res) => {
 
   fetch('https://discord.com/api/users/@me', {
     headers: {
-      authorization: `${req.headers['token-type']} ${req.headers['access-token']}`
+      authorization: `Bearer ${req.headers['access-token']}`
     }
   })
     .then((res) => res.json())
@@ -156,6 +156,43 @@ app.get('/guild/:guildID', (req, res) => {
 //       console.log(err.message);
 //     });
 // });
+
+app.get('/guilds', (req, res) => {
+  if (!req.headers['access-token']) {
+    res.status(400).json({
+      message: 'Missing authentication.'
+    });
+    return;
+  }
+
+  fetch('https://discord.com/api/users/@me', {
+    headers: {
+      authorization: `Bearer ${req.headers['access-token']}`
+    }
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.message) res.status(401).json(json);
+      else {
+        let guilds = {};
+        client.guilds.cache.each((guild) => {
+          if (guild.members.cache.get(json.id)) {
+            guilds[guild.id] = {
+              name: guild.name,
+              iconURL: guild.iconURL({ size: 256, dynamic: true, format: 'png' })
+            };
+          }
+        });
+        res.status(200).json(guilds);
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: 'An error occured. Please try again later.'
+      });
+      console.log(err.message);
+    });
+});
 
 module.exports = {
   startExpress(botClient) {

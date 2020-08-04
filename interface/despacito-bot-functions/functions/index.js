@@ -39,7 +39,6 @@ exports.guild = functions.https.onRequest((request, response) => {
     fetch(`${config.botapi_url}/guild/${params[0]}/save`, {
       method: 'GET',
       headers: {
-        'token-type': request.headers['token-type'],
         'access-token': request.headers['access-token'],
         data: request.headers['data']
       }
@@ -52,7 +51,6 @@ exports.guild = functions.https.onRequest((request, response) => {
     fetch(`${config.botapi_url}/guild/${params[0]}`, {
       method: 'GET',
       headers: {
-        'token-type': request.headers['token-type'],
         'access-token': request.headers['access-token']
       }
     })
@@ -61,4 +59,23 @@ exports.guild = functions.https.onRequest((request, response) => {
         response.status(200).json(json);
       });
   }
+});
+
+exports.guilds = functions.https.onRequest((request, response) => {
+  if (!request.headers['access-token']) {
+    return response.status(400).json({
+      message: 'Missing authentication.'
+    });
+  }
+
+  fetch(`${config.botapi_url}/guilds`, {
+    method: 'GET',
+    headers: {
+      'access-token': request.headers['access-token']
+    }
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      response.status(200).json(json);
+    });
 });

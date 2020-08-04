@@ -33,7 +33,6 @@ function Guild(props) {
         const res = await fetch('/despacito-spider-626fa/us-central1/guild/' + guildID, {
           method: 'GET',
           headers: {
-            'token-type': 'Bearer',
             'access-token': cookies.get('access-token')
           }
         });

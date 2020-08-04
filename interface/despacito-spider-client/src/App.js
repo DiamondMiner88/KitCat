@@ -10,7 +10,8 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Guild from './pages/Guild';
-import NotFound from './pages/404';
+import Guilds from './pages/Guilds';
+import NotFound from './pages/NotFound';
 
 const theme = createMuiTheme({
   palette: {
@@ -38,6 +39,7 @@ function App(props) {
             <Route exact path="/" component={Home} />
             <Route exact path="/token" component={Login} />
             <Route exact path="/guild/:guildID" component={Guild} />
+            <Route exact path="/guilds" component={Guilds} />
             <Route component={NotFound} />
           </Switch>
         </Router>
