@@ -60,7 +60,7 @@ module.exports = {
 
 function removeCopies(array) {
   return array.filter(function (elem, pos) {
-    return array.indexOf(elem) == pos;
+    return array.indexOf(elem) === pos;
   });
 }
 
@@ -133,7 +133,7 @@ function playTurn(message, chamber, playerCount, randomUsers, randomUserId, bull
           } else {
             // console.log(collected.first().mentions.users.first().id);
             var deadPerson = collected.first().mentions.users.first();
-            if (deadPerson === undefined) {
+            if (!deadPerson) {
               message.channel.send(`Someone shot you becaues you didn't provide a valid user.`);
               randomUserId.splice(randomUserId.indexOf(randomUserId[playerCount]), 1);
               randomUsers.splice(randomUserId.indexOf(randomUsers[playerCount]), 1);
@@ -215,7 +215,7 @@ message.channel.send(`React with :ok: if you want to play ${users_mentions.join(
 			errors: ['time'] // Throws error, if time runs out
 		}).then(collected => {
 			collected.each(reaction => {
-				if (reaction.count - 1 == users.length) {
+				if (reaction.count - 1 === users.length) {
 					console.log('true');
 					allReacted = true;
 				}

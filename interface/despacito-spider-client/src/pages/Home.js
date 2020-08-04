@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavBar from '../components/_Navbar';
+import NavBar from '../components/Navbar';
 
 class _Home extends Component {
   render() {
@@ -7,7 +7,7 @@ class _Home extends Component {
       <div>
         <NavBar location={this.props.location} history={this.props.history} />
         <div className="container">
-          <p>Add stuff here</p>
+          <p>676284863967526928</p>
         </div>
       </div>
     );

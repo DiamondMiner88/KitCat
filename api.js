@@ -83,7 +83,7 @@ app.get('/guild/:guildID', (req, res) => {
     });
 });
 
-// app.get('/guild/:guildID/set', (req, res) => {
+// app.get('/guild/:guildID/save', (req, res) => {
 //   if (!req.headers['token-type'] && !req.headers['access-token']) {
 //     res.status(400).json({
 //       message: 'Missing authentication.'
@@ -112,22 +112,25 @@ app.get('/guild/:guildID', (req, res) => {
 //           .fetch(json.id)
 //           .then((member) => {
 //             if (member.hasPermission('ADMINISTRATOR')) {
-//               db.get(
-//                 'SELECT * FROM commands WHERE guild=?',
-//                 [req.params.guildID],
-//                 (err, result) => {
-//                   delete result.guild;
-//                   if (err)
-//                     res.status(500).json({
-//                       message: 'An internal error occured. Please try again later.'
-//                     });
-//                   else {
-//                     res.status(200).json({
-//                       commands: result
-//                     });
-//                   }
-//                 }
-//               );
+//               let sql = 'UPDATE commands SET ';
+//               let sqlParams = [];
+//               console.log(req.headers.data);
+//               for (const key in req.headers.data.commands) {
+//                 if (!object.hasOwnProperty(key)) continue;
+//                 sql += '? = ?, ';
+//                 sqlParams.push(key, req.headers.data.commands[key]);
+//               }
+//               sql = sql.slice(0, -2) += ' WHERE guild=?';
+//               console.log(sql);
+//               console.log(sqlParams);
+//               db.run(sql, sqlParams, (err) => {
+//                 if (err) {
+//                   console.log(err.message);
+//                   res.status(500).json({
+//                     message: 'An internal error occured. Please try again later.'
+//                   });
+//                 } else res.status(200);
+//               });
 //             } else
 //               res.status(403).json({
 //                 message: "You don't have permission to manage this guild's settings!"
@@ -141,7 +144,7 @@ app.get('/guild/:guildID', (req, res) => {
 //               });
 //             else
 //               res.status(500).json({
-//                 message: 'An error occured. Please try again later.'
+//                 message: 'An internal error occured. Please try again later.'
 //               });
 //           });
 //       }

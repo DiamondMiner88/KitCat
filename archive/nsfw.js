@@ -131,7 +131,7 @@ module.exports = {
       return;
     }
     if (args[0].toLowerCase() === 'hentai') {
-      if (args[1] == 'help') {
+      if (args[1] === 'help') {
         message.channel.send(`Here are your options: \`${hentai_commands.join(', ')}\``);
         return;
       }

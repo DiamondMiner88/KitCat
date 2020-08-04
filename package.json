@@ -4,7 +4,7 @@
   "description": "i will take over discord",
   "main": "index.js",
   "scripts": {
-    "run": "node run.js",
+    "start": "node run.js",
     "dev": "nodemon run.js"
   },
   "repository": {
@@ -41,6 +41,7 @@
     "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
   },
   "devDependencies": {
+    "@types/node": "^14.0.27",
     "nodemon": "^2.0.4"
   }
 }

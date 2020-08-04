@@ -15,7 +15,7 @@ function getOverview(bookID, channel, callback) {
     callback('This command is only allowed in NSFW channels!', undefined);
     return;
   }
-  if (bookID === undefined) {
+  if (!bookID) {
     callback('You did not provide a number!', undefined);
     return;
   }

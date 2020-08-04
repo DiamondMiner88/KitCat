@@ -27,6 +27,7 @@ exports.token = functions.https.onRequest((request, response) => {
 });
 
 exports.guild = functions.https.onRequest((request, response) => {
+  const params = request.path.substring(1).split(/\/|$/);
   if (!request.headers['token-type'] && !request.headers['access-token']) {
     response.status(400).json({
       message: 'Missing authentication.'
@@ -34,15 +35,30 @@ exports.guild = functions.https.onRequest((request, response) => {
     return;
   }
 
-  fetch(config.botapi_url + '/guild' + request.params[0], {
-    method: 'GET',
-    headers: {
-      'token-type': request.headers['token-type'],
-      'access-token': request.headers['access-token']
-    }
-  })
-    .then((res) => res.json())
-    .then((json) => {
-      response.status(200).json(json);
-    });
+  if (params[1] === 'save') {
+    fetch(`${config.botapi_url}/guild/${params[0]}/save`, {
+      method: 'GET',
+      headers: {
+        'token-type': request.headers['token-type'],
+        'access-token': request.headers['access-token'],
+        data: request.headers['data']
+      }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        response.status(200).json(json);
+      });
+  } else {
+    fetch(`${config.botapi_url}/guild/${params[0]}`, {
+      method: 'GET',
+      headers: {
+        'token-type': request.headers['token-type'],
+        'access-token': request.headers['access-token']
+      }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        response.status(200).json(json);
+      });
+  }
 });

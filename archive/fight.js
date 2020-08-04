@@ -15,10 +15,10 @@ module.exports = {
     if (!user) return message.reply('you did not specify who you would like to fight!');
 
     //checks if the users is trying to fight themselves
-    if (user.id == message.author.id) return message.reply('you cannot fight yourself!');
+    if (user.id === message.author.id) return message.reply('you cannot fight yourself!');
 
     //checks if the user is trying to fight the bot
-    if (user.bot == true) return message.reply('you cannot fight a bot!');
+    if (user.bot === true) return message.reply('you cannot fight a bot!');
 
     //saves the two user ids to variables
     var fighter1 = message.author.id;
@@ -34,8 +34,8 @@ module.exports = {
         message.channel
           .awaitMessages(
             (response, user) =>
-              (response.content == 'yes' && response.author.id == fighter2) ||
-              (response.content == 'no' && response.author.id == fighter2),
+              (response.content === 'yes' && response.author.id === fighter2) ||
+              (response.content === 'no' && response.author.id === fighter2),
             {
               max: 1,
               time: 60000,
@@ -43,9 +43,9 @@ module.exports = {
             }
           )
           .then((collected) => {
-            if (collected.first().content == 'yes') {
+            if (collected.first().content === 'yes') {
               message.channel.send(`${challenged} has accepted the challenge!`);
-            } else if (collected.first().content == 'no') {
+            } else if (collected.first().content === 'no') {
               message.channel.send(`nope`);
             }
           })

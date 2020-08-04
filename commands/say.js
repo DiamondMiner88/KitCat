@@ -9,7 +9,7 @@ module.exports = {
   unlisted: false,
 
   execute(client, message, args) {
-    if (args.length == 0) message.author.send("You didn't provide a message to say!");
+    if (args.length === 0) message.author.send("You didn't provide a message to say!");
     else message.channel.send(args.join(' '));
     message.delete();
   }

@@ -16,7 +16,7 @@ module.exports = {
    * @returns {void}
    */
   execute(client, message, args) {
-    if (args[0] === undefined) {
+    if (!args[0]) {
       message.channel.send(`You need to mention someone or put their tag.`);
       return;
     }

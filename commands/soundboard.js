@@ -35,18 +35,11 @@ module.exports = {
       return message.channel.send(embed);
     }
     if (message.member.voice.channel) {
-      if (args[0] === undefined) {
-        message.channel.send("You didn't provide an audio clip to play.");
-        return;
-      }
+      if (!args[0]) return message.channel.send("You didn't provide an audio clip to play.");
       const argsStr = args.join(' ');
-      if (effects.sound_effects[args.join(' ')] === undefined) {
-        message.channel.send("You didn't provide a valid audio clip!");
-        return;
-      }
+      if (!effects.sound_effects[args.join(' ')])
+        return message.channel.send("You didn't provide a valid audio clip!");
       play_audio(effects.sound_effects[args.join(' ')], message);
-    } else {
-      message.reply('You need to join a VC first!');
-    }
+    } else message.reply('You need to join a VC first!');
   }
 };

@@ -24,9 +24,8 @@ process.on('SIGINT', function () {
 client.commands = new Discord.Collection();
 const commandFiles = require('fs')
   .readdirSync(path.join(__dirname, '/commands'))
-  .filter((file) => file.endsWith('.js'));
+  .filter((file) => file.endsWith('.js') && !file.startsWith("_"));
 for (const file of commandFiles) {
-  if (file[0] == '_') continue;
   const command = require(path.join(__dirname, './commands', file));
   client.commands.set(command.command, command);
 }
@@ -47,14 +46,13 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 client.on('message', async (message) => {
-  // Checks for blacklisted image attachments or cdn urls
   var url = undefined;
   if (message.attachments.size > 0) url = message.attachments.first().url;
   if (
     message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)
   )
     url = message.content;
-  if (url !== undefined) {
+  if (url) {
     if (url.toLowerCase().indexOf('png', url.length - 3) !== -1) {
       require('image-hash').imageHash(url, 16, true, (error, hash) => {
         if (error) throw error;
@@ -63,9 +61,7 @@ client.on('message', async (message) => {
           [hash],
           (err, result) => {
             if (err) console.log('Error trying get data: ' + err);
-            else {
-              if (result !== undefined) message.delete();
-            }
+            if (result) message.delete();
           }
         );
       });

@@ -9,10 +9,7 @@ module.exports = {
   unlisted: false,
 
   execute(client, message, args) {
-    if (args[0] === undefined) {
-      message.channel.send(`Missing subreddit`);
-      return;
-    }
+    if (!args[0]) return message.channel.send(`Missing subreddit`);
     require('../reddit.js').getTopPost(message, args[0]);
   }
 };

@@ -23,7 +23,7 @@ async function updateBoard(channel, gameOver) {
 
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
-      if (data.tiles[x + ',' + y] === undefined) continue;
+      if (!data.tiles[x + ',' + y]) continue;
       await loadImage(
         path.join(__dirname, `/../assets/2048/tiles/${data.tiles[x + ',' + y].toString()}.PNG`)
       ).then((image) => {
@@ -62,7 +62,7 @@ async function updateBoard(channel, gameOver) {
  */
 function addNewTile(guildID) {
   var emptyTileNames = Object.keys(games[guildID].tiles).filter(
-    (tileName) => games[guildID].tiles[tileName] === undefined
+    (tileName) => !games[guildID].tiles[tileName]
   );
   if (emptyTileNames.length === 0) return;
   const tileIndex = Math.floor(Math.random() * emptyTileNames.length);
@@ -106,7 +106,7 @@ function isGameOver(guild) {
   for (y = 0; y < data.size; y++) {
     for (x = 0; x < data.size; x++) {
       const curTile = data.tiles[x + ',' + y];
-      if (data.tiles[x + ',' + y] === undefined) return false;
+      if (!data.tiles[x + ',' + y]) return false;
       if (data.tiles[x + ',' + y - 1] === curTile) return false;
       if (data.tiles[x + ',' + y + 1] === curTile) return false;
       if (data.tiles[x + 1 + ',' + y] === curTile) return false;
@@ -132,7 +132,7 @@ function moveTiles(channel, direction) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + ',' + y] === undefined) continue;
+            if (!data.tiles[x + ',' + y]) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (
               data.tiles[x + ',' + y] === data.tiles[x + ',' + (y - 1)] &&
@@ -145,7 +145,7 @@ function moveTiles(channel, direction) {
               mergedTiles.push(x + ',' + (y - 1));
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x + ',' + (y - 1)] === undefined && y !== 0) {
+            else if (!data.tiles[x + ',' + (y - 1)] && y !== 0) {
               data.tiles[x + ',' + (y - 1)] = data.tiles[x + ',' + y];
               data.tiles[x + ',' + y] = undefined;
               if (mergedTiles.includes(x + ',' + y)) {
@@ -162,7 +162,7 @@ function moveTiles(channel, direction) {
         for (y = data.size - 1; y >= 0; y--) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + ',' + y] === undefined) continue;
+            if (!data.tiles[x + ',' + y]) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (
               data.tiles[x + ',' + y] === data.tiles[x + ',' + (y + 1)] &&
@@ -175,7 +175,7 @@ function moveTiles(channel, direction) {
               mergedTiles.push(x + ',' + (y + 1));
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x + ',' + (y + 1)] === undefined && y !== data.size - 1) {
+            else if (!data.tiles[x + ',' + (y + 1)] && y !== data.size - 1) {
               data.tiles[x + ',' + (y + 1)] = data.tiles[x + ',' + y];
               data.tiles[x + ',' + y] = undefined;
               if (mergedTiles.includes(x + ',' + y)) {
@@ -192,7 +192,7 @@ function moveTiles(channel, direction) {
         for (y = 0; y < data.size; y++) {
           for (x = 0; x < data.size; x++) {
             // if tile is empty, skip it
-            if (data.tiles[x + ',' + y] === undefined) continue;
+            if (!data.tiles[x + ',' + y]) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (
               data.tiles[x + ',' + y] === data.tiles[x - 1 + ',' + y] &&
@@ -205,7 +205,7 @@ function moveTiles(channel, direction) {
               mergedTiles.push(x - 1 + ',' + y);
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x - 1 + ',' + y] === undefined && x !== 0) {
+            else if (!data.tiles[x - 1 + ',' + y] && x !== 0) {
               data.tiles[x - 1 + ',' + y] = data.tiles[x + ',' + y];
               data.tiles[x + ',' + y] = undefined;
               if (mergedTiles.includes(x + ',' + y)) {
@@ -222,7 +222,7 @@ function moveTiles(channel, direction) {
         for (y = 0; y < data.size; y++) {
           for (x = data.size - 1; x >= 0; x--) {
             // if tile is empty, skip it
-            if (data.tiles[x + ',' + y] === undefined) continue;
+            if (!data.tiles[x + ',' + y]) continue;
             // if the tile above is equal to the current tile, double the above's tile value and set this one to empty
             else if (
               data.tiles[x + ',' + y] === data.tiles[x + 1 + ',' + y] &&
@@ -235,7 +235,7 @@ function moveTiles(channel, direction) {
               mergedTiles.push(x + 1 + ',' + y);
             }
             // If this tile isn't the top tile AND if the tile above is empty, then move the current tile's value one higher
-            else if (data.tiles[x + 1 + ',' + y] === undefined && x !== data.size - 1) {
+            else if (!data.tiles[x + 1 + ',' + y] && x !== data.size - 1) {
               data.tiles[x + 1 + ',' + y] = data.tiles[x + ',' + y];
               data.tiles[x + ',' + y] = undefined;
               if (mergedTiles.includes(x + ',' + y)) {
@@ -279,7 +279,7 @@ module.exports = {
         message.channel.send(embed);
         break;
       case 'new':
-        if (args[1] === undefined) {
+        if (!args[1]) {
           message.channel.send("You didn't provide a size, using the default which is 4...");
           newGame(message.channel, 4);
         } else {
@@ -309,7 +309,7 @@ module.exports = {
    */
   onReactionAdded(messageReaction, user) {
     if (user.bot) return;
-    if (games[messageReaction.message.guild.id] === undefined) return;
+    if (!games[messageReaction.message.guild.id]) return;
     if (messageReaction.message === games[messageReaction.message.guild.id].lastDisplayMsg) {
       moveTiles(messageReaction.message.channel, messageReaction._emoji.name);
     }

@@ -92,11 +92,9 @@ module.exports = {
       difficulty = selectedDifficulty[input[1].toLowerCase().replace(/\s+/g, '')];
       var toq = selectedType[input[2].toLowerCase().replace(/\s+/g, '')];
 
-      if (category === undefined) return message.channel.send('You provided an invalid category!');
-      if (difficulty === undefined)
-        return message.channel.send('You provided an invalid difficulty!');
-      if (toq === undefined)
-        return message.channel.send('You provided an invalid type of question!');
+      if (!category) return message.channel.send('You provided an invalid category!');
+      if (!difficulty) return message.channel.send('You provided an invalid difficulty!');
+      if (!toq) return message.channel.send('You provided an invalid type of question!');
       if (category !== 'any') url += `&category=${category}`;
       if (difficulty !== 'any') url += `&difficulty=${difficulty}`;
       if (toq !== 'any') url += `&type=${toq}`;

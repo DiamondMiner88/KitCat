@@ -7,8 +7,8 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 // Pages
-import _Home from './pages/_Home';
-import _Login from './pages/_Login';
+import Home from './pages/Home';
+import Login from './pages/Login';
 import Guild from './pages/Guild';
 import NotFound from './pages/404';
 
@@ -35,8 +35,8 @@ function App(props) {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/" component={_Home} />
-            <Route exact path="/token" component={_Login} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/token" component={Login} />
             <Route exact path="/guild/:guildID" component={Guild} />
             <Route component={NotFound} />
           </Switch>
