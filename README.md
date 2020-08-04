@@ -14,6 +14,8 @@ Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/
 
 ## TODO
 - Change the prefix in index.html, and also change the href for the discord button to the invite link.
+- Add link to invite for bot commands.
+- Do something with the bot commands website.
 
 ## Running
 Only for arm based systems (ie. a RasPi) do the following two commands
