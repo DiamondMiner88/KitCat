@@ -41,6 +41,7 @@ function Guilds(props) {
   return (
     <div>
       {JSON.stringify(guilds)}
+      {guilds.map(guild => <li>{guild.id}</li>)}
     </div>
   );
 }

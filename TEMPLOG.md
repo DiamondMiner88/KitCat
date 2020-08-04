@@ -11,3 +11,4 @@
 - Replace access token url search queary with a cookie
 - Transform Login page to a functional component
 - Create this log/todo
+- Guild list

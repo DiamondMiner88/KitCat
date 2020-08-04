@@ -5,6 +5,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import NavBar from '../components/Navbar';
 import Cookies from 'universal-cookie';
 
@@ -18,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function Guild(props) {
   const classes = useStyles();
   const [errors, setErrors] = useState([]);
+  const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
   const [settings, setSettings] = useState();
   const [commandSettings, setCommandSettings] = useState({});
   const [modified, setModified] = useState({
@@ -25,6 +28,11 @@ function Guild(props) {
     settings: {}
   });
   const { guildID } = useParams();
+
+  const addError = (error) => {
+    setErrors(errors.concat([error]));
+    setErrorsAlertOpened(true);
+  };
 
   useEffect(() => {
     const cookies = new Cookies();
@@ -39,12 +47,10 @@ function Guild(props) {
         res
           .json()
           .then((json) => {
-            if (json.message) setErrors(errors.concat([json.message]));
-            setCommandSettings(json.commands);
+            if (json.message) addError(json.message);
+            else setCommandSettings(json.commands);
           })
-          .catch((error) => {
-            setErrors(errors.concat([error.message]));
-          });
+          .catch((error) => addError(error.message));
       }
       fetchData();
     } else props.history.push('/');
@@ -61,7 +67,7 @@ function Guild(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        if (json.message) setErrors(errors.concat([json.message]));
+        if (json.message) addError(json.message);
         else {
           console.log(json);
           setModified({
@@ -70,18 +76,36 @@ function Guild(props) {
           });
         }
       })
-      .catch((error) => {
-        setErrors(errors.concat([error.message]));
-      });
+      .catch((error) => addError(error.message));
   }
 
   return (
     <div>
-      {errors.length === 0 ? (
-        <NavBar location={props.location} history={props.history} />
-      ) : (
-        ((<h2>Errors:</h2>), errors.map((error) => <div>{error}</div>))
+      <NavBar location={props.location} history={props.history} />
+
+      {errors.length > 0 && (
+        <Snackbar
+          open={errorsAlertOpened}
+          autoHideDuration={null}
+          onClose={(event, reason) => {
+            if (reason !== 'clickaway') setErrorsAlertOpened(false);
+          }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={() => {
+              setErrorsAlertOpened(false);
+            }}
+            severity="error"
+          >
+            {errors.map((error) => (
+              <div>{error}</div>
+            ))}
+          </MuiAlert>
+        </Snackbar>
       )}
+
       {errors.length === 0 && (
         <div className="container">
           {Object.keys(commandSettings).map((key) => {
@@ -106,6 +130,7 @@ function Guild(props) {
           })}
         </div>
       )}
+      {console.log(errors)}
     </div>
   );
 }
