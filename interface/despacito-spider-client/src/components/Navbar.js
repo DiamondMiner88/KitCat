@@ -33,7 +33,6 @@ function NavBar(props) {
   const [userDropdownOpened, setUserDropdownOpened] = useState(false);
 
   useEffect(() => {
-    console.log('effect');
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       setHasToken(true);
@@ -55,23 +54,26 @@ function NavBar(props) {
     <div className={classes.root}>
       <AppBar>
         <ToolBar>
-          {!hasToken && !user && (
-            <Button
-              color="inherit"
-              href="https://discord.com/api/oauth2/authorize?client_id=713778178967076945&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify"
-            >
-              Login
-            </Button>
-          )}
+          <Button color="inherit" href="">
+            Invite
+          </Button>
 
           <div className={classes.spacer} />
 
+          {/* If we have user info, display username, else if have the token but no user info yet, display a skeleton otherwise display login */}
           {user ? (
             <Typography variant="subtitle2" className={classes.username}>
               <b>{user.username}</b>#{user.discriminator}
             </Typography>
-          ) : (
+          ) : !user && hasToken ? (
             <Skeleton variant="rect" width={150} height={16} animation="wave" />
+          ) : (
+            <Button
+              color="inherit"
+              href="https://discord.com/api/oauth2/authorize?client_id=713778178967076945&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify"
+            >
+              Login with Discord
+            </Button>
           )}
 
           {user && (
