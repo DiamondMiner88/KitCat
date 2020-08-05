@@ -12,6 +12,9 @@ Check out the [Despacito Bot](https://diamondminer88.github.io/despacito-spider/
 - [Nano-AI](https://github.com/Nano-AI) - _Dev_
 - [BerkM125](https://github.com/BerkM125) - _Dev_
 
+## Issues
+Would have to repeat command in order for bot to work.
+
 ## TODO
 - Change the prefix in index.html, and also change the href for the discord button to the invite link.
 - Add link to invite for bot commands.
