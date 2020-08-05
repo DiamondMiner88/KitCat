@@ -70,7 +70,7 @@ function NavBar(props) {
           ) : (
             <Button
               color="inherit"
-              href="https://discord.com/api/oauth2/authorize?client_id=713778178967076945&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify"
+              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify`}
             >
               Login with Discord
             </Button>
