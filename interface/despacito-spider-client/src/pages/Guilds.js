@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
 
@@ -67,7 +67,7 @@ function Guilds(props) {
       }
       fetchData();
     } else props.history.push('/');
-  }, []);
+  }, [props.history]);
 
   const guildItems = [];
 
@@ -75,8 +75,8 @@ function Guilds(props) {
     guildItems.push(
       <Card className={classes.root}>
         <CardActionArea
+          // eslint-disable-next-line
           onClick={() => {
-            // eslint-disable-next-line
             props.history.push(`/guild/${guild}`);
           }}
         >
@@ -84,7 +84,7 @@ function Guilds(props) {
             className={classes.cardSubComponents}
             avatar={
               <Avatar className={classes.avatar}>
-                <img src={guilds[guild].iconURL} alt={`Guild Icon for ${guilds[guild].name}`}/>
+                <img src={guilds[guild].iconURL} alt={`Guild Icon for ${guilds[guild].name}`} />
               </Avatar>
             }
           />
@@ -100,7 +100,7 @@ function Guilds(props) {
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
-      <div className="container">{guildItems}</div>
+      <div className="container">{guilds ? guildItems : <Typography>Loading...</Typography>}</div>
     </div>
   );
 }

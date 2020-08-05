@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+// Material-UI
 import { makeStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import MuiAlert from '@material-ui/lab/Alert';
 import Select from '@material-ui/core/Select';
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+
+// Components
 import NavBar from '../components/Navbar';
+
+// Other
 import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,22 +26,20 @@ const useStyles = makeStyles((theme) => ({
 function Guild(props) {
   const classes = useStyles();
   const { guildID } = useParams();
-  
+
   const [settings, setSettings] = useState();
   const [commandSettings, setCommandSettings] = useState({});
   const [modified, setModified] = useState({
     commands: {},
     settings: {}
   });
-  
+
   const [errors, setErrors] = useState([]);
   const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
   const addError = (error) => {
     setErrors(errors.concat([error]));
     setErrorsAlertOpened(true);
   };
-
-
 
   useEffect(() => {
     const cookies = new Cookies();

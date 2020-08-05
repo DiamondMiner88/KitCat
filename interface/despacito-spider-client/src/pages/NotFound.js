@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import Link from 'react-router-dom/Link';
+import React from 'react';
 
-export default class home extends Component {
-  render() {
-    return (
-      <div>
-        <h1>404 - Not Found</h1>
-        <Link to="/">Go back home</Link>
-      </div>
-    );
-  }
+// Material-UI
+import Button from '@material-ui/core/Button';
+
+function NotFound(props) {
+  return (
+    <div>
+      <h1>404 - Not Found</h1>
+      <Button
+        onClick={() => {
+          props.history.push('/');
+        }}
+      >
+        Go Home
+      </Button>
+    </div>
+  );
 }
+
+export default NotFound;
