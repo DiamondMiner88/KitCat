@@ -10,13 +10,18 @@ body {
     left: 50%;
     /* bring your own prefixes */
     transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
 #mokey {
-    position: fixed;
-    top: 88%;
-    left: 50%;
-    /* bring your own prefixes */
-    transform: translate(-50%, -50%);
-    width: 25%;
+    position: absolute;
+    bottom: 0;
+    align-self: center;
+    margin-left: 30%;
+}
+
+@media (max-width: 768px) {
+    #mokey {
+          display:none;
+ }
 }
