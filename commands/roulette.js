@@ -8,7 +8,7 @@ module.exports = {
   help_name: `:gun: Russian Roulette`,
   help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
   guildOnly: true,
-  unlisted: false,
+  unlisted: true,
 
   execute(client, message, args) {
     // console.log(message.mentions.members.first(message.mentions.members.size));
