@@ -19,20 +19,23 @@ const useStyles = makeStyles((theme) => ({
 
 function Guild(props) {
   const classes = useStyles();
-  const [errors, setErrors] = useState([]);
-  const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
+  const { guildID } = useParams();
+  
   const [settings, setSettings] = useState();
   const [commandSettings, setCommandSettings] = useState({});
   const [modified, setModified] = useState({
     commands: {},
     settings: {}
   });
-  const { guildID } = useParams();
-
+  
+  const [errors, setErrors] = useState([]);
+  const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
   const addError = (error) => {
     setErrors(errors.concat([error]));
     setErrorsAlertOpened(true);
   };
+
+
 
   useEffect(() => {
     const cookies = new Cookies();

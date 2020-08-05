@@ -8,7 +8,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 // Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
+import Token from './pages/Token';
 import Guild from './pages/Guild';
 import Guilds from './pages/Guilds';
 import NotFound from './pages/NotFound';
@@ -37,7 +37,7 @@ function App(props) {
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/token" component={Login} />
+            <Route exact path="/token" component={Token} />
             <Route exact path="/guild/:guildID" component={Guild} />
             <Route exact path="/guilds" component={Guilds} />
             <Route component={NotFound} />

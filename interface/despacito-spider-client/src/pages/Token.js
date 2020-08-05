@@ -7,7 +7,9 @@ function Login(props) {
   useEffect(() => {
     const cookies = new Cookies();
     const query = new URLSearchParams(props.location.search);
-    if (query.has('code')) {
+    
+    if (query.has('error')) props.history.push(`/`);
+    else if (query.has('code')) {
       fetch(`/despacito-spider-626fa/us-central1/token?code=${query.get('code')}`, {
         method: 'POST'
       })
