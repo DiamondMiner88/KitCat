@@ -15,7 +15,6 @@ import NavBar from '../components/Navbar';
 
 // Other
 import Cookies from 'universal-cookie';
-import { FormControlLabel, Switch } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -118,15 +117,20 @@ function Guild(props) {
           {Object.keys(commandSettings).map((key) => {
             return (
               <FormControl className={classes.formControl}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="checkedB"
-                      color="primary"
-                    />
-                  }
-                  label={key}
-                />
+                <InputLabel htmlFor="grouped-select">{key}</InputLabel>
+                <Select
+                  defaultValue={commandSettings[key]}
+                  id="grouped-select"
+                  onChange={(event) => {
+                    let tmp = modified;
+                    tmp.commands[key] = event.target.value;
+                    setModified(tmp);
+                    // save();
+                  }}
+                >
+                  <MenuItem value="enabled">Enabled</MenuItem>
+                  <MenuItem value="disabled">Disabled</MenuItem>
+                </Select>
               </FormControl>
             );
           })}
@@ -137,20 +141,3 @@ function Guild(props) {
 }
 
 export default Guild;
-
-/*
-<InputLabel htmlFor="grouped-select">{key}</InputLabel>
-<Select
-defaultValue={commandSettings[key]}
-id="grouped-select"
-onChange={(event) => {
-  let tmp = modified;
-  tmp.commands[key] = event.target.value;
-  setModified(tmp);
-  // save();
-}}
->
-<MenuItem value="enabled">Enabled</MenuItem>
-<MenuItem value="disabled">Disabled</MenuItem>
-</Select>
-*/
