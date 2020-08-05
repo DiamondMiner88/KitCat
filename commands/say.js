@@ -1,10 +1,9 @@
-const pfx = require('../config/config.json').prefix;
-
 module.exports = {
   command: 'say',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:speaking_head: Say`,
-  help_description: `Make the bot say whatever you want!\n\`${pfx}say {message}\``,
+  help_description: `Make the bot say whatever you want!`,
+  usage: `say {message}`,
   guildOnly: false,
   unlisted: false,
 

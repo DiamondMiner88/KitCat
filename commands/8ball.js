@@ -1,11 +1,11 @@
-const pfx = require('../config/config.json').prefix;
 const eightball_config = require('../config/8ball.json');
 
 module.exports = {
   command: '8ball',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:8ball: 8Ball`,
-  help_description: `Ask it a question, and it will give you an answer.\n\`${pfx}8ball {question}\``,
+  help_description: `Ask it a question, and it will give you an answer.`,
+  usage: `8ball {Your Question}`,
   guildOnly: false,
   unlisted: false,
 

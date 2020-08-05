@@ -1,10 +1,9 @@
-const pfx = require('../config/config.json').prefix;
-
 module.exports = {
   command: 'ping',
   category: require('./_CATEGORIES.js').utils,
   help_name: `Ping`,
-  help_description: `Gets my latency and API latency.\n\`${pfx}ping\``,
+  help_description: `Gets my latency and API latency.`,
+  usage: `ping`,
   guildOnly: false,
   unlisted: false,
 

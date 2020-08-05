@@ -6,19 +6,21 @@ module.exports = {
   command: 'help',
   category: categories.utils,
   help_name: `Help`,
-  help_description: `What you're looking at right now.\n\`${pfx}help\``,
+  help_description: `What you're looking at right now.`,
+  usage: `help`,
   guildOnly: false,
   unlisted: false,
 
   execute(client, message, args) {
     if (args.length === 0) {
       var embed = new Discord.MessageEmbed().setColor(0x0099ff).setTitle('Categories:');
-      for (var key in categories) {
-        // skip loop if the property is from prototype
+      for (const key in categories) {
+        // Skip loop if the property is from prototype (I have no idea what this means this was from stackoverflow)
         if (!categories.hasOwnProperty(key)) continue;
-        var category = categories[key];
-        var desc =
-          category.help_description !== ''
+
+        const category = categories[key];
+        const desc =
+          category.help_description && category.help_description !== ''
             ? category.help_description + '\n' + category.usage
             : category.usage;
         embed.addField(category.help_name, desc);
@@ -39,7 +41,8 @@ module.exports = {
         .setTitle(categories[args[0]].help_name)
         .setDescription(categories[args[0]].help_description);
       commands.forEach((command) => {
-        embed.addField(command.help_name, command.help_description);
+        const desc = `${command.help_description}\n\`${pfx}${command.usage}\``;
+        embed.addField(command.help_name, desc);
       });
       message.channel.send(embed);
     }

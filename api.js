@@ -1,4 +1,4 @@
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 var db = require('./db.js').db;
 var app = require('express')();

@@ -3,17 +3,15 @@ import React from 'react';
 // Components
 import NavBar from '../components/Navbar';
 
-function Home(props) {
+function Commands(props) {
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
       <div className="container">
-        <a href="/guilds">Guilds list</a>
-        <br />
-        <a href="/commands">Commands</a>
+        <h2>Replace this</h2>
       </div>
     </div>
   );
 }
 
-export default Home;
+export default Commands;

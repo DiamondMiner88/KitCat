@@ -1,4 +1,3 @@
-const pfx = require('../config/config.json').prefix;
 const { spawn } = require('child_process');
 
 module.exports = {

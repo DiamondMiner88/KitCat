@@ -37,7 +37,7 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberRemove', (member) => {
-  var general = member.guild.systemChannel;
+  const general = member.guild.systemChannel;
   if (general) general.send(`<@${member.user.id}> has left the server.`);
 });
 

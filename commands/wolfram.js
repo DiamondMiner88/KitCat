@@ -1,5 +1,4 @@
 const config = require('../config/config.json');
-const pfx = config.prefix;
 const WolframAlphaAPI = require('wolfram-alpha-api');
 const waApi = WolframAlphaAPI('3K5593-UJEWH5VHRJ'); //I can just turn this into an environmental variable later. Im gonna need a gitignore on .env files
 const fs = require('fs');
@@ -46,7 +45,8 @@ module.exports = {
   command: 'wolfram',
   category: require('./_CATEGORIES.js').utils,
   help_name: `Wolfram`,
-  help_description: `Ask a mathematical or analytical question you want answered.\n\`oof wolfram {query}\``,
+  help_description: `Ask a mathematical or analytical question you want answered.`,
+  usage: `wolfram {query}`,
   guildOnly: false,
   unlisted: false,
 

@@ -1,10 +1,9 @@
-const pfx = require('../config/config.json').prefix;
-
 module.exports = {
   command: 'meme',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:joy: Memes`,
-  help_description: `Get a meme from r/memes\n\`${pfx}meme\``,
+  help_description: `Get a meme from r/memes`,
+  usage: `meme`,
   guildOnly: false,
   unlisted: false,
 

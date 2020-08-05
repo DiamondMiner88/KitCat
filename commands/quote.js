@@ -1,11 +1,11 @@
-const pfx = require('../config/config.json').prefix;
 const fetch = require('node-fetch');
 
 module.exports = {
   command: 'quote',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:innocent: Inspirational Quote`,
-  help_description: `Gives an inspirational quote!\n\`${pfx}quote\``,
+  help_description: `Gives an inspirational quote!`,
+  usage: `quote`,
   guildOnly: false,
   unlisted: false,
 

@@ -1,6 +1,4 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
-const fs = require('fs');
 const { imageHash } = require('image-hash');
 var { db } = require('../db.js');
 
@@ -8,7 +6,8 @@ module.exports = {
   command: 'blacklist',
   category: require('./_CATEGORIES.js').moderation,
   help_name: `Blacklist commands`,
-  help_description: `For more commands on the blacklist do\n\`${pfx}blacklist help\``,
+  help_description: `For more commands on the blacklist do`,
+  usage: `blacklist help`,
   guildOnly: true,
   unlisted: false,
 

@@ -16,7 +16,8 @@ module.exports = {
   command: 'soundboard',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:loud_sound: Soundboard`,
-  help_description: `Plays audio clips.\n\`${pfx}soundboard {audio clip}\`\nRun \`${pfx}soundboard help\` for help with audio clips`,
+  help_description: `Plays audio clips. Run \`${pfx}soundboard help\` for help with audio clips`,
+  usage: `soundboard {audio clip}`,
   guildOnly: true,
   unlisted: false,
 

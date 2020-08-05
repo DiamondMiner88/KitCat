@@ -1,11 +1,11 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
 
 module.exports = {
   command: 'avatar',
   category: require('./_CATEGORIES.js').utils,
   help_name: `Avatar`,
-  help_description: `Get avatar of the user after the command. Can be a mention or a tag.\n\`${pfx}avatar {mention | user tag}\``,
+  help_description: `Get avatar of the user after the command. Can be a mention or a tag.`,
+  usage: `avatar {mention | user tag}`,
   guildOnly: false,
   unlisted: false,
 

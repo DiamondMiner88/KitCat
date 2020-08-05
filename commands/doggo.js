@@ -1,5 +1,3 @@
-const config = require('../config/config.json');
-const pfx = config.prefix;
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
 
@@ -7,7 +5,8 @@ module.exports = {
   command: 'doggo',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:dog: Doggo`,
-  help_description: `Get a photo of a doggo using this command!\n\`oof doggo {optional: breed | example: retriever}\``,
+  help_description: `Get a photo of a doggo using this command!`,
+  usage: `doggo {optional: breed | example: retriever}`,
   guildOnly: false,
   unlisted: false,
 
