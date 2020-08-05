@@ -25,6 +25,7 @@ module.exports = {
   category: require('./_CATEGORIES.js').utils,
   help_name: `adjust_setting`,
   help_description: `adjust one of the listed bot settings: \n-Wolfram image result limit`,
+  unlisted: true,
 
   execute(client, message, args) {
     var concenatedargs = '';
