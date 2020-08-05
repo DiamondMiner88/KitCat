@@ -1,4 +1,3 @@
-const pfx = require('../config/config.json').prefix;
 var db = require('../db.js').db;
 const currency = require('../oofcoin.js');
 const Discord = require('discord.js');
@@ -26,7 +25,8 @@ module.exports = {
   command: 'balance',
   category: require('./_CATEGORIES.js').oofcoin,
   help_name: `Oof coin Balance`,
-  help_description: `Gets the your or the mention user's global balance of oof coin.\n\`${pfx}balance {optional: mention | username#discriminator}\``,
+  help_description: `Gets the your or the mention user's global balance of oof coin.`,
+  usage: `balance {optional: mention | username#discriminator}`,
   guildOnly: false,
   unlisted: false,
 

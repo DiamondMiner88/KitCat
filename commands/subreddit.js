@@ -1,10 +1,9 @@
-const pfx = require('../config/config.json').prefix;
-
 module.exports = {
   command: 'subreddit',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:globe_with_meridians: Subreddit`,
-  help_description: `Get a top post from a subreddit! (NSFW subreddits allowed in NSFW channels)\n\`${pfx}subreddit {subreddit}\``,
+  help_description: `Get a top post from a subreddit! (NSFW subreddits allowed in NSFW channels)`,
+  usage: `subreddit {Subreddit name}`,
   guildOnly: false,
   unlisted: false,
 

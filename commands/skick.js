@@ -1,11 +1,11 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
 
 module.exports = {
   command: 'skick',
   category: require('./_CATEGORIES.js').moderation,
   help_name: `:leg: Silent kick`,
-  help_description: `Used to silently kick members.\n\`${pfx}skick {mention | username#discriminator} {optional: reason}\``,
+  help_description: `Used to silently kick members.`,
+  usage: `skick {mention | username#discriminator} {optional: reason}`,
   guildOnly: true,
   unlisted: false,
 

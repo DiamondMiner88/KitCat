@@ -12,7 +12,8 @@ module.exports = {
   command: 'image',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:camera: Photo Commands`,
-  help_description: `Run photo commands to make custom photos.\n\`${pfx}image help\``,
+  help_description: `Run photo commands to make custom photos.`,
+  usage: `image help`,
   guildOnly: false,
   unlisted: false,
 

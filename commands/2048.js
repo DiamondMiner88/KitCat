@@ -260,7 +260,8 @@ module.exports = {
   command: '2048',
   category: require('./_CATEGORIES.js').games,
   help_name: `:1234: 2048`,
-  help_description: `Play 2048 in Discord\n\`${pfx}2048 help\``,
+  help_description: `Play 2048 in Discord`,
+  usage: `2048 help`,
   guildOnly: true,
   unlisted: false,
 

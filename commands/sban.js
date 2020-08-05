@@ -1,11 +1,11 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
 
 module.exports = {
   command: 'sban',
   category: require('./_CATEGORIES.js').moderation,
   help_name: `:no_entry: Silent ban`,
-  help_description: `Used to silently ban members.\n\`${pfx}sban {mention | username#discriminator} {optional: reason}\``,
+  help_description: `Used to silently ban members.`,
+  usage: `sban {mention | username#discriminator} {optional: reason}`,
   guildOnly: true,
   unlisted: false,
 

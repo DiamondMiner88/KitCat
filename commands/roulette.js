@@ -6,7 +6,8 @@ module.exports = {
   command: 'roulette',
   category: require('./_CATEGORIES.js').games,
   help_name: `:gun: Russian Roulette`,
-  help_description: `Play Russian Roulette in Discord.\n\`${pfx}roulette {people you want to play with}\`.\nExample: \`${pfx}roulette @Person1 @Person2 @Person3\``,
+  help_description: `Play Russian Roulette in Discord.`,
+  usage: `roulette {Mentions of people you want to play with}`,
   guildOnly: true,
   unlisted: true,
 

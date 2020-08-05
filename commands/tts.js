@@ -1,10 +1,9 @@
-const pfx = require('../config/config.json').prefix;
-
 module.exports = {
   command: 'tts',
   category: require('./_CATEGORIES.js').utils,
   help_name: `:robot: TTS`,
-  help_description: `Joins VC and says what you want it to say!\n\`${pfx}tts {text}\``,
+  help_description: `Joins VC and says what you want it to say!`,
+  usage: `tts {text}`,
   guildOnly: true,
   unlisted: false,
 

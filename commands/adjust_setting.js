@@ -1,5 +1,3 @@
-const config = require('../config/config.json');
-const pfx = config.prefix;
 const fs = require('fs');
 var fsjson = {};
 var fscontent;
@@ -25,6 +23,7 @@ module.exports = {
   category: require('./_CATEGORIES.js').utils,
   help_name: `adjust_setting`,
   help_description: `adjust one of the listed bot settings: \n-Wolfram image result limit`,
+  usage: `- \`remove this command later on \``,
   unlisted: true,
 
   execute(client, message, args) {

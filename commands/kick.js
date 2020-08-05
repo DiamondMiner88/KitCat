@@ -5,7 +5,8 @@ module.exports = {
   command: 'kick',
   category: require('./_CATEGORIES.js').moderation,
   help_name: `:leg: Kick`,
-  help_description: `Used to kick members.\n\`${pfx}kick {mention | username#discriminator} {optional: reason}\``,
+  help_description: `Used to kick members.`,
+  usage: `kick {mention | username#discriminator} {optional: reason}`,
   guildOnly: true,
   unlisted: false,
 
