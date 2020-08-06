@@ -3,9 +3,7 @@ const pfx = config.prefix;
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').AllHtmlEntities;
-const { ReactionCollector } = require('discord.js');
 const decode = require('decode-html');
-const currency = require('../oofcoin.js');
 
 var { db } = require('../db.js');
 const entities = new Entities();
@@ -75,7 +73,7 @@ module.exports = {
   unlisted: false,
 
   execute(client, message, args) {
-    currency.checkForProfile(message.author);
+    require('../db.js').checkForProfile(message.author);
     if (args[0] === 'help') {
       return message.channel.send(triviaHelp);
     }

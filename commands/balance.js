@@ -1,5 +1,5 @@
-var db = require('../db.js').db;
-const currency = require('../oofcoin.js');
+var database = require('../db.js');
+var db = database.db;
 const Discord = require('discord.js');
 
 /**
@@ -50,7 +50,7 @@ module.exports = {
       }
     }
 
-    currency.checkForProfile(target_user);
+    database.checkForProfile(target_user);
 
     db.get(
       'SELECT bank, daily_last_claimed_at FROM currency WHERE user=?',

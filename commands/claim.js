@@ -8,7 +8,7 @@ module.exports = {
   unlisted: false,
 
   execute(client, message, args) {
-    require('../oofcoin.js').checkForProfile(message.author);
+    require('../db.js').checkForProfile(message.author);
     message.channel.send('This command has not been implemented yet!');
   }
 };

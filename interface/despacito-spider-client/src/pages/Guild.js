@@ -86,6 +86,10 @@ function Guild(props) {
       .catch((error) => addError(error.message));
   }
 
+  const nameToBool = (name) => {
+    return name === 'enabled' ? true : false;
+  };
+
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
@@ -116,13 +120,29 @@ function Guild(props) {
       {errors.length === 0 && (
         <div className="container">
           {Object.keys(commandSettings).map((key) => {
+            {
+              console.log(
+                'key: ' + key + ': ' + (modified.commands[key]
+                  ? nameToBool(modified.commands[key])
+                  : nameToBool(commandSettings[key])).toString()
+              );
+            }
             return (
               <FormControl className={classes.formControl}>
                 <FormControlLabel
                   control={
                     <Switch
-                      name="checkedB"
+                      checked={
+                        modified.commands[key]
+                          ? nameToBool(modified.commands[key])
+                          : commandSettings[key]
+                      }
                       color="primary"
+                      onChange={(event) => {
+                        let tmp = modified;
+                        tmp.commands[key] = event.target.checked ? 'enabled' : 'disabled';
+                        setModified(tmp);
+                      }}
                     />
                   }
                   label={key}
