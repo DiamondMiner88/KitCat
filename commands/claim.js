@@ -5,7 +5,7 @@ module.exports = {
   help_description: `Claim your daily coins! Available once every 24 hours.`,
   usage: `claim`,
   guildOnly: false,
-  unlisted: false,
+  unlisted: true,
 
   execute(client, message, args) {
     require('../db.js').checkForProfile(message.author);
