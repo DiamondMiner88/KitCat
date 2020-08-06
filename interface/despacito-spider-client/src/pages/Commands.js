@@ -41,23 +41,28 @@ function Commands(props) {
           {MakeAccordion('Ban', 'Used to ban members.', 'ban', 'ban {mention | username#discriminator} {optional: reason}', 'Ban Members')}
           {MakeAccordion('Blacklist Commands', 'Blacklist things.', 'blacklist', 'blacklist help', 'Manage Messages')}
           {MakeAccordion('Kick', 'Used to kick members.', 'kick',  'kick {mention | username#discriminator} {optional: reason}', 'Kick Members')}
-          {MakeAccordion('Purge', 'Used to delete messages.', 'purge', 'oof purge {amount: default = 5}', 'Manage Messages')}
+          {MakeAccordion('Purge', 'Used to delete messages.', 'purge', 'purge {amount: default = 5}', 'Manage Messages')}
           {MakeAccordion('Purge Channel',
                         'Used to delete all messages in a channel. <i>This comamnd deletes and makes</i> a new channel in the same spot.',
-                        'purgechannel', 'oof purgechannel', 'Manage Messages')}
+                        'purgechannel', 'purgechannel', 'Manage Messages')}
           {MakeAccordion('Silent Ban', 'Used to silently ban members. (Doesn\'t show in chat)', 'sban', 
-                        'oof sban {mention | username#discriminator} {optional: reason}', 'Ban Members')}
-          {MakeAccordion('Silent Kick', 'Used to silently kick members.', 'skick', 'oof skick {mention | username#discriminator} {optional: reason}',
+                        'sban {mention | username#discriminator} {optional: reason}', 'Ban Members')}
+          {MakeAccordion('Silent Kick', 'Used to silently kick members.', 'skick', 'skick {mention | username#discriminator} {optional: reason}',
                         'Kick Members')}              
         </div>
         <h2>Fun</h2>
         <div className={classes.root}>
           {MakeAccordion('8Ball', 'Ask it a question, and it will give you an answer',
-                         'eightball', 'oof 8ball {question}')}
+                         'eightball', '8ball {question}')}
           {MakeAccordion('Doggo', 'Get a photo of a doggo using this command!',
-                         'doggo', 'oof doggo {optional: breed | example: retriever}')}
-          {MakeAccordion('Photo Commands', 'Run photo commands to make custom photos. (Only 1 so far)',
-                         '')}
+                         'doggo', 'doggo {optional: breed | example: retriever}')}
+          {MakeAccordion('Photo Commands', 'Run photo commands to make custom photos. (Only 1 so far)', 'photocmd',
+                         'image help')}
+          {MakeAccordion('Memes', 'Get a meme from r/memes', 'memes', 'meme')}
+          {MakeAccordion('Inspirational Quote', 'Gives an inspirational quote!', 'iquote', 'quote')}
+          {MakeAccordion('Say', 'Make the bot say whatever you want!', 'say', 'say {message}')}
+          {MakeAccordion('Soundboard', 'Play audio clips. Run <code>oof soundboard help</code> for help with audio clips.', 'soundboard',
+                         'soundboard {audio clip}')}
         </div>
       </div>
     </div>
