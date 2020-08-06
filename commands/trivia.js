@@ -8,6 +8,7 @@ const decode = require('decode-html');
 const currency = require('../oofcoin.js');
 
 var { db } = require('../db.js');
+const { disconnect } = require('process');
 const entities = new Entities();
 // https://opentdb.com/api_config.php
 const categories = {
@@ -87,13 +88,17 @@ module.exports = {
     var url = `https://opentdb.com/api.php?amount=1`;
     var user = message.author;
     if (args.length > 0) {
-      var difficulty = selectedDifficulty[input[0].toLowerCase()]
-      var category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')]
-
-      if (!input[0]) difficulty = 'any';
-      if (!input[1]) category = 'any';
-
+      var category = categories[input.join('').toLowerCase().replace(/\s+/g, '')]
+      var difficulty = 'any';
+      
       console.log(difficulty, category)
+
+      if (!category) { 
+        category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')]
+        difficulty = selectedDifficulty[input[0].toLowerCase()]
+        if (!input[0]) difficulty = 'any';
+        if (!input[1]) category = 'any';
+      }
 
       if (!difficulty) return message.channel.send('You provided an invalid difficulty!')
       if (!category) return message.channel.send('You provided an invalid category!')
