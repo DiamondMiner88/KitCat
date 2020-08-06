@@ -70,7 +70,7 @@ module.exports = {
   category: require('./_CATEGORIES.js').fun,
   help_name: `:question: Trivia`,
   help_description: `Asks a trivia question!. If you get the question right, you earn oof coins, if you get it wrong, you loose oofcoins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
-  usage: `\`trivia \\\`{category}\\\` \\\`{difficulty}\\\` \\\`{type}\\\``,
+  usage: `trivia \`{category}\` \`{difficulty}\` \{type}\``,
   guildOnly: false,
   unlisted: false,
 
