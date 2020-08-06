@@ -90,8 +90,6 @@ module.exports = {
     if (args.length > 0) {
       var category = categories[input.join('').toLowerCase().replace(/\s+/g, '')]
       var difficulty = 'any';
-      
-      console.log(difficulty, category)
 
       if (!category) { 
         category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')]
@@ -104,17 +102,6 @@ module.exports = {
       if (!category) return message.channel.send('You provided an invalid category!')
       if (category !== 'any') url += `&category=${category}`
       if (difficulty !== 'any') url += `&difficulty=${difficulty}`
-      /*
-      var category = categories[input[0].toLowerCase().replace(/\s+/g, '')];
-      difficulty = selectedDifficulty[input[1].toLowerCase().replace(/\s+/g, '')];
-
-      if (!category) return message.channel.send('You provided an invalid category!');
-      if (!difficulty) return message.channel.send('You provided an invalid difficulty!');
-      if (!toq) return message.channel.send('You provided an invalid type of question!');
-      if (category !== 'any') url += `&category=${category}`;
-      if (difficulty !== 'any') url += `&difficulty=${difficulty}`;
-      if (toq !== 'any') url += `&type=${toq}`;
-      */
     }
     fetch(url, {
       method: 'GET'
