@@ -56,11 +56,10 @@ const triviaHelp = new Discord.MessageEmbed()
     '`Any`, `General Knowledge`, `Entertainment: Books`, `Entertainment: Film`, `Entertainment: Music`, `Entertainment: Musicals & Theatres`, `Entertainment: Television`, `Entertainment: Video Games`, `Entertainment: Board Games`, `Science &amp; Nature`, `Science: Computers`, `Science: Mathematics`, `Mythology`, `Sports`, `Geography`, `History`, `Politics`, `Art`, `Celebrities`, `Animals`, `Vehicles`, `Entertainment: Comics`, `Science: Gadgets`, `Entertainment: Japanese Anime & Manga`, `Entertainment: Cartoon & Animations`'
   )
   .addField('Difficulties', '`Any`, `Easy`, `Medium`, `Hard`')
-  .addField('Type of Questions', '`Any`, `Multiple Choice`, `True False`')
   // .addField('Earn Money', '`Yes`, `No` (No by default)')
   .addField(
     'Ussage',
-    `\`\`${pfx}trivia \`{category}\` \`{difficulty}\` \`{type}\` \`\` or run \`${pfx}trivia\` for any category, any difficulty, and any type of question.`
+    `\`trivia {optional: difficulty} {optional: category}\``
   );
 const boolQuestionFilterArray = ['🇹', '🇫'];
 const multipleQuestionFilterArray = ['1️⃣', '2️⃣', '3️⃣', '4️⃣'];
@@ -70,7 +69,7 @@ module.exports = {
   category: require('./_CATEGORIES.js').fun,
   help_name: `:question: Trivia`,
   help_description: `Asks a trivia question!. If you get the question right, you earn oof coins, if you get it wrong, you loose oofcoins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
-  usage: `trivia \`{category}\` \`{difficulty}\` \{type}\``,
+  usage: `trivia {optional: difficulty} {optional: category}`,
   guildOnly: false,
   unlisted: false,
 
@@ -87,11 +86,22 @@ module.exports = {
       });
     var url = `https://opentdb.com/api.php?amount=1`;
     var user = message.author;
-    var difficulty;
     if (args.length > 0) {
+      var difficulty = selectedDifficulty[input[0].toLowerCase()]
+      var category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')]
+
+      if (!input[0]) difficulty = 'any';
+      if (!input[1]) category = 'any';
+
+      console.log(difficulty, category)
+
+      if (!difficulty) return message.channel.send('You provided an invalid difficulty!')
+      if (!category) return message.channel.send('You provided an invalid category!')
+      if (category !== 'any') url += `&category=${category}`
+      if (difficulty !== 'any') url += `&difficulty=${difficulty}`
+      /*
       var category = categories[input[0].toLowerCase().replace(/\s+/g, '')];
       difficulty = selectedDifficulty[input[1].toLowerCase().replace(/\s+/g, '')];
-      var toq = selectedType[input[2].toLowerCase().replace(/\s+/g, '')];
 
       if (!category) return message.channel.send('You provided an invalid category!');
       if (!difficulty) return message.channel.send('You provided an invalid difficulty!');
@@ -99,6 +109,7 @@ module.exports = {
       if (category !== 'any') url += `&category=${category}`;
       if (difficulty !== 'any') url += `&difficulty=${difficulty}`;
       if (toq !== 'any') url += `&type=${toq}`;
+      */
     }
     fetch(url, {
       method: 'GET'
