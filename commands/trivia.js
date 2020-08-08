@@ -6,7 +6,6 @@ const Entities = require('html-entities').AllHtmlEntities;
 const decode = require('decode-html');
 
 var { db } = require('../db.js');
-const { disconnect } = require('process');
 const entities = new Entities();
 // https://opentdb.com/api_config.php
 const categories = {

@@ -16,7 +16,7 @@ if (process.platform === 'win32') {
   });
 }
 process.on('SIGINT', function () {
-  console.log(`Exiting...`);
+  console.log(`Stopping Bot and API...`);
   client.destroy();
   process.exit();
 });
