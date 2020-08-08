@@ -21,10 +21,11 @@ exports.token = functions.https.onRequest((request, response) => {
       method: 'POST',
       body: data
     })
-      .then((res) => res.json()
-      )
-      .then((json) => {response.json(json)})
-      .catch(err => console.error(err));
+      .then((res) => res.json())
+      .then((json) => {
+        response.json(json);
+      })
+      .catch((err) => console.error(err));
   }
 });
 
@@ -46,9 +47,7 @@ exports.guild = functions.https.onRequest((request, response) => {
       }
     })
       .then((res) => res.json())
-      .then((json) => {
-        response.status(200).json(json);
-      });
+      .then(response.json);
   } else {
     fetch(`${config.botapi_url}/guild/${params[0]}`, {
       method: 'GET',

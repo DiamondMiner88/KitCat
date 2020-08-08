@@ -54,7 +54,10 @@ function NavBar(props) {
     <div className={classes.root}>
       <AppBar>
         <ToolBar>
-          <Button color="inherit" href="">
+          <Button
+            color="inherit"
+            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
+          >
             Invite
           </Button>
 

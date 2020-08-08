@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 // Components
 import NavBar from '../components/Navbar';
-import commands from '../data/commands';
+// import commands from '../data/commands';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -226,11 +226,11 @@ function MakeAccordion(title, text, id, code, perms) {
   );
 }
 
-function RenderArray() {
-  const cmds = require('../data/commands');
-  const commands = cmds.commands;
-  for (var item in commands) {
-  }
-}
+// function RenderArray() {
+//   const cmds = require('../data/commands');
+//   const commands = cmds.commands;
+//   for (var item in commands) {
+//   }
+// }
 
 export default Commands;
