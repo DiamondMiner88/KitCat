@@ -59,7 +59,7 @@ function Guilds(props) {
           .json()
           .then((json) => {
             if (json.message) console.log(json.message);
-            else setGuilds(json);
+            else setGuilds(json.guilds);
           })
           .catch((error) => {
             console.log(error.message);

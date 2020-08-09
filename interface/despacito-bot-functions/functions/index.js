@@ -43,11 +43,11 @@ exports.guild = functions.https.onRequest((request, response) => {
       method: 'GET',
       headers: {
         'access-token': request.headers['access-token'],
-        data: request.headers['data']
+        data: request.headers.data
       }
     })
       .then((res) => res.json())
-      .then(response.json);
+      .then((json) => response.json(json));
   } else {
     fetch(`${config.botapi_url}/guild/${params[0]}`, {
       method: 'GET',

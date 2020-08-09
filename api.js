@@ -12,13 +12,35 @@ app.use(
   })
 );
 
+/**
+ * Response will always have a status code of 200, but the json might not tell the same story
+ *
+ * Response JSON format with everything ok: {status: 0}
+ * With errors: {status: ERROR_CODE, message: 'English error message here'}
+ *
+ * OK codes:
+ * 0 == Request executed successfully
+ *
+ * Error codes:
+ * 1   == Invalid request data
+ * 400 == Invalid request (ie. Missing data in the guild save url)
+ * 401 == Invalid Discord access token
+ * 2   == Discord Error
+ * 403 == Missing permissions
+ * 500 == Internal error (ie. SQL error. In this case provide the sql error as the message)
+ */
+
+/**
+ * Example URL: /guild/123456788901234567
+ * Headers:
+ *  - access-token: Discord oauth access token (Required)
+ */
 app.get('/guild/:guildID', (req, res) => {
-  if (!req.headers['access-token']) {
-    res.status(400).json({
-      message: 'Missing authentication.'
+  if (!req.headers['access-token'])
+    return res.json({
+      code: 400,
+      message: 'Missing request headers!'
     });
-    return;
-  }
 
   fetch('https://discord.com/api/users/@me', {
     headers: {
@@ -27,15 +49,19 @@ app.get('/guild/:guildID', (req, res) => {
   })
     .then((res) => res.json())
     .then((json) => {
-      if (json.message) res.status(401).json(json);
+      if (json.message)
+        res.json({
+          status: 401,
+          message: json.message
+        });
       else {
         const guild = client.guilds.resolve(req.params.guildID);
-        if (guild === null) {
-          res.status(403).json({
+
+        if (guild === null)
+          return res.json({
+            status: 2,
             message: 'The bot is not in the guild you requested.'
           });
-          return;
-        }
 
         guild.members
           .fetch(json.id)
@@ -46,124 +72,65 @@ app.get('/guild/:guildID', (req, res) => {
                 [req.params.guildID],
                 (err, result) => {
                   delete result.guild;
-                  if (err)
-                    res.status(500).json({
-                      message: 'An internal error occured. Please try again later.'
-                    });
-                  else {
-                    res.status(200).json({
-                      commands: result
+
+                  if (err) {
+                    console.log(err.message);
+                    return res.json({
+                      status: 500,
+                      message: 'An internal error occured.'
                     });
                   }
+
+                  return res.json({
+                    status: 0,
+                    commands: result
+                  });
                 }
               );
             } else
-              res.status(403).json({
-                message: "You don't have permission to manage this guild's settings!"
+              return res.json({
+                status: 403,
+                message: 'Missing permissions.'
               });
           })
           .catch((error) => {
             const message = error.message;
             if (message === 'Unknown Member')
-              res.status(403).json({
+              return res.json({
+                status: 403,
                 message: 'You are not in the guild you requested.'
               });
             else
-              res.status(500).json({
-                message: 'An error occured. Please try again later.'
+              return res.json({
+                status: 2,
+                message: error.message
               });
           });
       }
     })
     .catch((err) => {
-      res.status(500).json({
-        message: 'An error occured. Please try again later.'
-      });
       console.log(err.message);
+      res.json({
+        status: 500,
+        message: 'An error occured.'
+      });
     });
 });
 
-// app.get('/guild/:guildID/save', (req, res) => {
-//   if (!req.headers['token-type'] && !req.headers['access-token']) {
-//     res.status(400).json({
-//       message: 'Missing authentication.'
-//     });
-//     return;
-//   }
-
-//   fetch('https://discord.com/api/users/@me', {
-//     headers: {
-//       authorization: `${req.headers['token-type']} ${req.headers['access-token']}`
-//     }
-//   })
-//     .then((res) => res.json())
-//     .then((json) => {
-//       if (json.message) res.status(401).json(json);
-//       else {
-//         const guild = client.guilds.resolve(req.params.guildID);
-//         if (guild === null) {
-//           res.status(403).json({
-//             message: 'The bot is not in the guild you requested.'
-//           });
-//           return;
-//         }
-
-//         guild.members
-//           .fetch(json.id)
-//           .then((member) => {
-//             if (member.hasPermission('ADMINISTRATOR')) {
-//               let sql = 'UPDATE commands SET ';
-//               let sqlParams = [];
-//               console.log(req.headers.data);
-//               for (const key in req.headers.data.commands) {
-//                 if (!object.hasOwnProperty(key)) continue;
-//                 sql += '? = ?, ';
-//                 sqlParams.push(key, req.headers.data.commands[key]);
-//               }
-//               sql = sql.slice(0, -2) += ' WHERE guild=?';
-//               console.log(sql);
-//               console.log(sqlParams);
-//               db.run(sql, sqlParams, (err) => {
-//                 if (err) {
-//                   console.log(err.message);
-//                   res.status(500).json({
-//                     message: 'An internal error occured. Please try again later.'
-//                   });
-//                 } else res.status(200);
-//               });
-//             } else
-//               res.status(403).json({
-//                 message: "You don't have permission to manage this guild's settings!"
-//               });
-//           })
-//           .catch((error) => {
-//             const message = error.message;
-//             if (message === 'Unknown Member')
-//               res.status(403).json({
-//                 message: 'You are not in the guild you requested.'
-//               });
-//             else
-//               res.status(500).json({
-//                 message: 'An internal error occured. Please try again later.'
-//               });
-//           });
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).json({
-//         message: 'An error occured. Please try again later.'
-//       });
-//       console.log(err.message);
-//     });
-// });
-
-app.get('/guilds', (req, res) => {
-  if (!req.headers['access-token']) {
-    res.status(400).json({
-      message: 'Missing authentication.'
+/**
+ * Example URL: /guild/123456788901234567/save
+ * Headers:
+ *  - access-token: Discord oauth access token (Required)
+ *  - data: (Required)
+ *    - commands
+ *    - settings
+ */
+app.get('/guild/:guildID/save', (req, res) => {
+  if (!req.headers['access-token'])
+    return res.json({
+      code: 400,
+      message: 'Missing request headers!'
     });
-    return;
-  }
 
   fetch('https://discord.com/api/users/@me', {
     headers: {
@@ -172,7 +139,121 @@ app.get('/guilds', (req, res) => {
   })
     .then((res) => res.json())
     .then((json) => {
-      if (json.message) res.status(401).json(json);
+      if (json.message)
+        res.json({
+          status: 401,
+          message: json.message
+        });
+      else {
+        const guild = client.guilds.resolve(req.params.guildID);
+        if (guild === null)
+          return res.json({
+            status: 2,
+            message: 'The bot is not in the guild you requested.'
+          });
+        guild.members.fetch(json.id).then((member) => {
+          if (member.hasPermission('ADMINISTRATOR')) {
+            let validCommands = [
+              '2048',
+              '8ball',
+              'avatar',
+              'ban',
+              'cat',
+              'doggo',
+              'image',
+              'kick',
+              'meme',
+              'ping',
+              'purge',
+              'purgechannel',
+              'quote',
+              'roulette',
+              'say',
+              'sban',
+              'skick',
+              'soundboard',
+              'subreddit',
+              'trivia',
+              'tts',
+              'wolfram'
+            ];
+            let commandSQL = 'UPDATE commands SET ';
+            let commandSQLParams = [];
+            const commands = JSON.parse(req.headers.data).commands;
+            Object.keys(commands).map((commandName) => {
+              if (!validCommands.includes(commandName))
+                return res.json({
+                  status: 1,
+                  message: `"${commandName}" is not a valid command!`
+                });
+
+              commandSQL += `'${commandName}' = ?, `;
+              commandSQLParams.push(commands[commandName]);
+            });
+            commandSQL = commandSQL.slice(0, -2);
+            commandSQL += ' WHERE guild = ?';
+            commandSQLParams.push(guild.id);
+
+            db.run(commandSQL, commandSQLParams, (err) => {
+              if (err) {
+                console.log(err.message);
+                return res.json({
+                  status: 500,
+                  message: 'An internal error occured.'
+                });
+              }
+              return res.json({
+                status: 0
+              });
+            });
+          } else
+            return res.json({
+              status: 403,
+              message: 'Missing permissions.'
+            });
+        })
+        .catch((error) => {
+          if (error.message === 'Unknown Member')
+            return res.json({
+              status: 403,
+              message: 'You are not in the guild you requested.'
+            });
+          else
+            return res.json({
+              status: 2,
+              message: error.message
+            });
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.json({
+        status: 500,
+        message: 'An error occured.'
+      });
+    });
+});
+
+app.get('/guilds', (req, res) => {
+  if (!req.headers['access-token'])
+    return res.json({
+      code: 400,
+      message: 'Missing request headers!'
+    });
+
+  fetch('https://discord.com/api/users/@me', {
+    headers: {
+      authorization: `Bearer ${req.headers['access-token']}`
+    }
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.message)
+        res.json({
+          status: 401,
+          message: json.message
+        });
       else {
         let guilds = {};
         client.guilds.cache.each((guild) => {
@@ -183,14 +264,18 @@ app.get('/guilds', (req, res) => {
             };
           }
         });
-        res.status(200).json(guilds);
+        res.json({
+          status: 0,
+          guilds: guilds
+        })
       }
     })
     .catch((err) => {
-      res.status(500).json({
-        message: 'An error occured. Please try again later.'
-      });
       console.log(err.message);
+      res.json({
+        status: 500,
+        message: 'An error occured.'
+      });
     });
 });
 

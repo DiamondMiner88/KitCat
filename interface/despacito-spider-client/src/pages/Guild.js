@@ -25,18 +25,23 @@ function Guild(props) {
   const classes = useStyles();
   const { guildID } = useParams();
 
+  // Data
   const [settings, setSettings] = useState();
   const [commands, setCommands] = useState();
 
+  // Errors
   const [errors, setErrors] = useState([]);
   const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
-
   const addError = (error) => {
     setErrors(errors.concat([error]));
     setErrorsAlertOpened(true);
   };
 
+  // Save popup: 'saved_no_popup', 'saved_open_popup', 'unsaved'
+  const [saveStatus, setSaveStatus] = useState('saved_no_popup');
+
   useEffect(() => {
+    if (commands || settings) return;
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
@@ -52,7 +57,7 @@ function Guild(props) {
             if (json.message) addError(json.message);
             else {
               setCommands(json.commands);
-              setSettings({});
+              setSettings({}); // Change this later when settings are introduced
             }
           })
           .catch((error) => addError(error.message));
@@ -62,56 +67,92 @@ function Guild(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    // console.log('commands has changed');
-  }, [commands]);
-
-  // function save() {
-  //   fetch(`/despacito-spider-626fa/us-central1/guild/${guildID}/save`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'access-token': new Cookies().get('access-token'),
-  //       data: {
-  //         commands: commands,
-  //         settings: settings
-  //       }
-  //     }
-  //   })
-  //     .then((res) => res.json())
-  //     .then((json) => {
-  //       console.log('saved');
-  //       console.log(json);
-  //       if (json.message) addError(json.message);
-  //     })
-  //     .catch((error) => addError(error.message));
-  // }
+  function save() {
+    fetch(`/despacito-spider-626fa/us-central1/guild/${guildID}/save`, {
+      method: 'GET',
+      headers: {
+        'access-token': new Cookies().get('access-token'),
+        data: JSON.stringify({
+          commands: commands
+        })
+      }
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.message) addError(json.message);
+        else setSaveStatus('saved_open_popup');
+      })
+      .catch((error) => addError(error.message));
+  }
 
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
       <div className="container">
-        {errors.length > 0 && (
-          <Snackbar
-            open={errorsAlertOpened}
-            autoHideDuration={null}
-            onClose={(event, reason) => {
-              if (reason !== 'clickaway') setErrorsAlertOpened(false);
+        <Snackbar
+          open={errorsAlertOpened}
+          autoHideDuration={null}
+          onClose={(event, reason) => {
+            if (reason !== 'clickaway') setErrorsAlertOpened(false);
+          }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={() => {
+              setErrorsAlertOpened(false);
             }}
+            severity="error"
           >
-            <MuiAlert
-              elevation={6}
-              variant="filled"
-              onClose={() => {
-                setErrorsAlertOpened(false);
-              }}
-              severity="error"
-            >
-              {errors.map((error) => (
-                <div>{error}</div>
-              ))}
-            </MuiAlert>
-          </Snackbar>
-        )}
+            {errors.map((error) => (
+              <div>{error}</div>
+            ))}
+          </MuiAlert>
+        </Snackbar>
+
+        <Snackbar
+          open={saveStatus === 'unsaved'}
+          autoHideDuration={null}
+          onClose={(event, reason) => {
+            if (reason !== 'clickaway') {
+              save();
+              setSaveStatus('no_popup');
+            }
+          }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={(event, reason) => {
+              if (reason !== 'clickaway') {
+                save();
+                setSaveStatus('no_popup');
+              }
+            }}
+            severity="info"
+          >
+            You have unsaved settings! Close this to save.
+          </MuiAlert>
+        </Snackbar>
+
+        <Snackbar
+          open={saveStatus === 'saved_open_popup'}
+          autoHideDuration={null}
+          onClose={(event, reason) => {
+            if (reason !== 'clickaway') setSaveStatus('saved_no_popup');
+          }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={(event, reason) => {
+              if (reason !== 'clickaway') setSaveStatus('saved_no_popup');
+            }}
+            severity="success"
+          >
+            Successfully saved settings!
+          </MuiAlert>
+        </Snackbar>
 
         {!commands && !settings && <Typography variant="h4">Loading...</Typography>}
 
@@ -131,6 +172,7 @@ function Guild(props) {
                           ...commands,
                           [key]: event.target.checked ? 'enabled' : 'disabled'
                         });
+                        setSaveStatus('unsaved');
                       }}
                     />
                   }
