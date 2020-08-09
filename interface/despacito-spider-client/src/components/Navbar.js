@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 // Other
 import Cookies from 'universal-cookie';
+import { Link } from '@material-ui/core';
 const fetch = require('node-fetch');
 
 const useStyles = makeStyles((theme) => ({
@@ -54,12 +55,10 @@ function NavBar(props) {
     <div className={classes.root}>
       <AppBar>
         <ToolBar>
-          <Button
-            color="inherit"
-            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
-          >
-            Invite
-          </Button>
+          <Link color="inherit"
+            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}>
+              Invite
+          </Link>
 
           <div className={classes.spacer} />
 
@@ -71,12 +70,12 @@ function NavBar(props) {
           ) : !user && hasToken ? (
             <Skeleton variant="rect" width={150} height={16} animation="wave" />
           ) : (
-            <Button
+            <Link
               color="inherit"
               href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify`}
             >
               Login with Discord
-            </Button>
+            </Link>
           )}
 
           {user && (
@@ -97,3 +96,12 @@ function NavBar(props) {
 }
 
 export default NavBar;
+
+/*
+          <Button
+            color="inherit"
+            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
+          >
+            Invite
+          </Button>
+*/
