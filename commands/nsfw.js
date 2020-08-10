@@ -97,19 +97,15 @@ module.exports = {
     }
     if (args[0].toLowerCase() === 'help') {
       const hEmbed = new Discord.MessageEmbed().setColor('#FF69B4').setTitle('Help');
-      // .setTimestamp()
-      // .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL())
       for (var items in help) {
         hEmbed.addField(help[items].name, help[items].description);
       }
-      // console.log( message.author.avatarURL);
       message.channel.send(hEmbed);
     }
     if (args[0].toLowerCase() === 'clip') {
       const search = require('pornsearch');
       const searcher = search.search(args.slice(1, args.length).join(' '));
       searcher.gifs().then((gifs) => {
-        // console.log(gifs);
         var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
         message.channel.send(`Title: \`${random.title}\`\n${random.webm}`);
       });
@@ -119,10 +115,7 @@ module.exports = {
       const search = require('pornsearch');
       const searcher = search.search(args.slice(1, args.length).join(' '), (driver = 'sex'));
       searcher.videos().then((gifs) => {
-        // console.log(gifs);
         var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
-        // console.log(random);
-        // console.log(random.title.replace(/\ {4,}/gm, " "));
         var embed = new Discord.MessageEmbed()
           .setTitle(random.title.replace(/\n/gm, '').replace(/\ {2,}/gm, ' '))
           .setColor('#FF69B4')
@@ -130,7 +123,6 @@ module.exports = {
           .addField('Video Link', random.url)
           .setTimestamp()
           .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL());
-        // console.log(random.title);
         message.channel.send(embed);
       });
       return;
@@ -168,7 +160,6 @@ module.exports = {
                 `${message.author.tag} ran the commnd | Content gotten from nekos.life`,
                 message.author.avatarURL()
               );
-            // console.log( message.author.avatarURL);
             message.channel.send(hEmbed);
           }
         }
