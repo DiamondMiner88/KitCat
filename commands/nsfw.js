@@ -1,5 +1,4 @@
-const config = require('../config.json');
-const pfx = config.prefix;
+const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
 const request = require('request');
 const fetch = require('node-fetch');
@@ -77,17 +76,23 @@ const help = [
 
 module.exports = {
   command: 'nsfw',
-  category: 'fun',
-  help_name: ':smirk: NSFW',
-  help_description: `Get NSFW photos, and gifs. Run \n\`${pfx}nsfw help\` for more information you sick creep.`,
+  category: require('./_CATEGORIES.js').fun,
+  help_name: `:smirk: NSFW`,
+  help_description: `Get NSFW photos, and gifs.`,
+  usage: `nsfw help`,
+  guildOnly: false,
+  unlisted: false,
 
   execute(client, message, args) {
+    if (message.guild.id == 698718799309832242) {
+      return message.channel.send("You thought you were going to get porn lmao.")
+    }
     if (!message.channel.nsfw) {
-      message.author.send('This command can only be run in channels marked NSFW.');
+      message.channel.send('This command can only be run in channels marked NSFW.');
       return;
     }
     if (args.length === 0) {
-      message.author.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
+      message.channel.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
       return;
     }
     if (args[0].toLowerCase() === 'help') {
@@ -98,7 +103,7 @@ module.exports = {
         hEmbed.addField(help[items].name, help[items].description);
       }
       // console.log( message.author.avatarURL);
-      message.author.send(hEmbed);
+      message.channel.send(hEmbed);
     }
     if (args[0].toLowerCase() === 'clip') {
       const search = require('pornsearch');
@@ -106,7 +111,7 @@ module.exports = {
       searcher.gifs().then((gifs) => {
         // console.log(gifs);
         var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
-        message.author.send(`Title: \`${random.title}\`\n${random.webm}`);
+        message.channel.send(`Title: \`${random.title}\`\n${random.webm}`);
       });
       return;
     }
@@ -126,7 +131,7 @@ module.exports = {
           .setTimestamp()
           .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL());
         // console.log(random.title);
-        message.author.send(embed);
+        message.channel.send(embed);
       });
       return;
     }
@@ -164,7 +169,7 @@ module.exports = {
                 message.author.avatarURL()
               );
             // console.log( message.author.avatarURL);
-            message.author.send(hEmbed);
+            message.channel.send(hEmbed);
           }
         }
       );
