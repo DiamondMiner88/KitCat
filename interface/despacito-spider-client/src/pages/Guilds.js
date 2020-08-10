@@ -8,6 +8,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
+import Sidebar from '../components/GuildSidebar';
 
 // Components
 import NavBar from '../components/Navbar';
@@ -100,6 +101,7 @@ function Guilds(props) {
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
+      <Sidebar />
       <div className="container">{guilds ? guildItems : <Typography>Loading...</Typography>}</div>
     </div>
   );

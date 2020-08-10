@@ -5,6 +5,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Sidebar from '../components/GuildSidebar';
 
 // Components
 import NavBar from '../components/Navbar';
@@ -35,6 +36,7 @@ function Commands(props) {
   return (
     <div className={classes.root}>
       <NavBar location={props.location} history={props.history} />
+      <Sidebar />
       <div className="container">
         <h2>Moderation</h2>
         <div className={classes.root}>

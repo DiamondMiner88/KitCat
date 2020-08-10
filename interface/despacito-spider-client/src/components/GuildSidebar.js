@@ -10,6 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
   drawerContainer: {
     overflow: 'auto'
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
+  link: {
+    textDecoration: 'none'
+  }
 }));
 
 function Sidebar(props) {
@@ -43,14 +47,40 @@ function Sidebar(props) {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem button key="guild_dashboard">
+            <ListItem button key="home_page" component={Link} href="/" style={{ textDecoration: 'none' }}>
               <ListItemIcon>
-                <ListIcon />
+                <ListIcon />  
               </ListItemIcon>
-              <ListItemText primary="Guild Overview" />
+              <ListItemText primary="Home"/>
+            </ListItem>
+          </List>
+          <List>
+            <ListItem button key="commands_page" component={Link} href="/commands" style={{ textDecoration: 'none' }}>
+              <ListItemIcon>
+                <ListIcon />  
+              </ListItemIcon>
+              <ListItemText primary="Commands"/>
+            </ListItem>
+          </List>
+          <List>
+            <ListItem button key="guilds_list" component={Link} href="/guilds" style={{ textDecoration: 'none' }}>
+              <ListItemIcon>
+                <ListIcon />  
+              </ListItemIcon>
+              <ListItemText primary="Guilds"/>
             </ListItem>
           </List>
           <Divider />
+        </div>
+      </Drawer>
+    </div>
+  );
+}
+
+export default Sidebar;
+
+
+/*
           <List>
             <ListItem button key="test">
               <ListItemIcon>
@@ -59,10 +89,13 @@ function Sidebar(props) {
               <ListItemText primary="test" />
             </ListItem>
           </List>
-        </div>
-      </Drawer>
-    </div>
-  );
-}
-
-export default Sidebar;
+                    <List>
+            <ListItem button key="guild_dashboard" onClick={() => console.log('Guild Overview')}>
+              <ListItemIcon>
+                <ListIcon />  
+              </ListItemIcon>
+              <ListItemText primary="Guild Overview" />
+            </ListItem>
+          </List>
+          <Divider />
+*/
