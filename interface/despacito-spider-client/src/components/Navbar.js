@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1
+  },
   spacer: {
     flex: '1 1 auto'
   },
@@ -53,7 +56,7 @@ function NavBar(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar>
+      <AppBar position="fixed" className={classes.appBar}>
         <ToolBar>
           <Link color="inherit"
             href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}>

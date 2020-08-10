@@ -24,7 +24,7 @@ process.on('SIGINT', function () {
 client.commands = new Discord.Collection();
 const commandFiles = require('fs')
   .readdirSync(path.join(__dirname, '/commands'))
-  .filter((file) => file.endsWith('.js') && !file.startsWith("_"));
+  .filter((file) => file.endsWith('.js') && !file.startsWith('_'));
 for (const file of commandFiles) {
   const command = require(path.join(__dirname, './commands', file));
   client.commands.set(command.command, command);
@@ -70,6 +70,21 @@ client.on('message', async (message) => {
 
   if (message.author.bot) return;
 
+  const nHmatches = message.content.matchAll(/\((\d{1,6})\)/g);
+  var isNHallowed = message.channel.type === 'dm' ? true : undefined;
+  for (const match of nHmatches) {
+    if (isNHallowed === undefined) {
+      db.get('SELECT nhentai FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
+        if (err) {
+          console.log('Error retrieving command data\n' + err.message);
+          message.channel.send('Error retrieving command data\n' + err.message);
+        } else isNHallowed = result.nhentai === 'enabled' ? true : false;
+      });
+    } else if (isNHallowed) require('./commands/nhentai.js').execute(client, message, args);
+    else if (isNHallowed === false)
+      message.channel.send('This command has been disabled on this server.');
+  }
+
   if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
   const args = message.content.slice(pfx.length).trim().split(' '); // args is an array of text after the command that were seperated by a whitespace
   const commandText = args.shift().toLowerCase(); // command is the word after the prefix
@@ -78,26 +93,29 @@ client.on('message', async (message) => {
   if (command && command.guildOnly && message.channel.type !== 'text')
     message.channel.send('This command only works in Guild Text Channels!');
   else if (command && command.command === commandText) {
-    db.get('SELECT * FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
-      if (err) {
-        console.log('Error retrieving command data\n' + err.message);
-        message.channel.send('Error retrieving command data\n' + err.message);
-      } else {
-        const other = {
-          mode: 'enabled'
-        };
+    if (message.channel.type === 'dm') command.execute(client, message, args);
+    else {
+      db.get('SELECT * FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
+        if (err) {
+          console.log('Error retrieving command data\n' + err.message);
+          message.channel.send('Error retrieving command data\n' + err.message);
+        } else {
+          const other = {
+            mode: 'enabled'
+          };
 
-        if (!result) {
-          db.run('INSERT INTO commands (guild) VALUES(?)', [message.guild.id], (err) => {
-            if (err) console.log('Error trying to add settings for guild: ' + err);
-          });
-        } else other.mode = result[commandText];
+          if (!result) {
+            db.run('INSERT INTO commands (guild) VALUES(?)', [message.guild.id], (err) => {
+              if (err) console.log('Error trying to add settings for guild: ' + err);
+            });
+          } else other.mode = result[commandText];
 
-        if (other.mode === 'disabled')
-          message.channel.send('This command has been disabled on this server.');
-        else command.execute(client, message, args, other);
-      }
-    });
+          if (other.mode === 'disabled')
+            message.channel.send('This command has been disabled on this server.');
+          else command.execute(client, message, args, other);
+        }
+      });
+    }
   }
 });
 

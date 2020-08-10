@@ -12,7 +12,7 @@ module.exports = {
       message.channel.send('You do not have the permission to manage messages.');
       return;
     }
-    let purgeamnt = config.default_purge_amnt;
+    let purgeamnt = 5;
     if (!isNaN(args[0])) purgeamnt = Number(args[0]);
     if (purgeamnt > 100) {
       message.channel.send(`The purging limit is 100`);

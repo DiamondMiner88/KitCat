@@ -9,6 +9,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 // Components
 import NavBar from '../components/Navbar';
+import Sidebar from '../components/GuildSidebar';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -79,6 +80,7 @@ function Guild(props) {
     })
       .then((res) => res.json())
       .then((json) => {
+        console.log(json);
         if (json.message) addError(json.message);
         else setSaveStatus('saved_open_popup');
       })
@@ -87,6 +89,7 @@ function Guild(props) {
 
   return (
     <div>
+      <Sidebar />
       <NavBar location={props.location} history={props.history} />
       <div className="container">
         <Snackbar
