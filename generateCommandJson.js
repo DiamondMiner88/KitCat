@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const { category } = require('./commands/8ball');
 const emoji = require('node-emoji');
 
 var commands = {};
