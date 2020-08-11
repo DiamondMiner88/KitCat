@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120
+  },
+  content: {
+    width: 'calc(100% - 300px)',
+    marginLeft: 300
   }
 }));
 
@@ -159,31 +163,33 @@ function Guild(props) {
 
         {!commands && !settings && <Typography variant="h4">Loading...</Typography>}
 
-        {errors.length === 0 &&
-          commands &&
-          settings &&
-          Object.keys(commands).map((key) => {
-            return (
-              <FormControl className={classes.formControl}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={commands[key] === 'enabled' ? true : false}
-                      color="primary"
-                      onChange={(event) => {
-                        setCommands({
-                          ...commands,
-                          [key]: event.target.checked ? 'enabled' : 'disabled'
-                        });
-                        setSaveStatus('unsaved');
-                      }}
-                    />
-                  }
-                  label={key}
-                />
-              </FormControl>
-            );
-          })}
+        <div className={classes.content}>
+          {errors.length === 0 &&
+            commands &&
+            settings &&
+            Object.keys(commands).map((key) => {
+              return (
+                <FormControl className={classes.formControl}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={commands[key] === 'enabled' ? true : false}
+                        color="primary"
+                        onChange={(event) => {
+                          setCommands({
+                            ...commands,
+                            [key]: event.target.checked ? 'enabled' : 'disabled'
+                          });
+                          setSaveStatus('unsaved');
+                        }}
+                      />
+                    }
+                    label={key}
+                  />
+                </FormControl>
+              );
+            })}
+        </div>
       </div>
     </div>
   );
