@@ -11,6 +11,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Link } from '@material-ui/core';
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Sidebar(props) {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <Drawer
@@ -62,19 +62,28 @@ function Sidebar(props) {
               <ListItemText primary="Commands"/>
             </ListItem>
           </List>
-          <List>
-            <ListItem button key="guilds_list" component={Link} href="/guilds" style={{ textDecoration: 'none' }}>
-              <ListItemIcon>
-                <ListIcon />  
-              </ListItemIcon>
-              <ListItemText primary="Guilds"/>
-            </ListItem>
-          </List>
+            {GuildsList()}
           <Divider />
         </div>
       </Drawer>
     </div>
   );
+}
+
+function GuildsList() {
+  const cookies = new Cookies();
+  if (cookies.get('access-token') !== undefined) {
+    return (
+      <List>
+        <ListItem button key="guilds_list" component={Link} href="/guilds" style={{ textDecoration: 'none' }}>
+          <ListItemIcon>
+            <ListIcon />  
+          </ListItemIcon>
+          <ListItemText primary="Guilds"/>
+        </ListItem>
+      </List>
+    );
+  }
 }
 
 export default Sidebar;
