@@ -101,6 +101,7 @@ function GuildsList() {
 }
 
 function GetRecentServers() {
+  // terrible way to get the servers but too bad i guess :)
   const cookies = new Cookies();
   if (cookies.get('recent-servers') === undefined  && cookies.get('access-token') !== undefined) {
     cookies.set('recent-servers', []);
