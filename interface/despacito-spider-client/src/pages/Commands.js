@@ -1,17 +1,18 @@
 import React from 'react';
+
+// Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Sidebar from '../components/GuildSidebar';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import Typography from '@material-ui/core/Typography';
 
 // Components
 import NavBar from '../components/Navbar';
 
-const commands =  require('../data/commands').commands;
+const commands = require('../data/commands').commands;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%'
@@ -38,12 +39,9 @@ function Commands(props) {
     <div className={classes.root}>
       <NavBar location={props.location} history={props.history} />
       <Sidebar />
-      <div className="container">
-        {GetCommands()}
-      </div>
+      <div className="container">{GetCommands()}</div>
     </div>
   );
-  
 }
 
 function MakeAccordion(title, text, id, code, perms) {
@@ -90,7 +88,12 @@ function GetCommands() {
               {commands[item].map((commandItem) => {
                 return (
                   <div>
-                    {MakeAccordion(commandItem.help_name, commandItem.help_description, commandItem.command, commandItem.usage)}
+                    {MakeAccordion(
+                      commandItem.help_name,
+                      commandItem.help_description,
+                      commandItem.command,
+                      commandItem.usage
+                    )}
                   </div>
                 );
               })}
