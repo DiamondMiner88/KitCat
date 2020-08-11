@@ -5,13 +5,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
+import Toolbar from '@material-ui/core/Toolbar';
+import { Link } from '@material-ui/core';
+import Cookies from 'universal-cookie';
+
+// Icon imports
+import HomeIcon from '@material-ui/icons/Home';
+
+import CodeIcon from '@material-ui/icons/Code';
+
+import StorageIcon from '@material-ui/icons/Storage';
+
 import ListIcon from '@material-ui/icons/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Link } from '@material-ui/core';
-import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +57,7 @@ function Sidebar(props) {
           <List>
             <ListItem button key="home_page" component={Link} href="/" style={{ textDecoration: 'none' }}>
               <ListItemIcon>
-                <ListIcon />  
+                <HomeIcon />  
               </ListItemIcon>
               <ListItemText primary="Home"/>
             </ListItem>
@@ -57,13 +65,15 @@ function Sidebar(props) {
           <List>
             <ListItem button key="commands_page" component={Link} href="/commands" style={{ textDecoration: 'none' }}>
               <ListItemIcon>
-                <ListIcon />  
+                <CodeIcon />  
               </ListItemIcon>
               <ListItemText primary="Commands"/>
             </ListItem>
           </List>
             {GuildsList()}
           <Divider />
+          <List>
+          </List>
         </div>
       </Drawer>
     </div>
@@ -77,7 +87,7 @@ function GuildsList() {
       <List>
         <ListItem button key="guilds_list" component={Link} href="/guilds" style={{ textDecoration: 'none' }}>
           <ListItemIcon>
-            <ListIcon />  
+            <StorageIcon />  
           </ListItemIcon>
           <ListItemText primary="Guilds"/>
         </ListItem>
