@@ -55,7 +55,6 @@ function NavBar(props) {
         .catch(console.error);
     }
   }, [props.history]);
-  console.log(user)
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>

@@ -78,6 +78,26 @@ function Guilds(props) {
         <CardActionArea
           // eslint-disable-next-line
           onClick={() => {
+            const cookies = new Cookies();
+            if (cookies.get('recent-servers') === undefined && cookies.get('access-token') !== undefined) {
+              cookies.set('recent-servers',[]);
+            }
+            if (cookies.get('recent-servers') !== undefined && cookies.get('access-token') !== undefined) {
+              for (var x = 0; x < cookies.get('recent-servers').length; x++) {
+                if (cookies.get('recent-servers')[x].id === guild) {
+                  props.history.push(`/guild/${guild}`);
+                  return;
+                }
+              }
+              var pushArray = cookies.get('recent-servers');
+              var tempDict = guilds[guild];
+              tempDict['id'] = guild;
+              pushArray.unshift(tempDict);
+              if (pushArray.length > 6) {
+                pushArray.splice(6);
+              }
+              cookies.set('recent-servers', pushArray);
+            }
             props.history.push(`/guild/${guild}`);
           }}
         >

@@ -6,8 +6,9 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Link } from '@material-ui/core';
+import { Link, Avatar } from '@material-ui/core';
 import Cookies from 'universal-cookie';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 // Icon imports
 import HomeIcon from '@material-ui/icons/Home';
@@ -70,8 +71,11 @@ function Sidebar(props) {
               <ListItemText primary="Commands"/>
             </ListItem>
           </List>
-            {GuildsList()}
+          {GuildsList()}
           <Divider />
+
+          {GetRecentServers()}
+
           <List>
           </List>
         </div>
@@ -96,25 +100,39 @@ function GuildsList() {
   }
 }
 
+function GetRecentServers() {
+  const cookies = new Cookies();
+  if (cookies.get('recent-servers') === undefined  && cookies.get('access-token') !== undefined) {
+    cookies.set('recent-servers', []);
+    return;
+  }
+  if (cookies.get('recent-servers').length === 0) {
+    return;
+  }
+  if (cookies.get('recent-servers').length > 6) {
+    cookies.set('recent-servers', cookies.get('recent-servers').splice(6))
+  }
+  if (cookies.get('recent-servers') !== undefined && cookies.get('access-token') !== undefined) {
+    return (
+      <div>
+        {cookies.get('recent-servers').map((item) => {
+          return (
+            <div>
+              <ListSubheader>Recent Servers</ListSubheader>
+              <List>
+                <ListItem button key={item.id} component={Link} href={`/guild/${item.id}`} style={{textDecoration: 'none'}}>
+                  <ListItemIcon>
+                    <Avatar alt={item.name} src={item.iconURL}></Avatar>
+                  </ListItemIcon>
+                  <ListItemText primary={item.name}/>
+                </ListItem>
+              </List>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+}
+
 export default Sidebar;
-
-
-/*
-<List>
-  <ListItem button key="test">
-    <ListItemIcon>
-      <ListIcon />
-    </ListItemIcon>
-    <ListItemText primary="test" />
-  </ListItem>
-</List>
-          <List>
-  <ListItem button key="guild_dashboard" onClick={() => console.log('Guild Overview')}>
-    <ListItemIcon>
-      <ListIcon />  
-    </ListItemIcon>
-    <ListItemText primary="Guild Overview" />
-  </ListItem>
-</List>
-<Divider />
-*/
