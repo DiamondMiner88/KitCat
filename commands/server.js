@@ -23,14 +23,3 @@ module.exports = {
         )
     }
 };
-/*
-.addFields(
-                { name: '', value: '' },
-                { name: '', value: '' },
-                { name: '', value: '' },
-                { name: '', value: '' },
-                { name: '', value: '' },
-                { name: '', value: '' },
-                { name: '', value: '' },
-            )
-*/

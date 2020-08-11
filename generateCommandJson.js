@@ -5,8 +5,6 @@ const emoji = require('node-emoji');
 
 var commands = {};
 
-console.log(emoji.emojify(':tools:', (emojiname) => emoji.get(emojiname)))
-
 const commandFiles = fs
   .readdirSync(path.join(__dirname, '/commands'))
   .filter((file) => file.endsWith('.js') && !file.startsWith('_'));
