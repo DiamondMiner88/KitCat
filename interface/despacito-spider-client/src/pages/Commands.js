@@ -6,6 +6,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Sidebar from '../components/GuildSidebar';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 // Components
 import NavBar from '../components/Navbar';
@@ -55,30 +56,6 @@ function MakeAccordion(title, text, id, code, perms) {
   */
 
   const classes = useStyles();
-
-  if (perms === undefined) {
-    return (
-      <Accordion className={classes.Accordion}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls={id + '-content'}
-          id={id + '-header'}
-        >
-          <Typography className={classes.heading}>{title}</Typography>
-        </AccordionSummary>
-        <AccordionDetails className={classes.background}>
-          <Typography>
-            {text}
-            <br></br>
-            <strong>Usage</strong>
-            <br></br>
-            <code className={classes.code}>{'oof ' + code}</code>
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
-
   return (
     <Accordion className={classes.Accordion}>
       <AccordionSummary
@@ -95,10 +72,6 @@ function MakeAccordion(title, text, id, code, perms) {
           <strong>Usage</strong>
           <br></br>
           <code className={classes.code}>{'oof ' + code}</code>
-          <br></br>
-          <strong>Permissions</strong>
-          <br></br>
-          {perms}
         </Typography>
       </AccordionDetails>
     </Accordion>

@@ -121,7 +121,7 @@ module.exports = {
             "command": "nhentai",
             "help_name": "nHentai",
             "help_description": "Gives an overview of the nHentai code.",
-            "usage": "nhentai {number} ` or `{number}",
+            "usage": "nhentai {number}",
             "guildOnly": false
         }, {
             "command": "ping",
