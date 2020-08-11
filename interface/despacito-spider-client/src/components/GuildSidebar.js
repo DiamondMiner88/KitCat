@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar(props) {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div position="fixed" className={classes.root}>
       <Drawer
         className={classes.drawer}
         variant="permanent"
