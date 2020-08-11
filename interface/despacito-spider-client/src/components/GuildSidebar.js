@@ -2,25 +2,22 @@ import React, { useState, useEffect } from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Cookies from 'universal-cookie';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
-import Toolbar from '@material-ui/core/Toolbar';
-import { Link, Avatar } from '@material-ui/core';
-import Cookies from 'universal-cookie';
-import ListSubheader from '@material-ui/core/ListSubheader';
-
-// Icon imports
-import HomeIcon from '@material-ui/icons/Home';
-
-import CodeIcon from '@material-ui/icons/Code';
-
-import StorageIcon from '@material-ui/icons/Storage';
-
-import ListIcon from '@material-ui/icons/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import Toolbar from '@material-ui/core/Toolbar';
+
+// Icon imports
+import CodeIcon from '@material-ui/icons/Code';
+import HomeIcon from '@material-ui/icons/Home';
+import StorageIcon from '@material-ui/icons/Storage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
