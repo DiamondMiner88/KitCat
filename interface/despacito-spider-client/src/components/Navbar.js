@@ -10,9 +10,11 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ToolBar from '@material-ui/core/ToolBar';
 import Typography from '@material-ui/core/Typography';
 
+import Avatar from '@material-ui/core/Avatar'
+
 // Other
 import Cookies from 'universal-cookie';
-import { Link } from '@material-ui/core';
+import { Link, Box } from '@material-ui/core';
 const fetch = require('node-fetch');
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +55,7 @@ function NavBar(props) {
         .catch(console.error);
     }
   }, [props.history]);
-
+  console.log(user)
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -64,7 +66,12 @@ function NavBar(props) {
           </Link>
 
           <div className={classes.spacer} />
-
+          {user ? (
+            <div>
+              <Avatar alt={user.username} src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp?size=128`}></Avatar>
+              <Box mr={6} />
+            </div>
+          ) : null}
           {/* If we have user info, display username, else if have the token but no user info yet, display a skeleton otherwise display login */}
           {user ? (
             <Typography variant="subtitle2" className={classes.username}>

@@ -68,7 +68,7 @@ function Guilds(props) {
       }
       fetchData();
     } else props.history.push('/');
-  }, [props.history]);
+  }, [props.history]);  
 
   const guildItems = [];
 

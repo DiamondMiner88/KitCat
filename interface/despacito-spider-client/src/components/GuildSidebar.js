@@ -100,21 +100,21 @@ export default Sidebar;
 
 
 /*
+<List>
+  <ListItem button key="test">
+    <ListItemIcon>
+      <ListIcon />
+    </ListItemIcon>
+    <ListItemText primary="test" />
+  </ListItem>
+</List>
           <List>
-            <ListItem button key="test">
-              <ListItemIcon>
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText primary="test" />
-            </ListItem>
-          </List>
-                    <List>
-            <ListItem button key="guild_dashboard" onClick={() => console.log('Guild Overview')}>
-              <ListItemIcon>
-                <ListIcon />  
-              </ListItemIcon>
-              <ListItemText primary="Guild Overview" />
-            </ListItem>
-          </List>
-          <Divider />
+  <ListItem button key="guild_dashboard" onClick={() => console.log('Guild Overview')}>
+    <ListItemIcon>
+      <ListIcon />  
+    </ListItemIcon>
+    <ListItemText primary="Guild Overview" />
+  </ListItem>
+</List>
+<Divider />
 */
