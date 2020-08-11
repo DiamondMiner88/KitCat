@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   link: {
     textDecoration: 'none'
-  }
+  },
 }));
 
 function Sidebar(props) {

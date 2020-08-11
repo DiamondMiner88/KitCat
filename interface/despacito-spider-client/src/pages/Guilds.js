@@ -78,6 +78,7 @@ function Guilds(props) {
         <CardActionArea
           // eslint-disable-next-line
           onClick={() => {
+            // Bad way to do this, but too bad i guess :)
             const cookies = new Cookies();
             if (cookies.get('recent-servers') === undefined && cookies.get('access-token') !== undefined) {
               cookies.set('recent-servers',[]);
