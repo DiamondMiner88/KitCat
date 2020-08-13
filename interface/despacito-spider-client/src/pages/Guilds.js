@@ -78,14 +78,17 @@ export default function Guilds(props) {
           <CardActionArea
             onClick={() => {
               const cookies = new Cookies();
-              const recentServers = cookies.get('recent-servers')
+              let recentServers = cookies.get('recent-servers')
                 ? cookies.get('recent-servers')
                 : [];
 
               let currentGuildData = guilds[guildID];
               currentGuildData.id = guildID;
 
-              if (!recentServers.includes(currentGuildData)) recentServers.push(currentGuildData);
+              if (!recentServers.some((elem) => elem.id === currentGuildData.id))
+                recentServers.unshift(currentGuildData);
+
+              if (recentServers.length > 6) recentServers = recentServers.slice(0, 6);
 
               cookies.set('recent-servers', recentServers, {
                 path: '/',
@@ -94,7 +97,7 @@ export default function Guilds(props) {
                 overwrite: true
               });
 
-              props.history.push(`/guild/${guildID}`);
+              // props.history.push(`/guild/${guildID}`);
             }}
           >
             <CardHeader

@@ -1,15 +1,17 @@
 import React from 'react';
 
+// Material-UI
+import Link from '@material-ui/core/Link';
+
 // Components
+import HomeSidebar from '../components/HomeSidebar';
 import NavBar from '../components/Navbar';
-import Sidebar from '../components/GuildSidebar';
-import { Link } from '@material-ui/core';
 
 export default function Home(props) {
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
-      <Sidebar />
+      <HomeSidebar />
       <div className="container">
         <h1>Despacito Spider</h1>
         <h2>What is this bot?</h2>

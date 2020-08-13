@@ -17,7 +17,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 // Icon imports
 import CodeIcon from '@material-ui/icons/Code';
 import HomeIcon from '@material-ui/icons/Home';
-import StorageIcon from '@material-ui/icons/Storage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,13 +52,7 @@ export default function Sidebar(props) {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem
-              button
-              key="home_page"
-              component={Link}
-              href="/"
-              style={{ textDecoration: 'none' }}
-            >
+            <ListItem button key="home_page" component={Link} href="/" className={classes.link}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -72,7 +65,7 @@ export default function Sidebar(props) {
               key="commands_page"
               component={Link}
               href="/commands"
-              style={{ textDecoration: 'none' }}
+              className={classes.link}
             >
               <ListItemIcon>
                 <CodeIcon />
@@ -80,25 +73,6 @@ export default function Sidebar(props) {
               <ListItemText primary="Commands" />
             </ListItem>
           </List>
-
-          {new Cookies().get('access-token') && (
-            <List>
-              <ListItem
-                button
-                key="guilds_list"
-                component={Link}
-                href="/guilds"
-                style={{ textDecoration: 'none' }}
-              >
-                <ListItemIcon>
-                  <StorageIcon />
-                </ListItemIcon>
-                <ListItemText primary="Guilds" />
-              </ListItem>
-            </List>
-          )}
-
-          <Divider />
 
           {GetRecentServers()}
 
@@ -110,21 +84,11 @@ export default function Sidebar(props) {
 }
 
 function GetRecentServers() {
-  const cookies = new Cookies();
-  const recentServers = cookies.get('recent-servers');
-
-  if (recentServers && recentServers.length > 6) {
-    recentServers = recentServers.splice(6);
-    cookies.set('recent-servers', recentServers, {
-      path: '/',
-      maxAge: 10 * 365 * 24 * 60 * 60, // 10 years is good enough as a permenant cookie
-      sameSite: 'strict',
-      overwrite: true
-    });
-  }
+  let recentServers = new Cookies().get('recent-servers');
 
   return recentServers ? (
     <div>
+      <Divider />
       <ListSubheader>Recent Servers</ListSubheader>
       {recentServers.map((item) => {
         return (
