@@ -146,23 +146,4 @@ function GetRecentServers() {
       })}
     </div>
   ) : null;
-
-  // const cookies = new Cookies();
-  // if (cookies.get('recent-servers') === undefined && cookies.get('access-token') !== undefined) {
-  //   cookies.set('recent-servers', []);
-  //   return;
-  // }
-  // if (cookies.get('recent-servers').length === 0) {
-  //   return;
-  // }
-  // if (cookies.get('recent-servers').length > 6) {
-  //   cookies.set('recent-servers', cookies.get('recent-servers').splice(6));
-  // }
-  // if (recentServers && cookies.get('access-token')) {
-  //   return (
-  //     <div>
-
-  //     </div>
-  //   );
-  // }
 }
