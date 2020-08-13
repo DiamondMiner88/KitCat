@@ -21,7 +21,8 @@ function Login(props) {
             cookies.set('access-token', json.access_token, {
               path: '/',
               maxAge: 604000,
-              sameSite: 'strict'
+              sameSite: 'strict',
+              overwrite: true
             });
           props.history.push(`/`);
         })

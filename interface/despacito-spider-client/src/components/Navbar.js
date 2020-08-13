@@ -9,7 +9,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ToolBar from '@material-ui/core/ToolBar';
 import Typography from '@material-ui/core/Typography';
 
-import Avatar from '@material-ui/core/Avatar'
+import Avatar from '@material-ui/core/Avatar';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function NavBar(props) {
+export default function NavBar(props) {
   const classes = useStyles();
   const [hasToken, setHasToken] = useState(false);
   const [user, setUser] = useState();
@@ -58,15 +58,20 @@ function NavBar(props) {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
         <ToolBar>
-          <Link color="inherit"
-            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}>
-              Invite
+          <Link
+            color="inherit"
+            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
+          >
+            Invite
           </Link>
 
           <div className={classes.spacer} />
           {user ? (
             <div>
-              <Avatar alt={user.username} src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp?size=128`}></Avatar>
+              <Avatar
+                alt={user.username}
+                src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp?size=128`}
+              ></Avatar>
               <Box mr={6} />
             </div>
           ) : null}
@@ -102,14 +107,3 @@ function NavBar(props) {
     </div>
   );
 }
-
-export default NavBar;
-
-/*
-          <Button
-            color="inherit"
-            href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
-          >
-            Invite
-          </Button>
-*/

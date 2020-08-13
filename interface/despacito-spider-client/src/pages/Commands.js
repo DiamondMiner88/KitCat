@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Commands(props) {
+export default function Commands(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -104,5 +104,3 @@ function GetCommands() {
     </div>
   );
 }
-
-export default Commands;

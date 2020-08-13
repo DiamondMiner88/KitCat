@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Guild(props) {
+export default function Guild(props) {
   const classes = useStyles();
   const { guildID } = useParams();
 
@@ -194,5 +194,3 @@ function Guild(props) {
     </div>
   );
 }
-
-export default Guild;
