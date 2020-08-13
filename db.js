@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS "commands" (
 	"image" TEXT NOT NULL DEFAULT 'enabled',
 	"kick" TEXT NOT NULL DEFAULT 'enabled',
 	"meme" TEXT NOT NULL DEFAULT 'enabled',
+	"nhentai" TEXT NOT NULL DEFAULT 'enabled',
+	"nsfw" TEXT NOT NULL DEFAULT 'enabled',
 	"ping" TEXT NOT NULL DEFAULT 'enabled',
 	"purge" TEXT NOT NULL DEFAULT 'enabled',
 	"purgechannel" TEXT NOT NULL DEFAULT 'enabled',
@@ -46,9 +48,17 @@ CREATE TABLE IF NOT EXISTS "commands" (
 	PRIMARY KEY("guild")
 );`;
 
+const warnings_tbl = `
+CREATE TABLE IF NOT EXISTS "users" (
+    "guild"    INTEGER NOT NULL,
+    "user"     INTEGER NOT NULL,
+    "warns"    INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY("guild","user")
+);`;
+
 var db = new sqlite3.Database('./data.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) console.error(err.message);
-  else console.info('Connected to data.db!')
+  else console.info('Connected to data.db!');
 });
 
 db.run(image_blacklist_tbl, [], (err) => {
@@ -60,6 +70,10 @@ db.run(currency_tbl, [], (err) => {
 });
 
 db.run(commands_tbl, [], (err) => {
+  if (err) console.log(`Error creating table: ${err}`);
+});
+
+db.run(warnings_tbl, [], (err) => {
   if (err) console.log(`Error creating table: ${err}`);
 });
 
