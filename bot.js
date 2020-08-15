@@ -78,9 +78,11 @@ client.on('message', async (message) => {
       if (err) {
         console.log('Error retrieving command data\n' + err.message);
         return message.channel.send('An error occured');
-      } else if (result.nhentai) return require('./commands/nhentai.js').multiMatch(message);
-      else if (!result.nhentai)
+      } else if (result.nhentai === 'enabled')
+        return require('./commands/nhentai.js').multiMatch(message);
+      else if (result.nhentai === 'disabled')
         return message.channel.send('This command has been disabled on this server.');
+      else if (!result.nhentai) return message.channel.send('An error occured');
     });
   }
 

@@ -33,11 +33,8 @@ function getData(bookID, callback) {
 
 function constructEmbed(data) {
   const { url, id, titles, parodies, characters, tags, artists, groups, lang, thumbnailURL } = data;
-  var embed = new MessageEmbed()
-    .setColor(0xffffff)
-    .setURL(url)
-    .setTitle('Overview')
-    .setDescription(titles.pretty);
+  var embed = new MessageEmbed().setColor(0xffffff).setURL(url).setTitle(titles.pretty);
+  
   if (parodies && tagsToString(parodies)) embed.addField('Parodies', tagsToString(parodies));
   if (characters && tagsToString(characters))
     embed.addField('Characters', tagsToString(characters));
