@@ -4,7 +4,7 @@ module.exports = {
   help_name: `:wastebasket: Purge`,
   help_description: `Used to delete messages in bulk.`,
   usage: `purge {amount: default = 5}`,
-  guildOnly: false,
+  guildOnly: true,
   unlisted: false,
 
   execute(client, message, args) {

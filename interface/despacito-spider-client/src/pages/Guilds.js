@@ -97,7 +97,7 @@ export default function Guilds(props) {
                 overwrite: true
               });
 
-              // props.history.push(`/guild/${guildID}`);
+              props.history.push(`/guild/${guildID}`);
             }}
           >
             <CardHeader

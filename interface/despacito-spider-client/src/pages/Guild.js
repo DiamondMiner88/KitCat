@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
+// import Tooltip from '@material-ui/core/Tooltip';
 
 // Components
 import NavBar from '../components/Navbar';
@@ -14,6 +15,7 @@ import Sidebar from '../components/GuildSidebar';
 // Other
 import Cookies from 'universal-cookie';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
+// import { commands } from '../data/commands';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
