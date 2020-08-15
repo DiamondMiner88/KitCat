@@ -151,79 +151,81 @@ app.get('/guild/:guildID/save', (req, res) => {
             status: 2,
             message: 'The bot is not in the guild you requested.'
           });
-        guild.members.fetch(json.id).then((member) => {
-          if (member.hasPermission('ADMINISTRATOR')) {
-            let validCommands = [
-              '2048',
-              '8ball',
-              'avatar',
-              'ban',
-              'cat',
-              'doggo',
-              'image',
-              'kick',
-              'meme',
-              'ping',
-              'purge',
-              'purgechannel',
-              'quote',
-              'roulette',
-              'say',
-              'sban',
-              'skick',
-              'soundboard',
-              'subreddit',
-              'trivia',
-              'tts',
-              'wolfram'
-            ];
-            let commandSQL = 'UPDATE commands SET ';
-            let commandSQLParams = [];
-            const commands = JSON.parse(req.headers.data).commands;
-            Object.keys(commands).map((commandName) => {
-              if (!validCommands.includes(commandName))
-                return res.json({
-                  status: 1,
-                  message: `"${commandName}" is not a valid command!`
-                });
+        guild.members
+          .fetch(json.id)
+          .then((member) => {
+            if (member.hasPermission('ADMINISTRATOR')) {
+              const validCommands = [
+                '8ball',
+                '2048',
+                'ban',
+                'cat',
+                'dog',
+                'image',
+                'kick',
+                'meme',
+                'nhentai',
+                'nsfw',
+                'purge',
+                'purgechannel',
+                'quote',
+                'roulette',
+                'say',
+                'sban',
+                'serverinfo',
+                'skick',
+                'subreddit',
+                'submission',
+                'trivia',
+                'tts'
+              ];
+              let commandSQL = 'UPDATE commands SET ';
+              let commandSQLParams = [];
+              const commands = JSON.parse(req.headers.data).commands;
+              Object.keys(commands).map((commandName) => {
+                if (!validCommands.includes(commandName))
+                  return res.json({
+                    status: 1,
+                    message: `"${commandName}" is not a valid command!`
+                  });
 
-              commandSQL += `'${commandName}' = ?, `;
-              commandSQLParams.push(commands[commandName]);
-            });
-            commandSQL = commandSQL.slice(0, -2);
-            commandSQL += ' WHERE guild = ?';
-            commandSQLParams.push(guild.id);
-
-            db.run(commandSQL, commandSQLParams, (err) => {
-              if (err) {
-                console.log(err.message);
-                return res.json({
-                  status: 500,
-                  message: 'An internal error occured.'
-                });
-              }
-              return res.json({
-                status: 0
+                commandSQL += `'${commandName}' = ?, `;
+                commandSQLParams.push(commands[commandName]);
               });
-            });
-          } else
-            return res.json({
-              status: 403,
-              message: 'Missing permissions.'
-            });
-        })
-        .catch((error) => {
-          if (error.message === 'Unknown Member')
-            return res.json({
-              status: 403,
-              message: 'You are not in the guild you requested.'
-            });
-          else
-            return res.json({
-              status: 2,
-              message: error.message
-            });
-        });
+              commandSQL = commandSQL.slice(0, -2);
+              commandSQL += ' WHERE guild = ?';
+              commandSQLParams.push(guild.id);
+
+              db.run(commandSQL, commandSQLParams, (err) => {
+                if (err) {
+                  console.log(err.message);
+                  return res.json({
+                    status: 500,
+                    message: 'An internal error occured.'
+                  });
+                }
+                return res.json({
+                  status: 0
+                });
+              });
+            } else
+              return res.json({
+                status: 403,
+                message: 'Missing permissions.'
+              });
+          })
+          .catch((error) => {
+            if (error.message === 'Unknown Member')
+              return res.json({
+                status: 403,
+                message: 'You are not in the guild you requested.'
+              });
+            else
+              return res.json({
+                status: 2,
+                message: error.message
+              });
+          });
       }
     })
     .catch((err) => {
@@ -267,7 +269,7 @@ app.get('/guilds', (req, res) => {
         res.json({
           status: 0,
           guilds: guilds
-        })
+        });
       }
     })
     .catch((err) => {

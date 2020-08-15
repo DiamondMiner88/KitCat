@@ -84,9 +84,6 @@ module.exports = {
   unlisted: false,
 
   execute(client, message, args) {
-    if (message.guild.id == 698718799309832242) {
-      return message.channel.send("You thought you were going to get porn lmao.")
-    }
     if (!message.channel.nsfw) {
       message.channel.send('This command can only be run in channels marked NSFW.');
       return;

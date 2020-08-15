@@ -43,7 +43,7 @@ function setResultsLimit() {
 
 module.exports = {
   command: 'wolfram',
-  category: require('./_CATEGORIES.js').utils,
+  category: require('./_CATEGORIES.js.js').utils,
   help_name: `Wolfram`,
   help_description: `Ask a mathematical or analytical question you want answered.`,
   usage: `wolfram {query}`,

@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
 
 module.exports = {
-    command: 'server',
+    command: 'serverinfo',
     category: require('./_CATEGORIES.js').utils,
     help_name: `Server`,
-    help_description: `Gives information on the server. Information: Server size (with and without bots), and the date server was created.`,
+    help_description: `Gives information on the server.`,
     usage: `server`,
     guildOnly: false,
     unlisted: false,

@@ -28,7 +28,7 @@ const help = new Discord.MessageEmbed()
 // .addField('Green Text', `Changes the text you send to a green color`)
 module.exports = {
   command: 'text',
-  category: require('./_CATEGORIES.js').utils,
+  category: require('./_CATEGORIES.js.js').utils,
   help_name: `Text`,
   help_description: `Changes your text.\n\`${pfx}text help\``,
   guildOnly: false, // TODO: i have no idea what this command does, so edit this later
