@@ -10,7 +10,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args.length === 0) {
       // Get random doggo
       fetch("https://dog.ceo/api/breeds/image/random", {method: 'Get'})

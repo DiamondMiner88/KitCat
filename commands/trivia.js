@@ -71,7 +71,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     require('../db.js').checkForProfile(message.author);
     if (args[0] === 'help') {
       return message.channel.send(triviaHelp);

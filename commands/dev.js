@@ -5,7 +5,7 @@ module.exports = {
   guildOnly: false,
   unlisted: true,
 
-  async execute(client, message, args) {
+  async execute(message, args) {
     if (
       ['295190422244950017', '407320720662855692', '678683775017943050'].includes(message.author.id)
     ) {

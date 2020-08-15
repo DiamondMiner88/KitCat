@@ -9,7 +9,7 @@ module.exports = {
     guildOnly: false,
     unlisted: false,
   
-    execute(client, message, args) {
+    execute(message) {
         const userCount = message.guild.members.cache.filter(member => !member.user.bot).size;
         const botCount = message.guild.members.cache.filter(member => member.user.bot).size;
         return message.channel.send(new Discord.MessageEmbed()

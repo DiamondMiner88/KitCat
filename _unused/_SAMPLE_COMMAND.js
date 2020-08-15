@@ -7,5 +7,5 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {}
+  execute(message, args) {}
 };

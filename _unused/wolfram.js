@@ -50,7 +50,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     var query = '';
     var textembed = new Array();
     var gbType = 'text';

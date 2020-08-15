@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
-  async execute(client, message, args) {
+  async execute(message, args) {
     var channel = message.member.voice.channel;
     if (
       message.member.voice.channel &&

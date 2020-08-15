@@ -10,7 +10,7 @@ module.exports = {
     guildOnly: false,
     unlisted: true,
 
-    execute(client, message, args) {
+    execute(message, args) {
         message.channel.send('This comamnd has not been made yet.')
     }
 };

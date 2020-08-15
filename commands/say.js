@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args.length === 0) message.author.send("You didn't provide a message to say!");
     else message.channel.send(args.join(' '));
     message.delete();

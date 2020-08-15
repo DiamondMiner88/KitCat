@@ -17,7 +17,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (message.mentions.users.first === undefined) return message.channel.send("You didn't provide a user to warn idiot.");
     if (args.length === 1) return message.channel.send("You didn't provide a reason for the warn.");
     if (message.mentions.users.first().id === message.author.id) return message.channel.send('Why are you trying to warn yourself.');

@@ -34,7 +34,7 @@ module.exports = {
   guildOnly: false, // TODO: i have no idea what this command does, so edit this later
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args[0] === 'help') {
       message.channel.send(help);
     }

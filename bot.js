@@ -112,7 +112,7 @@ client.on('message', async (message) => {
 
           if (other.mode === 'disabled')
             message.channel.send('This command has been disabled on this server.');
-          else command.execute(client, message, args, other);
+          else command.execute(message, args, other);
         }
       });
     }

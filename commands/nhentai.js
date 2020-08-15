@@ -55,7 +55,7 @@ module.exports = {
   unlisted: false,
   nsfw: true,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (message.channel.type !== 'dm' && !message.channel.nsfw)
       return message.channel.send('This command is only allowed in NSFW channels!');
     if (!args[0]) return message.channel.send('You did not provide a number!');

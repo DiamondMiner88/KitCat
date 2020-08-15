@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message) {
     require('../reddit.js').getTopPost(message, 'memes');
   }
 };

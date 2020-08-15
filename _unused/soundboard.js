@@ -21,7 +21,7 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args[0] === 'help') {
       let sounds = effects.sound_effects;
       let embed = new Discord.MessageEmbed()

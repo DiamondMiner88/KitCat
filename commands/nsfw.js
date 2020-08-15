@@ -83,7 +83,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (!message.channel.nsfw) {
       message.channel.send('This command can only be run in channels marked NSFW.');
       return;

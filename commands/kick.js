@@ -10,14 +10,14 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (!message.member.hasPermission('KICK_MEMBERS'))
       return message.author.send('You do not have the permission to kick members.');
     if (!args[0]) return message.channel.send('You did not mention a user to kick!');
 
     let target_user = message.mentions.users.first();
     if (!target_user) {
-      let matching_users = client.users.cache.filter(
+      let matching_users = message.client.users.cache.filter(
         (user) => user.username === args[0].split('#')[0]
       );
       target_user = matching_users.find((user) => user.discriminator === args[0].split('#')[1]);

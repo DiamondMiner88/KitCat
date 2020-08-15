@@ -17,7 +17,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args.length === 0) {
       return message.channel.send(
         `Didn't provide any image type run \`${pfx}image help\` for image commands.`
@@ -32,10 +32,10 @@ module.exports = {
     }
     switch (args[0].toLowerCase()) {
       case 'minecraft':
-        require('./ImageCommands/minecraft').minecraft(client, message, args);
+        require('./ImageCommands/minecraft').minecraft(message, args);
         break;
       case 'meme':
-        require('./ImageCommands/meme').meme(client, message, args);
+        require('./ImageCommands/meme').meme(message, args);
         break;
     }
   }
