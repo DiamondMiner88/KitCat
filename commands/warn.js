@@ -18,9 +18,11 @@ module.exports = {
   unlisted: false,
 
   execute(message, args) {
-    if (message.mentions.users.first === undefined) return message.channel.send("You didn't provide a user to warn idiot.");
+    if (message.mentions.users.first === undefined)
+      return message.channel.send("You didn't provide a user to warn idiot.");
     if (args.length === 1) return message.channel.send("You didn't provide a reason for the warn.");
-    if (message.mentions.users.first().id === message.author.id) return message.channel.send('Why are you trying to warn yourself.');
+    if (message.mentions.users.first().id === message.author.id)
+      return message.channel.send('Why are you trying to warn yourself.');
     db.get(get_warning, [message.guild.id, message.author.id], (err, result) => {
       if (err) {
         console.log('Error trying to get warnings: ' + err);
@@ -49,10 +51,5 @@ module.exports = {
         }
       });
     });
-    /*
-        db.get(get_warning, [message.guild.id, message.author.id], (err, result) => {
-                            console.log(result)
-                        });
-        */
   }
 };

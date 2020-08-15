@@ -8,44 +8,22 @@ module.exports = {
   unlisted: false,
 
   async execute(message, args) {
-    var channel = message.member.voice.channel;
-    if (
-      message.member.voice.channel &&
-      message.member.roles.cache.some((role) => role.name === 'DJ')
-    ) {
-      if (args.join(' ').length > 200) {
-        message.channel.send('Text exceeds 200 character limit.');
-        return;
-      }
-      const channel = message.member.voice.channel;
-      const connection = await message.member.voice.channel.join();
-      var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
-        args.join(' ')
-      )}&tl=en&client=tw-ob`;
-      // message.channel.send(url);
-      const dispatcher = connection.play(url);
-      dispatcher.on('finish', () => {
-        channel.leave();
-      });
-      /*
-      var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(args.join(" "))}&tl=en&client=tw-ob`;
-      var options = {
-          url: url,
-          headers: {
-              'Referer': 'http://translate.google.com/',
-              'User-Agent': 'stagefright/1.2 (Linux;Android 5.0)'
-          }
-      }
-      // var filename = `${message.author.id}.[${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}][${new Date().getHours()}-${new Date().getMinutes()}-${new Date().getSeconds()}-${new Date().getMilliseconds()}`
-      var filename = `${message.author.id}.${new Date().getTime()}.mp3`
-      request(options).pipe(fs.createWriteStream(`./audio/tts-audio-files/${filename}`));
-      const dispatcher = connection.play(`./audio/tts-audio-files/${filename}`);
-      dispatcher.end("end", end => {
-          channel.leave();
-      });
-      */
-    } else {
-      message.channel.send("Either you aren't in a voice channel, or you ain't a DJ");
-    }
+    if (!message.member.voice.channel)
+      return message.channel.send('You are not in a voice channel!');
+    if (!message.member.roles.cache.some((role) => role.name === 'DJ'))
+      return message.channel.send('You do not have the DJ role!');
+
+    const text = args.join(' ');
+
+    // if (text.length > 200) return message.channel.send('Text exceeds 200 character limit.');
+    const channel = message.member.voice.channel;
+    const connection = await message.member.voice.channel.join();
+    var url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(
+      text
+    )}&tl=en&client=tw-ob`;
+    const dispatcher = connection.play(url);
+    dispatcher.on('finish', () => {
+      channel.leave();
+    });
   }
 };

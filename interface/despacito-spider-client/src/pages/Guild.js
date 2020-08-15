@@ -146,7 +146,7 @@ export default function Guild(props) {
 
         <Snackbar
           open={saveStatus === 'saved_open_popup'}
-          autoHideDuration={null}
+          autoHideDuration={5000}
           onClose={(event, reason) => {
             if (reason !== 'clickaway') setSaveStatus('saved_no_popup');
           }}

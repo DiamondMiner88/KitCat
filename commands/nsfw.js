@@ -2,12 +2,8 @@ const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
 const request = require('request');
 const fetch = require('node-fetch');
-// const snoowrap = require('snoowrap');
-// const pSearch = require("pornsearch");
 
-/*
-https://pornopics.co/
-*/
+// https://pornopics.co/
 
 const hentai_commands = [
   'classic',

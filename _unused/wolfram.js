@@ -1,5 +1,6 @@
 const config = require('../config/config.json');
 const WolframAlphaAPI = require('wolfram-alpha-api');
+// Removed dependency: "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
 const waApi = WolframAlphaAPI('3K5593-UJEWH5VHRJ'); //I can just turn this into an environmental variable later. Im gonna need a gitignore on .env files
 const fs = require('fs');
 var wolframEmbed = new Array();
