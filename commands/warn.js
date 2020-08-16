@@ -72,10 +72,5 @@ module.exports = {
                 }
             })
         })
-        /*
-        db.get(get_warning, [message.guild.id, message.author.id], (err, result) => {
-                            console.log(result)
-                        });
-        */
     }
 };
