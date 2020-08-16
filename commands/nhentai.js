@@ -33,11 +33,8 @@ function getData(bookID, callback) {
 
 function constructEmbed(data) {
   const { url, id, titles, parodies, characters, tags, artists, groups, lang, thumbnailURL } = data;
-  var embed = new MessageEmbed()
-    .setColor(0xffffff)
-    .setURL(url)
-    .setTitle('Overview')
-    .setDescription(titles.pretty);
+  var embed = new MessageEmbed().setColor(0xffffff).setURL(url).setTitle(titles.pretty);
+  
   if (parodies && tagsToString(parodies)) embed.addField('Parodies', tagsToString(parodies));
   if (characters && tagsToString(characters))
     embed.addField('Characters', tagsToString(characters));
@@ -56,13 +53,13 @@ module.exports = {
   usage: 'nhentai {number} ` or `{number}',
   guildOnly: false,
   unlisted: false,
+  nsfw: true,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (message.channel.type !== 'dm' && !message.channel.nsfw)
       return message.channel.send('This command is only allowed in NSFW channels!');
-    if (!args[0]) return message.channel.send('You did not provide a number!', undefined);
-    if (!args[0].match(/\d{1,6}/g))
-      return message.channel.send('That is not a valid number!', undefined);
+    if (!args[0]) return message.channel.send('You did not provide a number!');
+    if (!args[0].match(/\d{1,6}/g)) return message.channel.send('That is not a valid number!');
     getData(args[0], (error, data) => {
       if (error) {
         if (error === 'Request failed with status code 404')
@@ -70,6 +67,13 @@ module.exports = {
         else message.channel.send('Error: ' + error);
       } else message.channel.send(constructEmbed(data));
     });
+  },
+  multiMatch(message) {
+    const matches = message.content.match(/\{\d{1,6}\}/g);
+    for (let number of matches) {
+      number = number.substring(1, number.length - 1);
+      this.execute(undefined, message, [number]);
+    }
   },
   constructEmbed,
   getData

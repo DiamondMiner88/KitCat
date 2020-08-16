@@ -11,7 +11,7 @@ module.exports = {
   guildOnly: true,
   unlisted: true,
 
-  execute(client, message, args) {
+  execute(message, args) {
     // console.log(message.mentions.members.first(message.mentions.members.size));
     if (args[0] === 'help') {
       return message.channel.send(
@@ -40,7 +40,7 @@ module.exports = {
     users_mentions = removeCopies(users_mentions);
     var users = [];
     for (var number in users_id) {
-      users.push(client.users.cache.get(users_id[number]));
+      users.push(message.client.users.cache.get(users_id[number]));
     }
     if (users.length === 1)
       return message.channel.send("You can't play Russian Roulette by yourself.");

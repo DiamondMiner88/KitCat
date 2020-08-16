@@ -11,7 +11,7 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (!message.member.hasPermission('MANAGE_MESSAGES')) {
       message.channel.send('You do not have permission to do this.');
       return;

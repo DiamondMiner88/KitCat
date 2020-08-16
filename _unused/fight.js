@@ -8,7 +8,7 @@ module.exports = {
   help_name: `NAME TO BE DISPLAYED ON HELP COMMAND`,
   help_description: `DESCRIPTON OF COMMAND FOR HELP COMMAND`,
 
-  execute(client, message, args) {
+  execute(message, args) {
     //checks if the username to fight is in the message
     let author1 = message.author.username;
     let user = message.mentions.users.first();

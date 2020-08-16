@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: false,
   unlisted: true,
 
-  execute(client, message, args) {
+  execute(message) {
     require('../db.js').checkForProfile(message.author);
     message.channel.send('This command has not been implemented yet!');
   }

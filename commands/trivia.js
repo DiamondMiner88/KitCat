@@ -3,7 +3,6 @@ const pfx = config.prefix;
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').AllHtmlEntities;
-const decode = require('decode-html');
 
 var { db } = require('../db.js');
 const entities = new Entities();
@@ -55,10 +54,7 @@ const triviaHelp = new Discord.MessageEmbed()
   )
   .addField('Difficulties', '`Any`, `Easy`, `Medium`, `Hard`')
   // .addField('Earn Money', '`Yes`, `No` (No by default)')
-  .addField(
-    'Ussage',
-    `\`trivia {optional: difficulty} {optional: category}\``
-  );
+  .addField('Ussage', `\`trivia {optional: difficulty} {optional: category}\``);
 const boolQuestionFilterArray = ['🇹', '🇫'];
 const multipleQuestionFilterArray = ['1️⃣', '2️⃣', '3️⃣', '4️⃣'];
 
@@ -71,7 +67,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     require('../db.js').checkForProfile(message.author);
     if (args[0] === 'help') {
       return message.channel.send(triviaHelp);
@@ -85,20 +81,20 @@ module.exports = {
     var url = `https://opentdb.com/api.php?amount=1`;
     var user = message.author;
     if (args.length > 0) {
-      var category = categories[input.join('').toLowerCase().replace(/\s+/g, '')]
+      var category = categories[input.join('').toLowerCase().replace(/\s+/g, '')];
       var difficulty = 'any';
 
-      if (!category) { 
-        category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')]
-        difficulty = selectedDifficulty[input[0].toLowerCase()]
+      if (!category) {
+        category = categories[input.slice(1).join(' ').toLowerCase().replace(/\s+/g, '')];
+        difficulty = selectedDifficulty[input[0].toLowerCase()];
         if (!input[0]) difficulty = 'any';
         if (!input[1]) category = 'any';
       }
 
-      if (!difficulty) return message.channel.send('You provided an invalid difficulty!')
-      if (!category) return message.channel.send('You provided an invalid category!')
-      if (category !== 'any') url += `&category=${category}`
-      if (difficulty !== 'any') url += `&difficulty=${difficulty}`
+      if (!difficulty) return message.channel.send('You provided an invalid difficulty!');
+      if (!category) return message.channel.send('You provided an invalid category!');
+      if (category !== 'any') url += `&category=${category}`;
+      if (difficulty !== 'any') url += `&difficulty=${difficulty}`;
     }
     fetch(url, {
       method: 'GET'

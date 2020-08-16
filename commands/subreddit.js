@@ -7,7 +7,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (!args[0]) return message.channel.send(`Missing subreddit`);
     require('../reddit.js').getTopPost(message, args[0]);
   }

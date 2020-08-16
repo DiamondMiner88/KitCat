@@ -1,11 +1,16 @@
 {
   "short_name": "Despacito Bot",
-  "name": "Despacito Bot Settings",
+  "name": "Despacito Bot Dashboard",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "https://dl.dropboxusercontent.com/s/yepxwpyk9ffdb3v/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "https://dl.dropboxusercontent.com/s/jo1fyajbbhxzcmb/bonk.jpg",
+      "sizes": "402x226",
+      "type": "image/jpeg"
     }
   ],
   "start_url": ".",

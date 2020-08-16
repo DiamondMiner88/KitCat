@@ -6,13 +6,15 @@ import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Sidebar from '../components/GuildSidebar';
 import Typography from '@material-ui/core/Typography';
 
 // Components
 import NavBar from '../components/Navbar';
+import HomeSidebar from '../components/HomeSidebar';
 
-const commands = require('../data/commands').commands;
+// Other
+import commandData from '../data/commandData';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%'
@@ -33,25 +35,25 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Commands(props) {
+export default function Commands(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <NavBar location={props.location} history={props.history} />
-      <Sidebar />
+      <HomeSidebar />
       <div className="container">{GetCommands()}</div>
     </div>
   );
 }
 
-function MakeAccordion(title, text, id, code, perms) {
-  /*
-  title - required
-  text - required
-  id - required
-  code - required
-  perms - optional
-  */
+function Command(title, text, id, code, perms) {
+  /**
+   * title - required
+   * text  - required
+   * id    - required
+   * code  - required
+   * perms - optional
+   */
 
   const classes = useStyles();
   return (
@@ -80,21 +82,15 @@ function GetCommands() {
   const classes = useStyles();
   return (
     <div>
-      {Object.keys(commands).map((item) => {
+      {commandData.categories.map((cat) => {
         return (
           <div>
-            <h2>{item}</h2>
+            <h2>{cat.help_name}</h2>
             <div className={classes.root}>
-              {commands[item].map((commandItem) => {
+              {cat.commands.map((cmdName) => {
+                const cmd = commandData.commands.find((cmd) => cmd.command === cmdName);
                 return (
-                  <div>
-                    {MakeAccordion(
-                      commandItem.help_name,
-                      commandItem.help_description,
-                      commandItem.command,
-                      commandItem.usage
-                    )}
-                  </div>
+                  <div>{Command(cmd.help_name, cmd.help_description, cmd.command, cmd.usage)}</div>
                 );
               })}
             </div>
@@ -104,5 +100,3 @@ function GetCommands() {
     </div>
   );
 }
-
-export default Commands;

@@ -265,7 +265,7 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     switch (args[0]) {
       case 'help':
         var embed = new Discord.MessageEmbed()

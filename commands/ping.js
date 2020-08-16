@@ -13,12 +13,12 @@ module.exports = {
    *
    * @returns {void}
    */
-  async execute(client, message, args) {
+  async execute(message) {
     let m = await message.channel.send('Ping?');
     m.edit(
       `Pong! Round trip latency is ${
         m.createdTimestamp - message.createdTimestamp
-      }ms. One-way API Latency is ${Math.round(client.ws.ping)}ms`
+      }ms. One-way API Latency is ${Math.round(message.client.ws.ping)}ms`
     );
   }
 };

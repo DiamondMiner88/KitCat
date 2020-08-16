@@ -15,14 +15,14 @@ module.exports = {
    * @param  {String} args [{Mention | User tag}]
    * @returns {void}
    */
-  execute(client, message, args) {
+  execute(message, args) {
     if (!args[0]) {
       message.channel.send(`You need to mention someone or put their tag.`);
       return;
     }
     let target_user = message.mentions.users.first();
     if (!target_user) {
-      let matching_users = client.users.cache.filter(
+      let matching_users = message.client.users.cache.filter(
         (user) => user.username === args[0].split('#')[0]
       );
       target_user = matching_users.find((user) => user.discriminator === args[0].split('#')[1]);

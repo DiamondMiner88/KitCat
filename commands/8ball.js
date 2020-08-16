@@ -12,7 +12,7 @@ module.exports = {
   /**
    * execute - Gets random string from /config/8ball.json and sends message
    */
-  execute(client, message, args) {
+  execute(message, args) {
     if (args.length > 0)
       message.channel.send(
         `Question: ${args.join(' ')}\nAnswer: ${

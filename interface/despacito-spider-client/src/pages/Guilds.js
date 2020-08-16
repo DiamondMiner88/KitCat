@@ -8,10 +8,10 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
-import Sidebar from '../components/GuildSidebar';
 
 // Components
 import NavBar from '../components/Navbar';
+import GuildSidebar from '../components/GuildSidebar';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Guilds(props) {
+export default function Guilds(props) {
   const classes = useStyles();
 
   const [guilds, setGuilds] = useState();
@@ -68,64 +68,68 @@ function Guilds(props) {
       }
       fetchData();
     } else props.history.push('/');
-  }, [props.history]);  
+  }, [props.history]);
 
-  const guildItems = [];
+  const guildsComponents = () => {
+    const guildComponentList = [];
+    for (const guildID in guilds) {
+      guildComponentList.push(
+        <Card className={classes.root}>
+          <CardActionArea
+            onClick={() => {
+              const cookies = new Cookies();
+              let recentServers = cookies.get('recent-servers')
+                ? cookies.get('recent-servers')
+                : [];
 
-  for (var guild in guilds) {
-    guildItems.push(
-      <Card className={classes.root}>
-        <CardActionArea
-          // eslint-disable-next-line
-          onClick={() => {
-            // Bad way to do this, but too bad i guess :)
-            const cookies = new Cookies();
-            if (cookies.get('recent-servers') === undefined && cookies.get('access-token') !== undefined) {
-              cookies.set('recent-servers',[]);
-            }
-            if (cookies.get('recent-servers') !== undefined && cookies.get('access-token') !== undefined) {
-              for (var x = 0; x < cookies.get('recent-servers').length; x++) {
-                if (cookies.get('recent-servers')[x].id === guild) {
-                  props.history.push(`/guild/${guild}`);
-                  return;
-                }
+              let currentGuildData = guilds[guildID];
+              currentGuildData.id = guildID;
+
+              if (!recentServers.some((elem) => elem.id === currentGuildData.id))
+                recentServers.unshift(currentGuildData);
+
+              if (recentServers.length > 6) recentServers = recentServers.slice(0, 6);
+
+              cookies.set('recent-servers', recentServers, {
+                path: '/',
+                maxAge: 10 * 365 * 24 * 60 * 60, // 10 years is good enough as a permenant cookie
+                sameSite: 'strict',
+                overwrite: true
+              });
+
+              props.history.push(`/guild/${guildID}`);
+            }}
+          >
+            <CardHeader
+              className={classes.cardSubComponents}
+              avatar={
+                <Avatar className={classes.avatar}>
+                  <img
+                    src={guilds[guildID].iconURL}
+                    alt={`Guild Icon for ${guilds[guildID].name}`}
+                  />
+                </Avatar>
               }
-              var pushArray = cookies.get('recent-servers');
-              var tempDict = guilds[guild];
-              tempDict['id'] = guild;
-              pushArray.unshift(tempDict);
-              if (pushArray.length > 6) {
-                pushArray.splice(6);
-              }
-              cookies.set('recent-servers', pushArray);
-            }
-            props.history.push(`/guild/${guild}`);
-          }}
-        >
-          <CardHeader
-            className={classes.cardSubComponents}
-            avatar={
-              <Avatar className={classes.avatar}>
-                <img src={guilds[guild].iconURL} alt={`Guild Icon for ${guilds[guild].name}`} />
-              </Avatar>
-            }
-          />
-          <CardContent className={classes.cardSubComponents}>
-            <Typography style={{ textTransform: 'none', fontSize: 30 }}>
-              {guilds[guild].name}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    );
-  }
+            />
+            <CardContent className={classes.cardSubComponents}>
+              <Typography style={{ textTransform: 'none', fontSize: 30 }}>
+                {guilds[guildID].name}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      );
+    }
+    return guildComponentList;
+  };
+
   return (
     <div>
       <NavBar location={props.location} history={props.history} />
-      <Sidebar />
-      <div className="container">{guilds ? guildItems : <Typography>Loading...</Typography>}</div>
+      <GuildSidebar />
+      <div className="container">
+        {guilds ? guildsComponents() : <Typography>Loading...</Typography>}
+      </div>
     </div>
   );
 }
-
-export default Guilds;

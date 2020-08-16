@@ -4,10 +4,10 @@ module.exports = {
   help_name: `:wastebasket: Purge`,
   help_description: `Used to delete messages in bulk.`,
   usage: `purge {amount: default = 5}`,
-  guildOnly: false,
+  guildOnly: true,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (!message.member.hasPermission('MANAGE_MESSAGES')) {
       message.channel.send('You do not have the permission to manage messages.');
       return;

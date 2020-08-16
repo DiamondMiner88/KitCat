@@ -11,7 +11,7 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
-  execute(client, message, args) {
+  execute(message, args) {
     if (args.length === 0) {
       var embed = new Discord.MessageEmbed().setColor(0x0099ff).setTitle('Categories:');
       for (const key in categories) {
@@ -33,7 +33,7 @@ module.exports = {
     } else if (!categories[args[0]]) {
       message.channel.send('Invalid category!');
     } else {
-      const commands = client.commands
+      const commands = message.client.commands
         .filter((command) => command.category === categories[args[0]])
         .filter((command) => !command.unlisted);
       var embed = new Discord.MessageEmbed()
