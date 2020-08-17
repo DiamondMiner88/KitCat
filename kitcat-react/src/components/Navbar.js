@@ -93,7 +93,7 @@ export default function NavBar(props) {
           ) : (
             <Link
               color="inherit"
-              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify`}
+              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify%20guilds`}
             >
               Login with Discord
             </Link>

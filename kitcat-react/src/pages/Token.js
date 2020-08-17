@@ -11,7 +11,7 @@ function Login(props) {
 
     if (query.has('error')) props.history.push(`/`);
     else if (query.has('code')) {
-      fetch(`/despacito-spider-626fa/us-central1/token?code=${query.get('code')}`, {
+      fetch(`/kitcat-ed191/us-central1/token?code=${query.get('code')}`, {
         method: 'POST'
       })
         .then((res) => res.json())

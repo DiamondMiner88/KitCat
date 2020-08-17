@@ -70,7 +70,7 @@ client.on('message', async (message) => {
 
   if (message.author.bot) return;
 
-  const args = message.content.slice(pfx.length).trim().split(' '); // args is an array of text after the command that were seperated by a whitespace
+  const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
 
   if (/\{\d{1,6}\}/.test(message.content)) {
     if (message.channel.type === 'dm') return require('./commands/nhentai.js').multiMatch(message);

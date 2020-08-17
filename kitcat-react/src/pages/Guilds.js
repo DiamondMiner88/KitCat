@@ -50,7 +50,7 @@ export default function Guilds(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
-        const res = await fetch('/despacito-spider-626fa/us-central1/guilds', {
+        const res = await fetch('/kitcat-ed191/us-central1/guilds', {
           method: 'GET',
           headers: {
             'access-token': cookies.get('access-token')

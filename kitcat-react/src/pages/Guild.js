@@ -52,7 +52,7 @@ export default function Guild(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
-        const res = await fetch('/despacito-spider-626fa/us-central1/guild/' + guildID, {
+        const res = await fetch('/kitcat-ed191/us-central1/guild/' + guildID, {
           method: 'GET',
           headers: {
             'access-token': cookies.get('access-token')
@@ -75,7 +75,7 @@ export default function Guild(props) {
   }, []);
 
   function save() {
-    fetch(`/despacito-spider-626fa/us-central1/guild/${guildID}/save`, {
+    fetch(`/kitcat-ed191/us-central1/guild/${guildID}/save`, {
       method: 'GET',
       headers: {
         'access-token': new Cookies().get('access-token'),

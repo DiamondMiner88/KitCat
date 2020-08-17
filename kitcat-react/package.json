@@ -1,5 +1,5 @@
 {
-  "name": "despacito-spider-client",
+  "name": "kitcat-firebase",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -21,7 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "startfunctions": "firebase serve --only functions",
+    "startwebsite": "npm run start"
   },
   "eslintConfig": {
     "extends": "react-app"
