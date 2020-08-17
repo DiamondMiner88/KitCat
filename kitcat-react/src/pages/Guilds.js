@@ -50,8 +50,8 @@ export default function Guilds(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
-        const res = await fetch('/kitcat-ed191/us-central1/guilds', {
-          method: 'GET',
+        const res = await fetch('/functions/guilds', {
+          method: 'POST',
           headers: {
             'access-token': cookies.get('access-token')
           }
@@ -59,8 +59,8 @@ export default function Guilds(props) {
         res
           .json()
           .then((json) => {
-            if (json.message) console.log(json.message);
-            else setGuilds(json.guilds);
+            if (json.result.message) console.log(json.message);
+            else setGuilds(json.result.guilds);
           })
           .catch((error) => {
             console.log(error.message);

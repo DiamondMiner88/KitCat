@@ -1,16 +1,14 @@
 {
-  "name": "kitcat-firebase",
+  "name": "kitcat-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "http-proxy-middleware": "^1.0.5",
     "node-fetch": "^2.6.0",
+    "parse": "^2.15.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -21,9 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "startfunctions": "firebase serve --only functions",
-    "startwebsite": "npm run start"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

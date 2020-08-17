@@ -52,10 +52,11 @@ export default function Guild(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
-        const res = await fetch('/kitcat-ed191/us-central1/guild/' + guildID, {
+        const res = await fetch('/functions/guild', {
           method: 'GET',
           headers: {
-            'access-token': cookies.get('access-token')
+            'access-token': cookies.get('access-token'),
+            guild: guildID
           }
         });
         res
@@ -75,10 +76,11 @@ export default function Guild(props) {
   }, []);
 
   function save() {
-    fetch(`/kitcat-ed191/us-central1/guild/${guildID}/save`, {
+    fetch(`/functions/guild`, {
       method: 'GET',
       headers: {
         'access-token': new Cookies().get('access-token'),
+        guild: guildID,
         data: JSON.stringify({
           commands: commands
         })

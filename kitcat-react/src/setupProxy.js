@@ -9,24 +9,14 @@ module.exports = function (app) {
     })
   );
   app.use(
-    '/bot/token',
+    '/functions',
     createProxyMiddleware({
-      target: 'http://762c04225862.ngrok.io',
-      changeOrigin: true
-    })
-  );
-  app.use(
-    '/bot/guild',
-    createProxyMiddleware({
-      target: 'http://762c04225862.ngrok.io',
-      changeOrigin: true
-    })
-  );
-  app.use(
-    '/bot/guilds',
-    createProxyMiddleware({
-      target: 'http://762c04225862.ngrok.io',
-      changeOrigin: true
+      target: 'https://parseapi.back4app.com',
+      changeOrigin: true,
+      headers: {
+        'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
+        'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
+      }
     })
   );
 };

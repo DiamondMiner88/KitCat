@@ -11,14 +11,16 @@ function Login(props) {
 
     if (query.has('error')) props.history.push(`/`);
     else if (query.has('code')) {
-      fetch(`/kitcat-ed191/us-central1/token?code=${query.get('code')}`, {
-        method: 'POST'
+      fetch(`/functions/token`, {
+        method: 'POST',
+        headers: {
+          code: query.get('code')
+        }
       })
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
-          if (json.access_token)
-            cookies.set('access-token', json.access_token, {
+          if (json.result.access_token)
+            cookies.set('access-token', json.result.access_token, {
               path: '/',
               maxAge: 604000,
               sameSite: 'strict',
