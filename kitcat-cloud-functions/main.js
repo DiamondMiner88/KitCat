@@ -30,7 +30,7 @@ Parse.Cloud.define('token', async (request) => {
 });
 
 Parse.Cloud.define('guild', async (request) => {
-  if (!request.headers['token-type'] && !request.headers['access-token']) {
+  if (!request.headers['access-token']) {
     return { message: 'Missing authentication.' };
   }
 
@@ -44,7 +44,6 @@ Parse.Cloud.define('guild', async (request) => {
     });
     let resData = await res.json();
     return resData;
-    //
   } else if (request.headers.guild) {
     let res = await fetch(`${config.botapi_url}/guild/${request.headers.guild}`, {
       method: 'GET',
@@ -54,20 +53,14 @@ Parse.Cloud.define('guild', async (request) => {
     });
     let resData = await res.json();
     return resData;
+  } else {
+    let res = await fetch(`${config.botapi_url}/guilds`, {
+      method: 'GET',
+      headers: {
+        'access-token': request.headers['access-token']
+      }
+    });
+    let resData = await res.json();
+    return resData;
   }
-});
-
-Parse.Cloud.define('guilds', async (request) => {
-  if (!request.headers['access-token']) {
-    return { message: 'Missing authentication.' };
-  }
-
-  let res = await fetch(`${config.botapi_url}/guilds`, {
-    method: 'GET',
-    headers: {
-      'access-token': request.headers['access-token']
-    }
-  });
-  let resData = await res.json();
-  return resData;
 });

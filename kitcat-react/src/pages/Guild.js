@@ -50,10 +50,10 @@ export default function Guild(props) {
   useEffect(() => {
     if (commands || settings) return;
     const cookies = new Cookies();
-    if (cookies.get('access-token') !== undefined) {
+    if (cookies.get('access-token')) {
       async function fetchData() {
         const res = await fetch('/functions/guild', {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'access-token': cookies.get('access-token'),
             guild: guildID
@@ -62,9 +62,9 @@ export default function Guild(props) {
         res
           .json()
           .then((json) => {
-            if (json.message) addError(json.message);
+            if (json.result.message) addError(json.result.message);
             else {
-              setCommands(json.commands);
+              setCommands(json.result.commands);
               setSettings({}); // Change this later when settings are introduced
             }
           })
@@ -77,7 +77,7 @@ export default function Guild(props) {
 
   function save() {
     fetch(`/functions/guild`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'access-token': new Cookies().get('access-token'),
         guild: guildID,
@@ -88,8 +88,7 @@ export default function Guild(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
-        if (json.message) addError(json.message);
+        if (json.result.message) addError(json.result.message);
         else setSaveStatus('saved_open_popup');
       })
       .catch((error) => addError(error.message));

@@ -38,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
   cardSubComponents: {
     display: 'inline-block',
     verticalAlign: 'middle'
+  },
+  card: {
+    marginBottom: theme.spacing(2),
+    border: '1px black',
+    borderStyle: 'solid'
   }
 }));
 
@@ -50,7 +55,7 @@ export default function Guilds(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       async function fetchData() {
-        const res = await fetch('/functions/guilds', {
+        const res = await fetch('/functions/guild', {
           method: 'POST',
           headers: {
             'access-token': cookies.get('access-token')
@@ -74,7 +79,7 @@ export default function Guilds(props) {
     const guildComponentList = [];
     for (const guildID in guilds) {
       guildComponentList.push(
-        <Card className={classes.root}>
+        <Card className={(classes.root, classes.card)}>
           <CardActionArea
             onClick={() => {
               const cookies = new Cookies();
@@ -92,7 +97,7 @@ export default function Guilds(props) {
 
               cookies.set('recent-servers', recentServers, {
                 path: '/',
-                maxAge: 10 * 365 * 24 * 60 * 60, // 10 years is good enough as a permenant cookie
+                maxAge: 604000, // 10 years is good enough as a permenant cookie
                 sameSite: 'strict',
                 overwrite: true
               });
