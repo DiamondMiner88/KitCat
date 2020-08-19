@@ -11,10 +11,17 @@ import Link from '@material-ui/core/Link';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ToolBar from '@material-ui/core/ToolBar';
 import Typography from '@material-ui/core/Typography';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 
 // Other
 import Cookies from 'universal-cookie';
 import fetch from 'node-fetch';
+import react_cookies from 'react-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +42,76 @@ export default function Navbar(props) {
   const classes = useStyles();
   const [hasToken, setHasToken] = useState(false);
   const [user, setUser] = useState();
-  const [userDropdownOpened, setUserDropdownOpened] = useState(false);
+
+  //User drop down
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const anchorRef = React.useRef(null);
+  const handleToggle = () => setUserDropdownOpen((prevOpen) => !prevOpen);
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) return;
+    setUserDropdownOpen(false);
+  };
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setUserDropdownOpen(false);
+    }
+  }
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(setUserDropdownOpen);
+  React.useEffect(() => {
+    if (prevOpen.current === true && setUserDropdownOpen === false) {
+      anchorRef.current.focus();
+    }
+    prevOpen.current = setUserDropdownOpen;
+  }, [setUserDropdownOpen]);
+  const userDropdown = () => {
+    return (
+      <div className={classes.root}>
+        {/* <Button
+          ref={anchorRef}
+          aria-controls={setUserDropdownOpen ? 'menu-list-grow' : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+        >
+          Toggle Menu Grow
+        </Button> */}
+        <Popper
+          open={userDropdownOpen}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList
+                    autoFocusItem={userDropdownOpen}
+                    id="menu-list-grow"
+                    onKeyDown={handleListKeyDown}
+                  >
+                    <MenuItem
+                      onClick={(event) => {
+                        handleClose(event);
+                        new Cookies().set('access-token', undefined);
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const cookies = new Cookies();
@@ -48,12 +124,13 @@ export default function Navbar(props) {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message) window.location = process.env.PUBLIC_URL + '#/'
+          if (json.message) window.location = process.env.PUBLIC_URL + '#/';
           else setUser(json);
         })
         .catch(console.error);
     }
   }, []);
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -93,23 +170,22 @@ export default function Navbar(props) {
           ) : (
             <Link
               color="inherit"
-              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=https%3A%2F%2Fkitcat-bot.github.io%2FKitCat&response_type=code&scope=guilds%20identify`}
+              href={`https://discord.com/api/oauth2/authorize?client_id=${
+                process.env.REACT_APP_CLIENT_ID
+              }&redirect_uri=${encodeURIComponent(
+                process.env.REACT_APP_DISCORD_REDIRECT_URL
+              )}&response_type=code&scope=guilds%20identify`}
             >
               Login with Discord
             </Link>
           )}
 
           {user && (
-            <IconButton
-              aria-label="drop down menu"
-              color="inherit"
-              onClick={() => {
-                setUserDropdownOpened(!userDropdownOpened);
-              }}
-            >
+            <IconButton aria-label="drop down menu" color="inherit" onClick={handleToggle}>
               <KeyboardArrowDownIcon />
             </IconButton>
           )}
+          {userDropdown()}
         </ToolBar>
       </AppBar>
     </div>
