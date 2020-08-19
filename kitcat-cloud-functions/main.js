@@ -3,19 +3,18 @@ const fetch = require('node-fetch');
 const config = {
   client_id: '744613719501176893',
   client_secret: 'MOqqQHwRhD7MwLrodpy_Y_-RB_RES2Ed',
-  redirect_uri: 'http://localhost:3000/token',
   botapi_url: 'http://24.16.44.237:4000'
 };
 
 Parse.Cloud.define('token', async (request) => {
-  if (request.headers.code) {
+  if (request.headers.code && request.headers['url-redirect']) {
     const code = request.headers.code;
     const data = new FormData();
 
     data.append('client_id', config.client_id);
     data.append('client_secret', config.client_secret);
     data.append('grant_type', 'authorization_code');
-    data.append('redirect_uri', config.redirect_uri);
+    data.append('redirect_uri', request.headers['url-redirect']);
     data.append('scope', 'identify');
     data.append('code', code);
 
@@ -26,12 +25,12 @@ Parse.Cloud.define('token', async (request) => {
 
     let resdata = await res.json();
     return resdata;
-  } else return { message: 'Missing code query parmater' };
+  } else return { message: 'Missing headers' };
 });
 
 Parse.Cloud.define('guild', async (request) => {
   if (!request.headers['access-token']) {
-    return { message: 'Missing authentication.' };
+    return { message: 'Missing headers.' };
   }
 
   if (request.headers.guild && request.headers.data) {

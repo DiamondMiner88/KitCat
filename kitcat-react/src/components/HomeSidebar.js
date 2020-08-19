@@ -54,7 +54,7 @@ export default function Sidebar(props) {
                 button
                 key="guilds"
                 component={Link}
-                href="/guilds"
+                href={process.env.PUBLIC_URL + '#/guilds'}
                 className={classes.link}
               >
                 <ListItemIcon>
@@ -65,7 +65,7 @@ export default function Sidebar(props) {
             </List>
           )}
           <List>
-            <ListItem button key="status" component={Link} href="/status" className={classes.link}>
+            <ListItem button key="status" component={Link} href={process.env.PUBLIC_URL + '#/status'} className={classes.link}>
               <ListItemIcon>
                 <WarningIcon />
               </ListItemIcon>

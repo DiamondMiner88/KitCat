@@ -39,7 +39,7 @@ export default function Commands(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <NavBar location={props.location} history={props.history} />
+      <NavBar location={props.location} />
       <HomeSidebar />
       <div className="container">{GetCommands()}</div>
     </div>

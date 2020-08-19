@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function NavBar(props) {
+export default function Navbar(props) {
   const classes = useStyles();
   const [hasToken, setHasToken] = useState(false);
   const [user, setUser] = useState();
@@ -48,12 +48,12 @@ export default function NavBar(props) {
       })
         .then((res) => res.json())
         .then((json) => {
-          if (json.message) props.history.push(`/`);
+          if (json.message) window.location = process.env.PUBLIC_URL + '#/'
           else setUser(json);
         })
         .catch(console.error);
     }
-  }, [props.history]);
+  }, []);
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -67,7 +67,7 @@ export default function NavBar(props) {
           </Link>
 
           {hasToken && (
-            <Link color="inherit" href="/guilds">
+            <Link color="inherit" href={process.env.PUBLIC_URL + '#/guilds'}>
               Guilds
             </Link>
           )}
@@ -93,7 +93,7 @@ export default function NavBar(props) {
           ) : (
             <Link
               color="inherit"
-              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Ftoken&response_type=code&scope=identify%20guilds`}
+              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=https%3A%2F%2Fkitcat-bot.github.io%2FKitCat&response_type=code&scope=guilds%20identify`}
             >
               Login with Discord
             </Link>

@@ -1,19 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 
 //Material-UI
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
-// Pages
-import Commands from './pages/Commands';
-import Guild from './pages/Guild';
-import Guilds from './pages/Guilds';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import Token from './pages/Token';
-
-// Other
+import { Commands, Guild, Guilds, Home, NotFound, Status } from './pages';
 import './App.css';
 
 const theme = createMuiTheme({
@@ -36,16 +28,16 @@ const theme = createMuiTheme({
 function App(props) {
   return (
     <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
+      <HashRouter basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/commands" component={Commands} />
           <Route exact path="/guild/:guildID" component={Guild} />
           <Route exact path="/guilds" component={Guilds} />
-          <Route exact path="/token" component={Token} />
+          <Route exact path="/status" component={Status} />
           <Route component={NotFound} />
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     </MuiThemeProvider>
   );
 }
