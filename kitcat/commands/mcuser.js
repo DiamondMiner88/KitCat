@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const fetch = require('node-fetch');
 
 module.exports = {
     command: 'mcuser',
@@ -13,11 +14,18 @@ module.exports = {
         if (args.length === 0) {
             return message.channel.send("You didn't provide a Minecraft username.")
         }
-        return message.channel.send(new Discord.MessageEmbed()
-            .setTitle(`User "${args[0]}"`)
-            .setColor("#5E9D34")
-            .setImage(`https://minotar.net/armor/body/${args[0]}/100.png`)
-            .setDescription(`[Download Skin](https://minotar.net/download/${args[0]})\n[NameMC](https://namemc.com/profile/${args[0]})`)
-        );
+        // console.log(`https://minotar.net/armor/body/${args[0]}/100.png`)
+        fetch(`https://minotar.net/armor/body/${args[0]}/100.png`, { method: 'HEAD' })
+            .then(res => {
+                if (res.ok) {
+                    return message.channel.send(new Discord.MessageEmbed()
+                        .setTitle(`User "${args[0]}"`)
+                        .setColor("#5E9D34")
+                        .setImage(`https://minotar.net/armor/body/${args[0]}/100.png`)
+                        .setDescription(`[Download Skin](https://minotar.net/download/${args[0]})\n[NameMC](https://namemc.com/profile/${args[0]})`)
+                    );
+                }
+                return message.channel.send(`Invalid user: ${args[0]}`)
+            })
     }
 };
