@@ -1,6 +1,4 @@
 const Discord = require("discord.js");
-const { default: fetch } = require("node-fetch");
-const pfx = require('../config/config.json').prefix;
 
 module.exports = {
     command: 'mcuser',
