@@ -6,7 +6,7 @@ const config = {
   botapi_url: 'http://24.16.44.237:4000'
 };
 
-Parse.Cloud.define('token', async (request) => {
+Parse.Cloud.define('getAccessToken', async (request) => {
   if (request.headers.code && request.headers['url-redirect']) {
     const code = request.headers.code;
     const data = new FormData();

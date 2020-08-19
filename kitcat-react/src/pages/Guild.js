@@ -44,6 +44,9 @@ export default function Guild(props) {
   // Save popup: 'saved_no_popup', 'saved_open_popup', 'unsaved'
   const [saveStatus, setSaveStatus] = useState('saved_no_popup');
 
+  // Menu
+  const [currentTab, setCurrentTab] = useState('disable_commands');
+
   useEffect(() => {
     if (commands || settings) return;
     const cookies = new Cookies();
@@ -93,7 +96,7 @@ export default function Guild(props) {
 
   return (
     <div>
-      <GuildSidebar />
+      <GuildSidebar onTabChange={setCurrentTab} />
       <Navbar location={props.location} />
       <div className="container">
         <Snackbar
@@ -161,10 +164,11 @@ export default function Guild(props) {
           </MuiAlert>
         </Snackbar>
 
-        {!commands && !settings && <Typography variant="h4">Loading...</Typography>}
-
         <div className={classes.content}>
+          {!commands && !settings && <Typography variant="h4">Loading...</Typography>}
+
           {errors.length === 0 &&
+            currentTab === 'disable_commands' &&
             commands &&
             settings &&
             Object.keys(commands).map((key) => {
@@ -218,6 +222,18 @@ export default function Guild(props) {
                 );
               }
             })}
+
+          {errors.length === 0 && currentTab === 'welcomer' && (
+            <Typography color="inherit">
+              Welcomer: This feature has not been added yet! Coming Soon!
+            </Typography>
+          )}
+
+          {errors.length === 0 && currentTab === 'leaver' && (
+            <Typography color="inherit">
+              Leaver: This feature has not been added yet! Coming Soon!
+            </Typography>
+          )}
         </div>
       </div>
     </div>

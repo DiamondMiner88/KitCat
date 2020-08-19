@@ -19,11 +19,11 @@ export default function Home(props) {
 
     if (window.location.href.includes('?error=')) window.location = process.env.PUBLIC_URL + '#/';
     else if (window.location.href.includes('?code=')) {
-      fetch(`/functions/token`, {
+      fetch(`/functions/getAccessToken`, {
         method: 'POST',
         headers: {
           code: code[1],
-          'url-redirect': 'https://kitcat-bot.github.io/KitCat'
+          'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL
         }
       })
         .then((res) => res.json())
