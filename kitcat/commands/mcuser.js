@@ -14,7 +14,6 @@ module.exports = {
         if (args.length === 0) {
             return message.channel.send("You didn't provide a Minecraft username.")
         }
-        // console.log(`https://minotar.net/armor/body/${args[0]}/100.png`)
         fetch(`https://minotar.net/armor/body/${args[0]}/100.png`, { method: 'HEAD' })
             .then(res => {
                 if (res.ok) {
