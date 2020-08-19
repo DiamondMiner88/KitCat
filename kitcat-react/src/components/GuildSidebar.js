@@ -2,21 +2,27 @@ import React from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Cookies from 'universal-cookie';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Link from '@material-ui/core/Link';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Toolbar from '@material-ui/core/Toolbar';
+import {
+  Avatar,
+  Divider,
+  Drawer,
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Toolbar
+} from '@material-ui/core';
+import {
+  EmojiPeople as WavingPersonIcon,
+  Home as HomeIcon,
+  MeetingRoom as OpenDoorIcon,
+  ToggleOff as ToggleOffIcon
+} from '@material-ui/icons';
 
-// Icon imports
-import CodeIcon from '@material-ui/icons/Code';
-import HomeIcon from '@material-ui/icons/Home';
+// Other
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +44,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Sidebar(props) {
+export default function GuildSidebar(props) {
   const classes = useStyles();
+
   return (
     <div position="fixed" className={classes.root}>
       <Drawer
@@ -68,21 +75,55 @@ export default function Sidebar(props) {
           <List>
             <ListItem
               button
-              key="commands_page"
+              key="disable_commands"
               component={Link}
-              href={process.env.PUBLIC_URL + '#/commands'}
               className={classes.link}
+              onClick={() => {
+                props.onTabChange('disable_commands');
+              }}
             >
               <ListItemIcon>
-                <CodeIcon />
+                <ToggleOffIcon />
               </ListItemIcon>
-              <ListItemText primary="Commands" />
+              <ListItemText primary="Disable Commands" />
+            </ListItem>
+          </List>
+
+          <List>
+            <ListItem
+              button
+              key="welcomer"
+              component={Link}
+              className={classes.link}
+              onClick={() => {
+                props.onTabChange('welcomer');
+              }}
+            >
+              <ListItemIcon>
+                <OpenDoorIcon />
+              </ListItemIcon>
+              <ListItemText primary="Welcomer" />
+            </ListItem>
+          </List>
+
+          <List>
+            <ListItem
+              button
+              key="welcomer"
+              component={Link}
+              className={classes.link}
+              onClick={() => {
+                props.onTabChange('leaver');
+              }}
+            >
+              <ListItemIcon>
+                <WavingPersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Leaver" />
             </ListItem>
           </List>
 
           {GetRecentServers()}
-
-          <List></List>
         </div>
       </Drawer>
     </div>
