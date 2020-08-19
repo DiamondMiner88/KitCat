@@ -10,12 +10,15 @@ module.exports = {
     unlisted: false,
 
     execute(message, args) {
+        if (args.length === 0) {
+            return message.channel.send("You didn't provide a Minecraft username.")
+        }
         return message.channel.send(new Discord.MessageEmbed()
             .setTitle(`User "${args[0]}"`)
             .setColor("#5E9D34")
             // .setThumbnail(`https://minotar.net/helm/${args[1]}/100.png`)
             .setImage(`https://minotar.net/armor/body/${args[0]}/100.png`)
-            .setDescription(`[Download Skin](https://minotar.net/download/${args[0]})\n[NameMC](https://namemc.com/profile/${args[1]})`)
+            .setDescription(`[Download Skin](https://minotar.net/download/${args[0]})\n[NameMC](https://namemc.com/profile/${args[0]})`)
         );
     }
 };
