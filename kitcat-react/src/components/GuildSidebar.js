@@ -52,7 +52,13 @@ export default function Sidebar(props) {
         <Toolbar />
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem button key="home_page" component={Link} href="/" className={classes.link}>
+            <ListItem
+              button
+              key="home_page"
+              component={Link}
+              href={process.env.PUBLIC_URL + '#/'}
+              className={classes.link}
+            >
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -64,7 +70,7 @@ export default function Sidebar(props) {
               button
               key="commands_page"
               component={Link}
-              href="/commands"
+              href={process.env.PUBLIC_URL + '#/commands'}
               className={classes.link}
             >
               <ListItemIcon>
@@ -97,7 +103,7 @@ function GetRecentServers() {
               button
               key={item.id}
               component={Link}
-              href={`/guild/${item.id}`}
+              href={process.env.PUBLIC_URL + `#/guild/${item.id}`}
               style={{ textDecoration: 'none' }}
             >
               <ListItemIcon>

@@ -72,8 +72,8 @@ export default function Guilds(props) {
           });
       }
       fetchData();
-    } else props.history.push('/');
-  }, [props.history]);
+    } else window.location = process.env.PUBLIC_URL + '#/';
+  }, []);
 
   const guildsComponents = () => {
     const guildComponentList = [];
@@ -97,12 +97,12 @@ export default function Guilds(props) {
 
               cookies.set('recent-servers', recentServers, {
                 path: '/',
-                maxAge: 604000, // 10 years is good enough as a permenant cookie
+                maxAge: 604000,
                 sameSite: 'strict',
                 overwrite: true
               });
 
-              props.history.push(`/guild/${guildID}`);
+              window.location = process.env.PUBLIC_URL + `#/guild/${guildID}`;
             }}
           >
             <CardHeader
@@ -130,7 +130,7 @@ export default function Guilds(props) {
 
   return (
     <div>
-      <NavBar location={props.location} history={props.history} />
+      <NavBar location={props.location} />
       <GuildSidebar />
       <div className="container">
         {guilds ? guildsComponents() : <Typography>Loading...</Typography>}

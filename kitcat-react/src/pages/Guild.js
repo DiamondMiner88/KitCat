@@ -3,19 +3,16 @@ import { useParams } from 'react-router-dom';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
+import { FormControl, Snackbar, Tooltip } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
-import Snackbar from '@material-ui/core/Snackbar';
-// import Tooltip from '@material-ui/core/Tooltip';
 
 // Components
-import NavBar from '../components/Navbar';
-import Sidebar from '../components/GuildSidebar';
+import { Navbar, GuildSidebar } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
-// import { commands } from '../data/commands';
+import * as commandsData from '../data/commandData';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -71,7 +68,7 @@ export default function Guild(props) {
           .catch((error) => addError(error.message));
       }
       fetchData();
-    } else props.history.push('/');
+    } else window.location = process.env.PUBLIC_URL + '#/';
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -96,8 +93,8 @@ export default function Guild(props) {
 
   return (
     <div>
-      <Sidebar />
-      <NavBar location={props.location} history={props.history} />
+      <GuildSidebar />
+      <Navbar location={props.location} />
       <div className="container">
         <Snackbar
           open={errorsAlertOpened}
@@ -171,26 +168,55 @@ export default function Guild(props) {
             commands &&
             settings &&
             Object.keys(commands).map((key) => {
-              return (
-                <FormControl className={classes.formControl}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={commands[key] === 'enabled' ? true : false}
-                        color="primary"
-                        onChange={(event) => {
-                          setCommands({
-                            ...commands,
-                            [key]: event.target.checked ? 'enabled' : 'disabled'
-                          });
-                          setSaveStatus('unsaved');
-                        }}
+              // eslint-disable-next-line array-callback-return
+              const cmdData = commandsData.commands.find((cmd) => {
+                if (cmd.command === key) return true;
+              });
+              if (cmdData) {
+                return (
+                  <Tooltip title={cmdData.help_description}>
+                    <FormControl className={classes.formControl}>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={commands[key] === 'enabled' ? true : false}
+                            color="primary"
+                            onChange={(event) => {
+                              setCommands({
+                                ...commands,
+                                [key]: event.target.checked ? 'enabled' : 'disabled'
+                              });
+                              setSaveStatus('unsaved');
+                            }}
+                          />
+                        }
+                        label={key}
                       />
-                    }
-                    label={key}
-                  />
-                </FormControl>
-              );
+                    </FormControl>
+                  </Tooltip>
+                );
+              } else {
+                return (
+                  <FormControl className={classes.formControl}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={commands[key] === 'enabled' ? true : false}
+                          color="primary"
+                          onChange={(event) => {
+                            setCommands({
+                              ...commands,
+                              [key]: event.target.checked ? 'enabled' : 'disabled'
+                            });
+                            setSaveStatus('unsaved');
+                          }}
+                        />
+                      }
+                      label={key}
+                    />
+                  </FormControl>
+                );
+              }
             })}
         </div>
       </div>
