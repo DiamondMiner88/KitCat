@@ -1,6 +1,5 @@
 const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
-const request = require('request');
 const fetch = require('node-fetch');
 
 // https://pornopics.co/
@@ -137,14 +136,10 @@ module.exports = {
       } else {
         url = `https://nekos.life/api/v2/img/${args[1]}`;
       }
-      request(
-        {
-          url: url,
-          json: true
-        },
-        function (error, response, body) {
-          if (!error && response.statusCode === 200) {
-            const hEmbed = new Discord.MessageEmbed()
+      fetch(url)
+        .then(res => res.text())
+        .then(body => {
+          const hEmbed = new Discord.MessageEmbed()
               .setColor('#FF69B4')
               .setTitle("Here's some hentai")
               .setImage(body.url)
@@ -153,10 +148,8 @@ module.exports = {
                 `${message.author.tag} ran the commnd | Content gotten from nekos.life`,
                 message.author.avatarURL()
               );
-            message.channel.send(hEmbed);
-          }
-        }
-      );
+            return message.channel.send(hEmbed);
+        });
     }
   }
 };
