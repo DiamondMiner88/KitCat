@@ -46,29 +46,34 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 client.on('message', async (message) => {
-  // var url = undefined;
-  // if (message.attachments.size > 0) url = message.attachments.first().url;
-  // if (
-  //   message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)
-  // )
-  //   url = message.content;
-  // if (url) {
-  //   if (url.toLowerCase().indexOf('png', url.length - 3) !== -1) {
-  //     require('image-hash').imageHash(url, 16, true, (error, hash) => {
-  //       if (error) throw error;
-  //       require('./db.js').db.get(
-  //         'SELECT * FROM image_blacklist WHERE hash=?',
-  //         [hash],
-  //         (err, result) => {
-  //           if (err) console.log('Error trying get data: ' + err);
-  //           if (result) message.delete();
-  //         }
-  //       );
-  //     });
-  //   }
-  // }
-
+  /*
+  var url = undefined;
+  if (message.attachments.size > 0) url = message.attachments.first().url;
+  if (
+    message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)
+  )
+    url = message.content;
+  if (url) {
+    if (url.toLowerCase().indexOf('png', url.length - 3) !== -1) {
+      require('image-hash').imageHash(url, 16, true, (error, hash) => {
+        if (error) throw error;
+        require('./db.js').db.get(
+          'SELECT * FROM image_blacklist WHERE hash=?',
+          [hash],
+          (err, result) => {
+            if (err) console.log('Error trying get data: ' + err);
+            if (result) message.delete();
+          }
+        );
+      });
+    }
+  }
+  */
   if (message.author.bot) return;
+
+  if (message.mentions.has(client.user)) {
+    message.channel.send("what do you want")
+  }
 
   const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
 
