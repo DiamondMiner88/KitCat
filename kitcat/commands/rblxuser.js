@@ -24,6 +24,7 @@ module.exports = {
         if (userBody['success'] === false) { // It could be undefined, so specifying that it has to be false
             return message.channel.send(`Invalid user: ${args[0]}`);
         }
+
         var rblxEmbed = new Discord.MessageEmbed()
             .setTitle(`User "${args[0]}"`)
             .addField("Online", userBody['IsOnline'], true)
@@ -31,11 +32,14 @@ module.exports = {
             .addField("ID", userBody['Id'], true)
             .setColor("#c4281c")
             .setImage(`http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username=${args[0]}`);
+        
         var groups = groupsBody.map((item) => {
                             return `Name: *[${item["Name"]}](https://www.roblox.com/groups/${item["Id"]})*    Role: *${item["Role"]}*`;
                         }
                     );
+        
         var strGroups = groups.join("\n");
+
         if (strGroups.length >= 1024) {
             while (strGroups.length >= 1018) {
                 groups.pop();
@@ -43,6 +47,7 @@ module.exports = {
             }
             strGroups += "...";
         }
+
         rblxEmbed.addField("Groups", strGroups)
         return message.channel.send(rblxEmbed);
     }
