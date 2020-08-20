@@ -5,7 +5,7 @@ module.exports = {
   category: require('./_CATEGORIES.js').utils,
   help_name: `Server`,
   help_description: `Gives information on the server.`,
-  usage: `server`,
+  usage: `serverinfo`,
   guildOnly: false,
   unlisted: false,
 
