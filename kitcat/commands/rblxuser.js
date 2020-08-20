@@ -48,7 +48,8 @@ module.exports = {
             strGroups += "...";
         }
 
-        rblxEmbed.addField("Groups", strGroups)
+        rblxEmbed.addField("Groups", strGroups);
+        
         return message.channel.send(rblxEmbed);
     }
 };
