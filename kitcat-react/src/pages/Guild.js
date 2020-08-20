@@ -52,9 +52,11 @@ export default function Guild(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token')) {
       async function fetchData() {
-        const res = await fetch('/functions/guild', {
+        const res = await fetch('https://parseapi.back4app.com/functions/guild', {
           method: 'POST',
           headers: {
+            'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
+            'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY,
             'access-token': cookies.get('access-token'),
             guild: guildID
           }
@@ -76,9 +78,11 @@ export default function Guild(props) {
   }, []);
 
   function save() {
-    fetch(`/functions/guild`, {
+    fetch(`https://parseapi.back4app.com/functions/guild`, {
       method: 'POST',
       headers: {
+        'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
+        'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY,
         'access-token': new Cookies().get('access-token'),
         guild: guildID,
         data: JSON.stringify({

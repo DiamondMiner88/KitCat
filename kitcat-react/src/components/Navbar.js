@@ -117,7 +117,7 @@ export default function Navbar(props) {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       setHasToken(true);
-      fetch('/api/users/@me', {
+      fetch('https://discord.com/api/users/@me', {
         headers: {
           authorization: `Bearer ${cookies.get('access-token')}`
         }

@@ -19,15 +19,18 @@ export default function Home(props) {
 
     if (window.location.href.includes('?error=')) window.location = process.env.PUBLIC_URL + '#/';
     else if (window.location.href.includes('?code=')) {
-      fetch(`/functions/getAccessToken`, {
+      fetch(`https://parseapi.back4app.com/functions/getAccessToken`, {
         method: 'POST',
         headers: {
           code: code[1],
-          'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL
+          'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL,
+          'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
+          'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
         }
       })
         .then((res) => res.json())
         .then((json) => {
+          console.log(json);
           if (json.result.access_token)
             cookies.set('access-token', json.result.access_token, {
               path: '/',
@@ -35,9 +38,9 @@ export default function Home(props) {
               sameSite: 'strict',
               overwrite: true
             });
-          window.location = process.env.PUBLIC_URL + '#/';
+          // window.location = process.env.PUBLIC_URL + '#/';
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.error(error));
     }
   }, [props.location]);
 
