@@ -28,7 +28,7 @@ module.exports = {
         .bulkDelete(purgeamnt)
         .then((messages) => {
           message.channel
-            .send(`Purged ${messages.size} messages, deleting this in 3 seconds.`)
+            .send(`Purged ${messages.size} messages, deleting this in 2 seconds.`)
             .then((msg) => {
               msg
                 .delete({
