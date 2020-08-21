@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const snoowrap = require('snoowrap');
 const config = require('./config/config.json');
 const pfx = config.prefix;
@@ -14,11 +15,9 @@ var reddit_submission_ids = [];
 var reddit_idlist_starttime = new Date().getTime();
 
 /**
- * getTopPost - Gets the top post of a subreddit that has not been gotten yet for the guild
- *
- * @param  {Message} message Message this was executed from
- * @param  {String} subreddit_name subreddit name
- * @returns {void}
+ * Gets the top post of a subreddit that has not been gotten yet for the guild
+ * @param {Discord.TextChannel} message
+ * @param {String} subreddit_name
  */
 async function getTopPost(message, subreddit_name) {
   // reset id list if its been a day

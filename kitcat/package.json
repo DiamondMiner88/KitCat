@@ -1,7 +1,7 @@
 {
   "name": "despacito-spider",
   "version": "1.0.0",
-  "description": "i will take over discord",
+  "description": "The only thing this bot has is stupidity and power.",
   "main": "index.js",
   "scripts": {
     "start": "node run.js",
@@ -19,9 +19,9 @@
   ],
   "license": "AGPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/DiamondMiner88/despacito-spider/issues"
+    "url": "https://github.com/KitCat-Bot/KitCat/issues"
   },
-  "homepage": "https://github.com/DiamondMiner88/despacito-spider#readme",
+  "homepage": "https://kitcat-bot.github.io/KitCat/#/",
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "body-parser": "^1.19.0",
