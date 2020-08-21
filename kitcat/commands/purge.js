@@ -32,7 +32,7 @@ module.exports = {
             .then((msg) => {
               msg
                 .delete({
-                  timeout: 3000
+                  timeout: 2000
                 })
                 .catch((err) => {});
             });
