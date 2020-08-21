@@ -4,5 +4,6 @@
     "prettier.singleQuote": true,
     "files.exclude": {
         "**/package-lock.json": true
-    }
+    },
+    "javascript.suggest.completeJSDocs": true
 }
