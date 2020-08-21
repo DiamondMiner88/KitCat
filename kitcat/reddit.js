@@ -104,9 +104,7 @@ function sendPost(message, post) {
     .setURL(`https://reddit.com${post.permalink}`)
     .setImage(post.url)
     .setFooter(
-      `👍 ${(Math.round(post.score / 1000) * 1000).toString().slice(0, -3)}k | ${
-        new Date().toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2]
-      }`
+      `👍 ${(Math.round(post.score / 1000) * 1000).toString().slice(0, -3)}k`
     )
     .setTimestamp(new Date(post.created_utc * 1000));
   message.channel.send(embed);
