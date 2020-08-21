@@ -71,9 +71,9 @@ client.on('message', async (message) => {
   */
   if (message.author.bot) return;
 
-  if (message.mentions.has(client.user)) {
-    message.channel.send("what do you want")
-  }
+  if (message.mentions.has(client.user)) 
+    return message.channel.send(`Do ${pfx} for commands!`)
+  
 
   const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
 
@@ -98,7 +98,7 @@ client.on('message', async (message) => {
   if (command && command.guildOnly && message.channel.type !== 'text')
     message.channel.send('This command only works in Guild Text Channels!');
   else if (command && command.command === commandText) {
-    if (message.channel.type === 'dm') command.execute(client, message, args);
+    if (message.channel.type === 'dm') command.execute(message, args);
     else {
       db.get('SELECT * FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
         if (err) {
