@@ -1,6 +1,6 @@
+const Discord = require('discord.js');
 const { API } = require('nhentai-api');
 const api = new API();
-const { MessageEmbed } = require('discord.js');
 
 const nhentai_book_url = 'https://nhentai.net/g/';
 
@@ -33,7 +33,7 @@ function getData(bookID, callback) {
 
 function constructEmbed(data) {
   const { url, id, titles, parodies, characters, tags, artists, groups, lang, thumbnailURL } = data;
-  var embed = new MessageEmbed().setColor(0xffffff).setURL(url).setTitle(titles.pretty);
+  var embed = new Discord.MessageEmbed().setColor(0xffffff).setURL(url).setTitle(titles.pretty);
   
   if (parodies && tagsToString(parodies)) embed.addField('Parodies', tagsToString(parodies));
   if (characters && tagsToString(characters))
@@ -55,6 +55,11 @@ module.exports = {
   unlisted: false,
   nsfw: true,
 
+  /**
+   * Displays an embed about the doujinshi
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (message.channel.type !== 'dm' && !message.channel.nsfw)
       return message.channel.send('This command is only allowed in NSFW channels!');

@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'ping',
   category: require('./_CATEGORIES.js').utils,
@@ -10,8 +12,7 @@ module.exports = {
   /**
    * Calculates ping between sending a message and editing it, giving a round-trip latency.
    * The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
-   *
-   * @returns {void}
+   * @param {Discord.TextChannel} message
    */
   async execute(message) {
     let m = await message.channel.send('Ping?');

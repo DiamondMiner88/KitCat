@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'say',
   category: require('./_CATEGORIES.js').fun,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Make the bot say something
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (args.length === 0) message.author.send("You didn't provide a message to say!");
     else message.channel.send(args.join(' '));

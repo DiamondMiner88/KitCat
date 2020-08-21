@@ -10,6 +10,11 @@ module.exports = {
     guildOnly: false,
     unlisted: false,
 
+  /**
+   * 
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
     async execute(message, args) {
         if (args[0] === 0) {
             return message.channel.send("You didn't provide a Roblox username.");

@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'claim',
   category: require('./_CATEGORIES.js').oofcoin,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: false,
   unlisted: true,
 
+  /**
+   * Claim daily oofcoins
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message) {
     require('../db.js').checkForProfile(message.author);
     message.channel.send('This command has not been implemented yet!');

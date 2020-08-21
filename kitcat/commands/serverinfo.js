@@ -9,6 +9,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Show guild info
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message) {
     const userCount = message.guild.members.cache.filter((member) => !member.user.bot).size;
     const botCount = message.guild.members.cache.filter((member) => member.user.bot).size;

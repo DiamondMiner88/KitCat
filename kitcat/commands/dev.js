@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const { spawn } = require('child_process');
 
 module.exports = {
@@ -5,6 +6,11 @@ module.exports = {
   guildOnly: false,
   unlisted: true,
 
+  /**
+   * Developer commands
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   async execute(message, args) {
     if (
       ['295190422244950017', '407320720662855692', '678683775017943050'].includes(message.author.id)

@@ -10,10 +10,9 @@ module.exports = {
   unlisted: false,
 
   /**
-   * execute - Gets the avatar of the user that's in args[0]
-   *
-   * @param  {String} args [{Mention | User tag}]
-   * @returns {void}
+   * Sends the avatar of the target user
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
    */
   execute(message, args) {
     if (!args[0]) {

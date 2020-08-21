@@ -1,11 +1,8 @@
 const Discord = require('discord.js');
-const sqlite3 = require('sqlite3').verbose();
 const { db } = require('../db.js');
 
 const get_warning = `SELECT warns FROM users WHERE guild=? AND user=?`;
-
 const add_user = `INSERT OR IGNORE INTO users (guild, user) VALUES(?, ?)`;
-
 const update_warnings = `UPDATE users SET warns = warns + 1 WHERE guild=? AND user=?`;
 
 module.exports = {
@@ -17,6 +14,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Warn someone
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (message.mentions.users.first === undefined)
       return message.channel.send("You didn't provide a user to warn idiot.");

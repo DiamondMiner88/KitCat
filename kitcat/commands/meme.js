@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'meme',
   category: require('./_CATEGORIES.js').fun,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Displays a meme from r/memes
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message) {
     require('../reddit.js').getTopPost(message, 'memes');
   }

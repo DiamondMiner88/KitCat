@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
 const Discord = require('discord.js');
+const fetch = require('node-fetch');
 
 module.exports = {
   command: 'cat',
@@ -10,6 +10,11 @@ module.exports = {
   guildOnly: false,
   unlisted: true,
 
+  /**
+   * Get a random cat
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     message.channel.send('This comamnd has not been made yet.');
   }

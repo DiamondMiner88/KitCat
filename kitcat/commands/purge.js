@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'purge',
   category: require('./_CATEGORIES.js').moderation,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * Purges a specified amount of message from the channel
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (!message.member.hasPermission('MANAGE_MESSAGES')) {
       message.channel.send('You do not have the permission to manage messages.');

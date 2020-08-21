@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'COMMANDNAME',
   category: require('./_CATEGORIES.js').utils,
@@ -7,5 +9,9 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {}
 };

@@ -1,5 +1,5 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
+const pfx = require('../config/config.json').prefix;
 
 module.exports = {
   command: 'kick',
@@ -10,6 +10,11 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * Kicks the target user
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (!message.member.hasPermission('KICK_MEMBERS'))
       return message.author.send('You do not have the permission to kick members.');

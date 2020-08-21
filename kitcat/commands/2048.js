@@ -1,5 +1,5 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
+const pfx = require('../config/config.json').prefix;
 const path = require('path');
 const { createCanvas, loadImage } = require('canvas');
 
@@ -265,6 +265,10 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     switch (args[0]) {
       case 'help':

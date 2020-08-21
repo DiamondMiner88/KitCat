@@ -1,6 +1,6 @@
+const Discord = require('discord.js');
 const config = require('../config/config.json');
 const pfx = config.prefix;
-const Discord = require('discord.js');
 
 module.exports = {
   command: 'roulette',
@@ -11,6 +11,11 @@ module.exports = {
   guildOnly: true,
   unlisted: true,
 
+  /**
+   * Play roulette with other people
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     // console.log(message.mentions.members.first(message.mentions.members.size));
     if (args[0] === 'help') {

@@ -1,5 +1,5 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
+const pfx = require('../config/config.json').prefix;
 
 const ImageCmdHelp = [
   {
@@ -17,6 +17,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Idk what this is
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (args.length === 0) {
       return message.channel.send(

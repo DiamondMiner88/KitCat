@@ -1,6 +1,5 @@
-var database = require('../db.js');
-var db = database.db;
 const Discord = require('discord.js');
+var { db } = require('../db.js');
 
 /**
  * timestampToStr - Makes a Unix timestamp into a readable date and time
@@ -31,10 +30,9 @@ module.exports = {
   unlisted: false,
 
   /**
-   * execute - Gets the user's bank balance that is in args[0]
-   *
-   * @param  {String} args [{Mention | User tag}]
-   * @returns {void}
+   * See target user's oofcoin balance
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
    */
   execute(message, args) {
     let target_user = message.mentions.users.first();

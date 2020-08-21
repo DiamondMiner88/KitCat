@@ -1,11 +1,11 @@
+const Discord = require('discord.js');
 const config = require('../config/config.json');
 const pfx = config.prefix;
-const Discord = require('discord.js');
 const fetch = require('node-fetch');
 const Entities = require('html-entities').AllHtmlEntities;
-
 var { db } = require('../db.js');
 const entities = new Entities();
+
 // https://opentdb.com/api_config.php
 const categories = {
   any: 'any',
@@ -67,6 +67,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Shows random trivia
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     require('../db.js').checkForProfile(message.author);
     if (args[0] === 'help') {

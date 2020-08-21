@@ -10,6 +10,11 @@ module.exports = {
     guildOnly: false,
     unlisted: false,
 
+  /**
+   * Shows info about the target Minecraft username
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
     execute(message, args) {
         if (args.length === 0) {
             return message.channel.send("You didn't provide a Minecraft username.")

@@ -9,6 +9,11 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * Silently kick someone
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     message.delete();
     if (!message.member.hasPermission('KICK_MEMBERS'))

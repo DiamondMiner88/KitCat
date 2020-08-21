@@ -1,5 +1,5 @@
-const pfx = require('../config/config.json').prefix;
 const Discord = require('discord.js');
+const pfx = require('../config/config.json').prefix;
 const fetch = require('node-fetch');
 
 // https://pornopics.co/
@@ -69,6 +69,11 @@ const help = [
   }
 ];
 
+  /**
+   * Idk the specifics of this
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
 module.exports = {
   command: 'nsfw',
   category: require('./_CATEGORIES.js').fun,

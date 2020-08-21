@@ -1,6 +1,6 @@
+const Discord = require('discord.js');
 const pfx = require('../config/config.json').prefix;
 const categories = require('./_CATEGORIES.js');
-const Discord = require('discord.js');
 
 module.exports = {
   command: 'help',
@@ -11,6 +11,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Displays help embed
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (args.length === 0) {
       var embed = new Discord.MessageEmbed().setColor(0x0099ff).setTitle('Categories:');

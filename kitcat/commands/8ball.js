@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const eightball_config = require('../config/8ball.json');
 
 module.exports = {
@@ -10,7 +11,9 @@ module.exports = {
   unlisted: false,
 
   /**
-   * execute - Gets random string from /config/8ball.json and sends message
+   * Gets random string from /config/8ball.json and sends it
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
    */
   execute(message, args) {
     if (args.length > 0)

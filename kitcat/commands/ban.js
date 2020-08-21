@@ -9,6 +9,11 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * Ban target user
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (!message.member.hasPermission('BAN_MEMBERS'))
       return message.author.send('You do not have the permission to ban members.');

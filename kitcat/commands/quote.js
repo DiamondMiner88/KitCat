@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const fetch = require('node-fetch');
 
 module.exports = {
@@ -9,8 +10,12 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Gets a random quote from https://api.quotable.io/random
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   async execute(message) {
-    // https://github.com/lukePeavey/quotable#readme
     const response = await fetch('https://api.quotable.io/random');
     const data = await response.json();
     message.channel.send(`"${data.content}"\n- ${data.author}`);

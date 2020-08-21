@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'tts',
   category: require('./_CATEGORIES.js').utils,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: true,
   unlisted: false,
 
+  /**
+   * Google TTS in a Discord VC
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   async execute(message, args) {
     if (!message.member.voice.channel)
       return message.channel.send('You are not in a voice channel!');

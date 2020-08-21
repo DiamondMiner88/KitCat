@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   command: 'subreddit',
   category: require('./_CATEGORIES.js').fun,
@@ -7,6 +9,11 @@ module.exports = {
   guildOnly: false,
   unlisted: false,
 
+  /**
+   * Shows a top post from the specified subreddit
+   * @param {Discord.TextChannel} message
+   * @param {Array.<String>} args
+   */
   execute(message, args) {
     if (!args[0]) return message.channel.send(`Missing subreddit`);
     require('../reddit.js').getTopPost(message, args[0]);
