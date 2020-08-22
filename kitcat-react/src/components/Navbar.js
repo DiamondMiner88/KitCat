@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import Link from '@material-ui/core/Link';
-import Skeleton from '@material-ui/lab/Skeleton';
-import ToolBar from '@material-ui/core/ToolBar';
-import Typography from '@material-ui/core/Typography';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  IconButton,
+  Link,
+  Toolbar,
+  Typography,
+  ClickAwayListener,
+  Grow,
+  Paper,
+  Popper,
+  MenuItem,
+  MenuList
+} from '@material-ui/core';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -39,37 +41,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar(props) {
   const classes = useStyles();
-  const [hasToken, setHasToken] = useState(false);
-  const [user, setUser] = useState();
+  const [hasToken, setHasToken] = React.useState(false);
+  const [user, setUser] = React.useState();
 
   //User drop down
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const anchorRef = React.useRef(null);
-  const handleToggle = () => setUserDropdownOpen((prevOpen) => !prevOpen);
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) return;
-    setUserDropdownOpen(false);
-  };
-  function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setUserDropdownOpen(false);
-    }
-  }
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(setUserDropdownOpen);
-  React.useEffect(() => {
-    if (prevOpen.current === true && setUserDropdownOpen === false) {
-      anchorRef.current.focus();
-    }
-    prevOpen.current = setUserDropdownOpen;
-  }, [setUserDropdownOpen]);
+  const [userDropdownRef, setUserDropdownRef] = React.useState(null);
   const userDropdown = () => {
     return (
       <div className={classes.root}>
         <Popper
-          open={userDropdownOpen}
-          anchorEl={anchorRef.current}
+          open={Boolean(userDropdownRef)}
+          anchorEl={userDropdownRef}
           role={undefined}
           transition
           disablePortal
@@ -80,20 +62,27 @@ export default function Navbar(props) {
               style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
             >
               <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
+                <ClickAwayListener onClickAway={() => setUserDropdownRef(null)}>
                   <MenuList
-                    autoFocusItem={userDropdownOpen}
+                    autoFocusItem={Boolean(userDropdownRef)}
                     id="menu-list-grow"
-                    onKeyDown={handleListKeyDown}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Tab') {
+                        event.preventDefault();
+                        setUserDropdownRef(null);
+                      }
+                    }}
                   >
                     <MenuItem
                       onClick={(event) => {
-                        handleClose(event);
+                        setUserDropdownRef(null);
+                        console.log(document.cookie);
                         // Remove all cookies
+                        const exp = new Date().toUTCString();
                         document.cookie.split(';').forEach((c) => {
                           document.cookie = c
                             .replace(/^ +/, '')
-                            .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+                            .replace(/=.*/, '=;expires=' + exp + ';path=/');
                         });
                         document.location.reload();
                       }}
@@ -110,7 +99,7 @@ export default function Navbar(props) {
     );
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const cookies = new Cookies();
     if (cookies.get('access-token') !== undefined) {
       setHasToken(true);
@@ -131,7 +120,7 @@ export default function Navbar(props) {
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
-        <ToolBar>
+        <Toolbar>
           <Link
             color="inherit"
             href={`https://discord.com/oauth2/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&scope=bot&permissions=8`}
@@ -178,12 +167,16 @@ export default function Navbar(props) {
           )}
 
           {user && (
-            <IconButton aria-label="drop down menu" color="inherit" onClick={handleToggle}>
+            <IconButton
+              aria-label="drop down menu"
+              color="inherit"
+              onClick={(event) => setUserDropdownRef(event.currentTarget)}
+            >
               <KeyboardArrowDownIcon />
             </IconButton>
           )}
           {userDropdown()}
-        </ToolBar>
+        </Toolbar>
       </AppBar>
     </div>
   );
