@@ -3,7 +3,7 @@
     "prettier.trailingComma": "none",
     "prettier.singleQuote": true,
     "files.exclude": {
-        "**/package-lock.json": true
+        "**/node_modules": true
     },
     "javascript.suggest.completeJSDocs": true
 }

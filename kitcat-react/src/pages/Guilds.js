@@ -53,15 +53,15 @@ export default function Guilds(props) {
 
   useEffect(() => {
     const cookies = new Cookies();
-    if (cookies.get('access-token') !== undefined) {
+    if (cookies.get('access-token')) {
       async function fetchData() {
         const res = await fetch('https://parseapi.back4app.com/functions/guild', {
           method: 'POST',
           headers: {
             'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
-            'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY,
-            'access-token': cookies.get('access-token')
-          }
+            'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
+          },
+          body: JSON.stringify({ 'access-token': cookies.get('access-token') })
         });
         res
           .json()

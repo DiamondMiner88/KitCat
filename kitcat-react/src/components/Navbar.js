@@ -21,7 +21,6 @@ import MenuList from '@material-ui/core/MenuList';
 // Other
 import Cookies from 'universal-cookie';
 import fetch from 'node-fetch';
-import react_cookies from 'react-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,14 +67,6 @@ export default function Navbar(props) {
   const userDropdown = () => {
     return (
       <div className={classes.root}>
-        {/* <Button
-          ref={anchorRef}
-          aria-controls={setUserDropdownOpen ? 'menu-list-grow' : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
-        >
-          Toggle Menu Grow
-        </Button> */}
         <Popper
           open={userDropdownOpen}
           anchorEl={anchorRef.current}
@@ -98,7 +89,13 @@ export default function Navbar(props) {
                     <MenuItem
                       onClick={(event) => {
                         handleClose(event);
-                        new Cookies().set('access-token', undefined);
+                        // Remove all cookies
+                        document.cookie.split(';').forEach((c) => {
+                          document.cookie = c
+                            .replace(/^ +/, '')
+                            .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+                        });
+                        document.location.reload();
                       }}
                     >
                       Logout

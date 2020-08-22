@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const pfx = require('../config/config.json').prefix;
 
 module.exports = {
   command: 'kick',

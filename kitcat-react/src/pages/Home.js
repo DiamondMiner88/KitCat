@@ -22,11 +22,13 @@ export default function Home(props) {
       fetch(`https://parseapi.back4app.com/functions/getAccessToken`, {
         method: 'POST',
         headers: {
-          code: code[1],
-          'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL,
           'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
           'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
-        }
+        },
+        body: JSON.stringify({
+          code: code[1],
+          'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL
+        })
       })
         .then((res) => res.json())
         .then((json) => {
@@ -36,9 +38,10 @@ export default function Home(props) {
               path: '/',
               maxAge: 604000,
               sameSite: 'strict',
-              overwrite: true
+              overwrite: true,
+              secure: true
             });
-          // window.location = process.env.PUBLIC_URL + '#/';
+          window.location = process.env.PUBLIC_URL + '#/';
         })
         .catch((error) => console.error(error));
     }

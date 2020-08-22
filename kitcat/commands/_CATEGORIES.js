@@ -1,4 +1,4 @@
-const pfx = require('../config/config.json').prefix;
+const pfx = process.env.BOT_PREFIX;
 
 /**
  * Are used in the "category" variable in commands.

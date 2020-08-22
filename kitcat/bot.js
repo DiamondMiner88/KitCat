@@ -1,9 +1,11 @@
-const config = require('./config/config.json');
-const pfx = config.prefix;
 const path = require('path');
+require('dotenv-flow').config({
+  node_env: 'development',
+  path: path.join(__dirname, 'config')
+});
 const Discord = require('discord.js');
-var db = require('./db.js').db;
 
+var db = require('./db.js').db;
 var client = new Discord.Client();
 
 if (process.platform === 'win32') {
@@ -23,16 +25,18 @@ process.on('SIGINT', function () {
 
 client.commands = new Discord.Collection();
 const commandFiles = require('fs')
-  .readdirSync(path.join(__dirname, '/commands'))
+  .readdirSync(path.join(__dirname, 'commands'))
   .filter((file) => file.endsWith('.js') && !file.startsWith('_'));
 for (const file of commandFiles) {
-  const command = require(path.join(__dirname, './commands', file));
+  const command = require(path.join(__dirname, 'commands', file));
   client.commands.set(command.command, command);
 }
 
 client.on('ready', () => {
   console.log(`Bot is ready.`);
-  client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
+  client.user.setActivity(
+    `${process.env.BOT_PREFIX}help | Serving ${client.guilds.cache.array().length} servers`
+  );
   require('./api.js').startExpress(client);
 });
 
@@ -71,9 +75,7 @@ client.on('message', async (message) => {
   */
   if (message.author.bot) return;
 
-  if (message.mentions.has(client.user)) 
-    return message.channel.send(`Do ${pfx} for commands!`)
-  
+  if (message.mentions.has(client.user)) return message.channel.send(`Do ${pfx} for commands!`);
 
   const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
 
@@ -124,4 +126,4 @@ client.on('message', async (message) => {
   }
 });
 
-client.login(config.token);
+client.login(process.env.BOT_TOKEN);

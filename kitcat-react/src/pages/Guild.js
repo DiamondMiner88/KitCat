@@ -56,10 +56,12 @@ export default function Guild(props) {
           method: 'POST',
           headers: {
             'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
-            'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY,
+            'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
+          },
+          body: JSON.stringify({
             'access-token': cookies.get('access-token'),
             guild: guildID
-          }
+          })
         });
         res
           .json()
@@ -82,13 +84,15 @@ export default function Guild(props) {
       method: 'POST',
       headers: {
         'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
-        'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY,
+        'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
+      },
+      body: JSON.stringify({
         'access-token': new Cookies().get('access-token'),
         guild: guildID,
-        data: JSON.stringify({
+        data: {
           commands: commands
-        })
-      }
+        }
+      })
     })
       .then((res) => res.json())
       .then((json) => {

@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config/config.json');
-const pfx = config.prefix;
+const pfx = process.env.BOT_PREFIX;
 const fetch = require('node-fetch');
 const Entities = require('html-entities').AllHtmlEntities;
 var { db } = require('../db.js');

@@ -4,3 +4,6 @@ data.db
 commands.json
 
 *.log
+
+.env.local
+.env.*.local

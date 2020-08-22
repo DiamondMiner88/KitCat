@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
-const config = require('../config/config.json');
-const pfx = config.prefix;
+const pfx = process.env.BOT_PREFIX;
 
 module.exports = {
   command: 'roulette',

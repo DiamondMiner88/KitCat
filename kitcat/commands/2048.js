@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const pfx = require('../config/config.json').prefix;
+const pfx = process.env.BOT_PREFIX;
 const path = require('path');
 const { createCanvas, loadImage } = require('canvas');
 

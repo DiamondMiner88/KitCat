@@ -1,15 +1,13 @@
 const Discord = require('discord.js');
 const snoowrap = require('snoowrap');
-const config = require('./config/config.json');
 const fetch = require('node-fetch');
-const { Subreddit } = require('snoowrap');
 
 const reddit = new snoowrap({
-  userAgent: config.reddit_user_agent,
-  clientId: config.reddit_client_id,
-  clientSecret: config.reddit_client_secret,
-  username: config.reddit_username,
-  password: config.reddit_password
+  userAgent: 'meme_gatherer',
+  clientId: process.env.REDDIT_CLIENT_ID,
+  clientSecret: process.env.REDDIT_CLIENT_SECRET,
+  username: process.env.REDDIT_USERNAME,
+  password: process.env.REDDIT_PASSWORD
 });
 
 let id_list = {

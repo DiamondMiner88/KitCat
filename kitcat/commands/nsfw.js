@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const pfx = require('../config/config.json').prefix;
+const pfx = process.env.BOT_PREFIX;
 const fetch = require('node-fetch');
 
 // https://pornopics.co/

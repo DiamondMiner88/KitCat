@@ -7,16 +7,15 @@ const config = {
 };
 
 Parse.Cloud.define('getAccessToken', async (request) => {
-  if (request.headers.code && request.headers['url-redirect']) {
-    const code = request.headers.code;
+  if (request.params.code && request.params['url-redirect']) {
     const data = new FormData();
 
     data.append('client_id', config.client_id);
     data.append('client_secret', config.client_secret);
     data.append('grant_type', 'authorization_code');
-    data.append('redirect_uri', request.headers['url-redirect']);
+    data.append('redirect_uri', request.params['url-redirect']);
     data.append('scope', 'identify');
-    data.append('code', code);
+    data.append('code', request.params.code);
 
     let res = await fetch('https://discordapp.com/api/oauth2/token', {
       method: 'POST',
@@ -25,29 +24,27 @@ Parse.Cloud.define('getAccessToken', async (request) => {
 
     let resdata = await res.json();
     return resdata;
-  } else return { message: 'Missing headers' };
+  } else return { message: 'Missing body data' };
 });
 
 Parse.Cloud.define('guild', async (request) => {
-  if (!request.headers['access-token']) {
-    return { message: 'Missing headers.' };
-  }
+  if (!request.params['access-token']) return { message: 'Missing body data.' };
 
-  if (request.headers.guild && request.headers.data) {
-    let res = await fetch(`${config.botapi_url}/guild/${request.headers.guild}/save`, {
+  if (request.params.guild && request.params.data) {
+    let res = await fetch(`${config.botapi_url}/guild/${request.params.guild}/save`, {
       method: 'GET',
       headers: {
-        'access-token': request.headers['access-token'],
-        data: request.headers.data
+        'access-token': request.params['access-token'],
+        data: request.params.data
       }
     });
     let resData = await res.json();
     return resData;
-  } else if (request.headers.guild) {
-    let res = await fetch(`${config.botapi_url}/guild/${request.headers.guild}`, {
+  } else if (request.params.guild) {
+    let res = await fetch(`${config.botapi_url}/guild/${request.params.guild}`, {
       method: 'GET',
       headers: {
-        'access-token': request.headers['access-token']
+        'access-token': request.params['access-token']
       }
     });
     let resData = await res.json();
@@ -56,7 +53,7 @@ Parse.Cloud.define('guild', async (request) => {
     let res = await fetch(`${config.botapi_url}/guilds`, {
       method: 'GET',
       headers: {
-        'access-token': request.headers['access-token']
+        'access-token': request.params['access-token']
       }
     });
     let resData = await res.json();
