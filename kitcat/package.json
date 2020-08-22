@@ -4,8 +4,8 @@
   "description": "The only thing this bot has is stupidity and power.",
   "main": "index.js",
   "scripts": {
-    "start": "node run.js --node-env=development",
-    "production": "node run.js --node-env=production"
+    "start": "node run.js development",
+    "production": "node run.js production"
   },
   "repository": {
     "type": "git",

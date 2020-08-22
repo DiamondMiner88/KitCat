@@ -1,6 +1,6 @@
 const path = require('path');
 require('dotenv-flow').config({
-  node_env: 'development',
+  node_env: process.argv[2] || 'development',
   path: path.join(__dirname, 'config')
 });
 const Discord = require('discord.js');
