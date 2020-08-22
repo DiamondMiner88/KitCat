@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Material-UI
-import Link from '@material-ui/core/Link';
+import { Link } from '@material-ui/core';
 
 // Components
-import HomeSidebar from '../components/HomeSidebar';
-import NavBar from '../components/Navbar';
+import { HomeSidebar, Navbar } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
 const fetch = require('node-fetch');
 
 export default function Home(props) {
-  useEffect(() => {
+  React.useEffect(() => {
     const cookies = new Cookies();
 
     const code = /\?code=(.{30})/.exec(window.location.href);
@@ -49,7 +48,7 @@ export default function Home(props) {
 
   return (
     <div>
-      <NavBar location={props.location} />
+      <Navbar location={props.location} />
       <HomeSidebar />
       <div className="container">
         <h1>KitCat</h1>

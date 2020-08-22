@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, Snackbar, Tooltip } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 
 // Components
 import { Navbar, GuildSidebar } from '../components';
@@ -30,24 +30,24 @@ export default function Guild(props) {
   const { guildID } = useParams();
 
   // Data
-  const [settings, setSettings] = useState();
-  const [commands, setCommands] = useState();
+  const [settings, setSettings] = React.useState();
+  const [commands, setCommands] = React.useState();
 
   // Errors
-  const [errors, setErrors] = useState([]);
-  const [errorsAlertOpened, setErrorsAlertOpened] = useState(false);
+  const [errors, setErrors] = React.useState([]);
+  const [errorsAlertOpened, setErrorsAlertOpened] = React.useState(false);
   const addError = (error) => {
     setErrors(errors.concat([error]));
     setErrorsAlertOpened(true);
   };
 
   // Save popup: 'saved_no_popup', 'saved_open_popup', 'unsaved'
-  const [saveStatus, setSaveStatus] = useState('saved_no_popup');
+  const [saveStatus, setSaveStatus] = React.useState('saved_no_popup');
 
   // Menu
-  const [currentTab, setCurrentTab] = useState('disable_commands');
+  const [currentTab, setCurrentTab] = React.useState('disable_commands');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (commands || settings) return;
     const cookies = new Cookies();
     if (cookies.get('access-token')) {
@@ -114,7 +114,7 @@ export default function Guild(props) {
             if (reason !== 'clickaway') setErrorsAlertOpened(false);
           }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={() => {
@@ -125,7 +125,7 @@ export default function Guild(props) {
             {errors.map((error) => (
               <div>{error}</div>
             ))}
-          </MuiAlert>
+          </Alert>
         </Snackbar>
 
         <Snackbar
@@ -138,7 +138,7 @@ export default function Guild(props) {
             }
           }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={(event, reason) => {
@@ -150,7 +150,7 @@ export default function Guild(props) {
             severity="info"
           >
             You have unsaved settings! Close this to save.
-          </MuiAlert>
+          </Alert>
         </Snackbar>
 
         <Snackbar
@@ -160,7 +160,7 @@ export default function Guild(props) {
             if (reason !== 'clickaway') setSaveStatus('saved_no_popup');
           }}
         >
-          <MuiAlert
+          <Alert
             elevation={6}
             variant="filled"
             onClose={(event, reason) => {
@@ -169,7 +169,7 @@ export default function Guild(props) {
             severity="success"
           >
             Successfully saved settings!
-          </MuiAlert>
+          </Alert>
         </Snackbar>
 
         <div className={classes.content}>

@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Typography from '@material-ui/core/Typography';
+import {
+  Avatar,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardHeader,
+  Typography
+} from '@material-ui/core';
 
 // Components
-import NavBar from '../components/Navbar';
-import GuildSidebar from '../components/GuildSidebar';
+import { Navbar, GuildSidebar } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -49,9 +50,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Guilds(props) {
   const classes = useStyles();
 
-  const [guilds, setGuilds] = useState();
+  const [guilds, setGuilds] = React.useState();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const cookies = new Cookies();
     if (cookies.get('access-token')) {
       async function fetchData() {
@@ -132,7 +133,7 @@ export default function Guilds(props) {
 
   return (
     <div>
-      <NavBar location={props.location} />
+      <Navbar location={props.location} />
       <GuildSidebar />
       <div className="container">
         {guilds ? guildsComponents() : <Typography>Loading...</Typography>}

@@ -2,15 +2,11 @@ import React from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 // Components
-import NavBar from '../components/Navbar';
-import HomeSidebar from '../components/HomeSidebar';
+import { Navbar, HomeSidebar } from '../components';
 
 // Other
 import commandData from '../data/commandData';
@@ -39,7 +35,7 @@ export default function Commands(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <NavBar location={props.location} />
+      <Navbar location={props.location} />
       <HomeSidebar />
       <div className="container">{GetCommands()}</div>
     </div>

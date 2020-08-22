@@ -2,18 +2,19 @@ import React from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import Cookies from 'universal-cookie';
-import Drawer from '@material-ui/core/Drawer';
-import Link from '@material-ui/core/Link';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Toolbar from '@material-ui/core/Toolbar';
+import {
+  Drawer,
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar
+} from '@material-ui/core';
+import { Storage as StorageIcon, Warning as WarningIcon } from '@material-ui/icons/';
 
-// Icon imports
-import StorageIcon from '@material-ui/icons/Storage';
-import WarningIcon from '@material-ui/icons/Warning';
+// Other
+import Cookies from 'universal-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +66,13 @@ export default function Sidebar(props) {
             </List>
           )}
           <List>
-            <ListItem button key="status" component={Link} href={process.env.PUBLIC_URL + '#/status'} className={classes.link}>
+            <ListItem
+              button
+              key="status"
+              component={Link}
+              href={process.env.PUBLIC_URL + '#/status'}
+              className={classes.link}
+            >
               <ListItemIcon>
                 <WarningIcon />
               </ListItemIcon>
