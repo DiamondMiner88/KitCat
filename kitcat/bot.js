@@ -4,6 +4,7 @@ require('dotenv-flow').config({
   path: path.join(__dirname, 'config')
 });
 const Discord = require('discord.js');
+const pfx = process.env.BOT_PREFIX;
 
 var db = require('./db.js').db;
 var client = new Discord.Client();
@@ -34,9 +35,7 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
   console.log(`Bot is ready.`);
-  client.user.setActivity(
-    `${process.env.BOT_PREFIX}help | Serving ${client.guilds.cache.array().length} servers`
-  );
+  client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
   require('./api.js').startExpress(client);
 });
 
