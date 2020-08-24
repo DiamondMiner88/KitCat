@@ -162,7 +162,7 @@ export default function GuildSidebar(props) {
             </ListItem>
           </List>
 
-          {GetRecentServers()}
+          {/* {GetRecentServers()} */}
         </div>
       </Drawer>
     </div>

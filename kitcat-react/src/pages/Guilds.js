@@ -105,23 +105,19 @@ export default function Guilds(props) {
               });
 
               window.location = process.env.PUBLIC_URL + `#/guild/${guild.id}`;
+              window.location.reload();
             }}
           >
             <CardHeader
               className={classes.cardSubComponents}
               avatar={
                 <Avatar className={classes.avatar}>
-                  <img
-                    src={guild.iconURL}
-                    alt={`Guild Icon for ${guild.name}`}
-                  />
+                  <img src={guild.iconURL} alt={`Guild Icon for ${guild.name}`} />
                 </Avatar>
               }
             />
             <CardContent className={classes.cardSubComponents}>
-              <Typography style={{ textTransform: 'none', fontSize: 30 }}>
-                {guild.name}
-              </Typography>
+              <Typography style={{ textTransform: 'none', fontSize: 30 }}>{guild.name}</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
