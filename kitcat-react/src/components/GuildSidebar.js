@@ -18,7 +18,9 @@ import {
   EmojiPeople as WavingPersonIcon,
   Home as HomeIcon,
   MeetingRoom as OpenDoorIcon,
-  ToggleOff as ToggleOffIcon
+  ToggleOff as ToggleOffIcon,
+  SmsFailed as SmsFailedIcon,
+  Settings as SettingsIcon
 } from '@material-ui/icons';
 
 // Other
@@ -72,6 +74,9 @@ export default function GuildSidebar(props) {
               <ListItemText primary="Home" />
             </ListItem>
           </List>
+
+          <Divider />
+
           <List>
             <ListItem
               button
@@ -120,6 +125,40 @@ export default function GuildSidebar(props) {
                 <WavingPersonIcon />
               </ListItemIcon>
               <ListItemText primary="Leaver" />
+            </ListItem>
+          </List>
+
+          <List>
+            <ListItem
+              button
+              key="dmOnJoin"
+              component={Link}
+              className={classes.link}
+              onClick={() => {
+                props.onTabChange('dmOnJoin');
+              }}
+            >
+              <ListItemIcon>
+                <SmsFailedIcon />
+              </ListItemIcon>
+              <ListItemText primary="DM on join" />
+            </ListItem>
+          </List>
+
+          <List>
+            <ListItem
+              button
+              key="other"
+              component={Link}
+              className={classes.link}
+              onClick={() => {
+                props.onTabChange('other');
+              }}
+            >
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Other settings" />
             </ListItem>
           </List>
 

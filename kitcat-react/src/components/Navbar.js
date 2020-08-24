@@ -76,7 +76,6 @@ export default function Navbar(props) {
                     <MenuItem
                       onClick={(event) => {
                         setUserDropdownRef(null);
-                        console.log(document.cookie);
                         // Remove all cookies
                         const exp = new Date().toUTCString();
                         document.cookie.split(';').forEach((c) => {

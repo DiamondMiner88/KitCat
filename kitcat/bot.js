@@ -6,7 +6,7 @@ require('dotenv-flow').config({
 const Discord = require('discord.js');
 const pfx = process.env.BOT_PREFIX;
 
-var db = require('./db.js').db;
+var { db, addGuildToSettings } = require('./db.js');
 var client = new Discord.Client();
 
 if (process.platform === 'win32') {
@@ -92,35 +92,35 @@ client.on('message', async (message) => {
     });
   }
 
-  const commandText = args.shift().toLowerCase(); // command is the word after the prefix
+  const commandName = args.shift().toLowerCase(); // command is the word after the prefix
   if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
 
-  const command = client.commands.get(commandText);
+  const command = client.commands.get(commandName);
   if (command && command.guildOnly && message.channel.type !== 'text')
     message.channel.send('This command only works in Guild Text Channels!');
-  else if (command && command.command === commandText) {
+  else if (command && command.command === commandName) {
     if (message.channel.type === 'dm') command.execute(message, args);
     else {
-      db.get('SELECT * FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
-        if (err) {
-          console.log('Error retrieving command data\n' + err.message);
-          message.channel.send('Error retrieving command data\n' + err.message);
-        } else {
-          const other = {
-            mode: 'enabled'
-          };
-
-          if (!result) {
-            db.run('INSERT INTO commands (guild) VALUES(?)', [message.guild.id], (err) => {
-              if (err) console.log('Error trying to add settings for guild: ' + err);
-            });
-          } else other.mode = result[commandText];
-
-          if (other.mode === 'disabled')
-            message.channel.send('This command has been disabled on this server.');
-          else command.execute(message, args, other);
-        }
-      });
+      addGuildToSettings(message.guild.id)
+        .then(() => {
+          db.get(
+            'SELECT commands FROM settings WHERE guild=?',
+            [message.guild.id],
+            (err, result) => {
+              if (err) {
+                console.log(err.message);
+                message.channel.send('Error retrieving command data\n' + err.message);
+              } else {
+                if (JSON.parse(result.commands)[commandName] === 0)
+                  message.channel.send(
+                    'This command has been disabled on this server by administrators.'
+                  );
+                else command.execute(message, args);
+              }
+            }
+          );
+        })
+        .catch((err) => message.channel.send(err));
     }
   }
 });

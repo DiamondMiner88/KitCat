@@ -1,8 +1,13 @@
+const Discord = require('discord.js');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-var db = require('./db.js').db;
+var { db, acceptableCmds } = require('./db.js');
+
 var app = require('express')();
-var server;
+
+/**
+ * @type {Discord.Client}
+ */
 var client;
 
 app.use(bodyParser.json());
@@ -68,13 +73,11 @@ app.get('/guild/:guildID', (req, res) => {
           .then((member) => {
             if (member.hasPermission('ADMINISTRATOR')) {
               db.get(
-                'SELECT * FROM commands WHERE guild=?',
+                'SELECT commands FROM settings WHERE guild=?',
                 [req.params.guildID],
                 (err, result) => {
-                  delete result.guild;
-
                   if (err) {
-                    console.log(err.message);
+                    console.error(err.message);
                     return res.json({
                       status: 500,
                       message: 'An internal error occured.'
@@ -83,7 +86,7 @@ app.get('/guild/:guildID', (req, res) => {
 
                   return res.json({
                     status: 0,
-                    commands: result
+                    commands: JSON.parse(result.commands)
                   });
                 }
               );
@@ -109,7 +112,7 @@ app.get('/guild/:guildID', (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err);
       res.json({
         status: 500,
         message: 'An error occured.'
@@ -126,7 +129,7 @@ app.get('/guild/:guildID', (req, res) => {
  *    - settings
  */
 app.get('/guild/:guildID/save', (req, res) => {
-  if (!req.headers['access-token'])
+  if (!req.headers['access-token'] || !req.headers.settings)
     return res.json({
       code: 400,
       message: 'Missing request headers!'
@@ -155,50 +158,20 @@ app.get('/guild/:guildID/save', (req, res) => {
           .fetch(json.id)
           .then((member) => {
             if (member.hasPermission('ADMINISTRATOR')) {
-              const validCommands = [
-                '8ball',
-                '2048',
-                'ban',
-                'cat',
-                'dog',
-                'image',
-                'kick',
-                'meme',
-                'nhentai',
-                'nsfw',
-                'purge',
-                'purgechannel',
-                'quote',
-                'roulette',
-                'say',
-                'sban',
-                'serverinfo',
-                'skick',
-                'subreddit',
-                'submission',
-                'trivia',
-                'tts'
-              ];
-              let commandSQL = 'UPDATE commands SET ';
-              let commandSQLParams = [];
-              const commands = JSON.parse(req.headers.data).commands;
+              const { commands } = JSON.parse(req.headers.settings);
               Object.keys(commands).map((commandName) => {
-                if (!validCommands.includes(commandName))
+                // Dont transform === undefined into !
+                if (acceptableCmds[commandName] === undefined)
                   return res.json({
                     status: 1,
                     message: `"${commandName}" is not a valid command!`
                   });
-
-                commandSQL += `'${commandName}' = ?, `;
-                commandSQLParams.push(commands[commandName]);
               });
-              commandSQL = commandSQL.slice(0, -2);
-              commandSQL += ' WHERE guild = ?';
-              commandSQLParams.push(guild.id);
 
-              db.run(commandSQL, commandSQLParams, (err) => {
+              const sql = 'UPDATE settings SET commands = ?';
+              db.run(sql, [JSON.stringify(commands)], (err) => {
                 if (err) {
-                  console.log(err.message);
+                  console.error(err);
                   return res.json({
                     status: 500,
                     message: 'An internal error occured.'
@@ -222,14 +195,14 @@ app.get('/guild/:guildID/save', (req, res) => {
               });
             else
               return res.json({
-                status: 2,
+                status: 500,
                 message: error.message
               });
           });
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err);
       res.json({
         status: 500,
         message: 'An error occured.'
@@ -244,28 +217,35 @@ app.get('/guilds', (req, res) => {
       message: 'Missing request headers!'
     });
 
-  fetch('https://discord.com/api/users/@me', {
+  fetch('https://discord.com/api/users/@me/guilds', {
     headers: {
       authorization: `Bearer ${req.headers['access-token']}`
     }
   })
     .then((res) => res.json())
-    .then((json) => {
+    .then(async (json) => {
       if (json.message)
         res.json({
           status: 401,
           message: json.message
         });
       else {
-        let guilds = {};
-        client.guilds.cache.each((guild) => {
-          if (guild.members.cache.get(json.id)) {
-            guilds[guild.id] = {
-              name: guild.name,
-              iconURL: guild.iconURL({ size: 256, dynamic: true, format: 'png' })
-            };
-          }
-        });
+        let guilds = [];
+
+        for (const guild of json) {
+          // Check if the user has the 'ADMINISTRATOR' permission
+          if ((guild.permissions & 0x8) !== 0x8) continue;
+
+          const fguild = await client.guilds.fetch(guild.id).catch(() => {});
+          if (!fguild) continue;
+
+          guilds.push({
+            id: guild.id,
+            name: guild.name,
+            nameAcronym: fguild.nameAcronym,
+            iconURL: fguild.iconURL({ size: 256, dynamic: true, format: 'png' })
+          });
+        }
         res.json({
           status: 0,
           guilds: guilds
@@ -273,7 +253,7 @@ app.get('/guilds', (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err.message);
+      console.error(err);
       res.json({
         status: 500,
         message: 'An error occured.'
@@ -284,6 +264,6 @@ app.get('/guilds', (req, res) => {
 module.exports = {
   startExpress(botClient) {
     client = botClient;
-    server = app.listen(4000);
+    app.listen(4000);
   }
 };

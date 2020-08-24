@@ -25,8 +25,8 @@ const commandFiles = fs
 for (const fileName of commandFiles) {
   const command = require(path.join(__dirname, './commands', fileName));
   if (command.unlisted) continue;
-
   const categoryI = data.categories.findIndex((item) => item === command.category);
+
   data.categories[categoryI].commands.push(command.command);
 
   data.commands.push({

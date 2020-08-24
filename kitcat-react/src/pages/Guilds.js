@@ -12,10 +12,11 @@ import {
 } from '@material-ui/core';
 
 // Components
-import { Navbar, GuildSidebar } from '../components';
+import { Navbar, HomeSidebar } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
+import { ReactIsInDevelomentMode } from '../functions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,7 +63,10 @@ export default function Guilds(props) {
             'X-Parse-Application-Id': process.env.REACT_APP_PARSE_ID,
             'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
           },
-          body: JSON.stringify({ 'access-token': cookies.get('access-token') })
+          body: JSON.stringify({
+            'access-token': cookies.get('access-token'),
+            env: ReactIsInDevelomentMode() ? 'development' : 'production'
+          })
         });
         res
           .json()
@@ -134,7 +138,7 @@ export default function Guilds(props) {
   return (
     <div>
       <Navbar location={props.location} />
-      <GuildSidebar />
+      <HomeSidebar />
       <div className="container">
         {guilds ? guildsComponents() : <Typography>Loading...</Typography>}
       </div>

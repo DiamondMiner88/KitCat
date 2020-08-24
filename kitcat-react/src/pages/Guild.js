@@ -13,6 +13,7 @@ import { Navbar, GuildSidebar } from '../components';
 import Cookies from 'universal-cookie';
 import { FormControlLabel, Switch, Typography } from '@material-ui/core';
 import * as commandsData from '../data/commandData';
+import { ReactIsInDevelomentMode } from '../functions';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -35,10 +36,8 @@ export default function Guild(props) {
 
   // Errors
   const [errors, setErrors] = React.useState([]);
-  const [errorsAlertOpened, setErrorsAlertOpened] = React.useState(false);
   const addError = (error) => {
     setErrors(errors.concat([error]));
-    setErrorsAlertOpened(true);
   };
 
   // Save popup: 'saved_no_popup', 'saved_open_popup', 'unsaved'
@@ -60,7 +59,8 @@ export default function Guild(props) {
           },
           body: JSON.stringify({
             'access-token': cookies.get('access-token'),
-            guild: guildID
+            guild: guildID,
+            env: ReactIsInDevelomentMode() ? 'development' : 'production'
           })
         });
         res
@@ -88,10 +88,11 @@ export default function Guild(props) {
       },
       body: JSON.stringify({
         'access-token': new Cookies().get('access-token'),
+        env: ReactIsInDevelomentMode() ? 'development' : 'production',
         guild: guildID,
-        data: {
+        settings: JSON.stringify({
           commands: commands
-        }
+        })
       })
     })
       .then((res) => res.json())
@@ -106,22 +107,10 @@ export default function Guild(props) {
     <div>
       <GuildSidebar onTabChange={setCurrentTab} />
       <Navbar location={props.location} />
+
       <div className="container">
-        <Snackbar
-          open={errorsAlertOpened}
-          autoHideDuration={null}
-          onClose={(event, reason) => {
-            if (reason !== 'clickaway') setErrorsAlertOpened(false);
-          }}
-        >
-          <Alert
-            elevation={6}
-            variant="filled"
-            onClose={() => {
-              setErrorsAlertOpened(false);
-            }}
-            severity="error"
-          >
+        <Snackbar open={errors.length > 0} autoHideDuration={null}>
+          <Alert elevation={6} variant="filled" severity="error" action={null}>
             {errors.map((error) => (
               <div>{error}</div>
             ))}
@@ -191,12 +180,12 @@ export default function Guild(props) {
                       <FormControlLabel
                         control={
                           <Switch
-                            checked={commands[key] === 'enabled' ? true : false}
+                            checked={Boolean(commands[key])}
                             color="primary"
                             onChange={(event) => {
                               setCommands({
                                 ...commands,
-                                [key]: event.target.checked ? 'enabled' : 'disabled'
+                                [key]: event.target.checked ? 1 : 0
                               });
                               setSaveStatus('unsaved');
                             }}
@@ -213,12 +202,12 @@ export default function Guild(props) {
                     <FormControlLabel
                       control={
                         <Switch
-                          checked={commands[key] === 'enabled' ? true : false}
+                          checked={Boolean(commands[key])}
                           color="primary"
                           onChange={(event) => {
                             setCommands({
                               ...commands,
-                              [key]: event.target.checked ? 'enabled' : 'disabled'
+                              [key]: event.target.checked ? 1 : 0
                             });
                             setSaveStatus('unsaved');
                           }}
@@ -231,15 +220,27 @@ export default function Guild(props) {
               }
             })}
 
-          {errors.length === 0 && currentTab === 'welcomer' && (
+          {errors.length === 0 && currentTab === 'welcomer' && settings && (
             <Typography color="inherit">
               Welcomer: This feature has not been added yet! Coming Soon!
             </Typography>
           )}
 
-          {errors.length === 0 && currentTab === 'leaver' && (
+          {errors.length === 0 && currentTab === 'leaver' && settings && (
             <Typography color="inherit">
               Leaver: This feature has not been added yet! Coming Soon!
+            </Typography>
+          )}
+
+          {errors.length === 0 && currentTab === 'dmOnJoin' && settings && (
+            <Typography color="inherit">
+              DM on join: This feature has not been added yet! Coming Soon!
+            </Typography>
+          )}
+
+          {errors.length === 0 && currentTab === 'dmOnJoin' && settings && (
+            <Typography color="inherit">
+              Other settings: This feature has not been added yet! Coming Soon!
             </Typography>
           )}
         </div>

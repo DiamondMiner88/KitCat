@@ -8,12 +8,13 @@ import { HomeSidebar, Navbar } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
+import { ReactIsInDevelomentMode } from '../functions';
 const fetch = require('node-fetch');
 
 export default function Home(props) {
   React.useEffect(() => {
     const cookies = new Cookies();
-
+    
     const code = /\?code=(.{30})/.exec(window.location.href);
 
     if (window.location.href.includes('?error=')) window.location = process.env.PUBLIC_URL + '#/';
@@ -25,6 +26,7 @@ export default function Home(props) {
           'X-Parse-Javascript-Key': process.env.REACT_APP_PARSE_JS_KEY
         },
         body: JSON.stringify({
+          env: ReactIsInDevelomentMode() ? 'development' : 'production',
           code: code[1],
           'url-redirect': process.env.REACT_APP_DISCORD_REDIRECT_URL
         })
