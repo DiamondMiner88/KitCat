@@ -83,9 +83,8 @@ export default function Guilds(props) {
   }, []);
 
   const guildsComponents = () => {
-    const guildComponentList = [];
-    for (const guildID in guilds) {
-      guildComponentList.push(
+    return guilds.map((guild) => {
+      return (
         <Card className={(classes.root, classes.card)}>
           <CardActionArea
             onClick={() => {
@@ -94,11 +93,7 @@ export default function Guilds(props) {
                 ? cookies.get('recent-servers')
                 : [];
 
-              let currentGuildData = guilds[guildID];
-              currentGuildData.id = guildID;
-
-              if (!recentServers.some((elem) => elem.id === currentGuildData.id))
-                recentServers.unshift(currentGuildData);
+              if (!recentServers.some((item) => item.id === guild.id)) recentServers.unshift(guild);
 
               if (recentServers.length > 6) recentServers = recentServers.slice(0, 6);
 
@@ -109,7 +104,7 @@ export default function Guilds(props) {
                 overwrite: true
               });
 
-              window.location = process.env.PUBLIC_URL + `#/guild/${guildID}`;
+              window.location = process.env.PUBLIC_URL + `#/guild/${guild.id}`;
             }}
           >
             <CardHeader
@@ -117,22 +112,21 @@ export default function Guilds(props) {
               avatar={
                 <Avatar className={classes.avatar}>
                   <img
-                    src={guilds[guildID].iconURL}
-                    alt={`Guild Icon for ${guilds[guildID].name}`}
+                    src={guild.iconURL}
+                    alt={`Guild Icon for ${guild.name}`}
                   />
                 </Avatar>
               }
             />
             <CardContent className={classes.cardSubComponents}>
               <Typography style={{ textTransform: 'none', fontSize: 30 }}>
-                {guilds[guildID].name}
+                {guild.name}
               </Typography>
             </CardContent>
           </CardActionArea>
         </Card>
       );
-    }
-    return guildComponentList;
+    });
   };
 
   return (

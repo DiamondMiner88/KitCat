@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-var { db, acceptableCmds } = require('./db.js');
+var { db, acceptableCmds, addGuildToSettings } = require('./db.js');
 
 var app = require('express')();
 
@@ -72,24 +72,26 @@ app.get('/guild/:guildID', (req, res) => {
           .fetch(json.id)
           .then((member) => {
             if (member.hasPermission('ADMINISTRATOR')) {
-              db.get(
-                'SELECT commands FROM settings WHERE guild=?',
-                [req.params.guildID],
-                (err, result) => {
-                  if (err) {
-                    console.error(err.message);
+              addGuildToSettings(guild.id).then(() => {
+                db.get(
+                  'SELECT commands FROM settings WHERE guild=?',
+                  [req.params.guildID],
+                  (err, result) => {
+                    if (err) {
+                      console.error(err.message);
+                      return res.json({
+                        status: 500,
+                        message: 'An internal error occured.'
+                      });
+                    }
+
                     return res.json({
-                      status: 500,
-                      message: 'An internal error occured.'
+                      status: 0,
+                      commands: JSON.parse(result.commands)
                     });
                   }
-
-                  return res.json({
-                    status: 0,
-                    commands: JSON.parse(result.commands)
-                  });
-                }
-              );
+                );
+              });
             } else
               return res.json({
                 status: 403,
