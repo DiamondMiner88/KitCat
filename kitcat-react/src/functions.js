@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 // import Cookies from 'universal-cookie';
 
 export function ReactIsInDevelomentMode() {

@@ -105,7 +105,6 @@ export default function Guilds(props) {
               });
 
               window.location = process.env.PUBLIC_URL + `#/guild/${guild.id}`;
-              window.location.reload();
             }}
           >
             <CardHeader

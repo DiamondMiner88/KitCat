@@ -183,8 +183,10 @@ function GetRecentServers() {
               button
               key={item.id}
               component={Link}
-              href={process.env.PUBLIC_URL + `#/guild/${item.id}`}
               style={{ textDecoration: 'none' }}
+              onClick={() => {
+                window.location = process.env.PUBLIC_URL + `#/guild/${item.id}`;
+              }}
             >
               <ListItemIcon>
                 <Avatar alt={item.name} src={item.iconURL}></Avatar>
