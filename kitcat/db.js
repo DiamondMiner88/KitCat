@@ -20,35 +20,6 @@ CREATE TABLE IF NOT EXISTS "currency" (
 );
 `;
 
-const commands_tbl = `
-CREATE TABLE IF NOT EXISTS "commands" (
-	"guild"	INTEGER NOT NULL,
-	"8ball"	TEXT NOT NULL DEFAULT 'enabled',
-	"2048" TEXT NOT NULL DEFAULT 'enabled',
-	"ban" TEXT NOT NULL DEFAULT 'enabled',
-	"cat" TEXT NOT NULL DEFAULT 'enabled',
-	"dog" TEXT NOT NULL DEFAULT 'enabled',
-	"image" TEXT NOT NULL DEFAULT 'enabled',
-	"kick" TEXT NOT NULL DEFAULT 'enabled',
-	"meme" TEXT NOT NULL DEFAULT 'enabled',
-	"nhentai" TEXT NOT NULL DEFAULT 'enabled',
-	"nsfw" TEXT NOT NULL DEFAULT 'enabled',
-	"purge" TEXT NOT NULL DEFAULT 'enabled',
-	"purgechannel" TEXT NOT NULL DEFAULT 'enabled',
-	"quote"	TEXT NOT NULL DEFAULT 'enabled',
-	"roulette" TEXT NOT NULL DEFAULT 'enabled',
-	"say" TEXT NOT NULL DEFAULT 'enabled',
-	"sban" TEXT NOT NULL DEFAULT 'enabled',
-	"serverinfo" TEXT NOT NULL DEFAULT 'enabled',
-	"skick"	TEXT NOT NULL DEFAULT 'enabled',
-	"subreddit"	TEXT NOT NULL DEFAULT 'enabled',
-	"submission" TEXT NOT NULL DEFAULT 'enabled',
-	"trivia" TEXT DEFAULT 'enabled',
-	"tts" TEXT DEFAULT 'enabled',
-	PRIMARY KEY("guild")
-);
-`;
-
 const users_tbl = `
 CREATE TABLE IF NOT EXISTS "users" (
     "guild" INTEGER NOT NULL,
