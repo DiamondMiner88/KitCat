@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     marginBottom: theme.spacing(2),
-    border: '1px black',
+    border: '1px rgba(0, 0, 0, 0.2)',
     borderStyle: 'solid'
   }
 }));
