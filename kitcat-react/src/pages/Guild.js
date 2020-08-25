@@ -3,7 +3,15 @@ import { useParams } from 'react-router-dom';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, Snackbar, Tooltip } from '@material-ui/core';
+import {
+  FormControl,
+  Snackbar,
+  Tooltip,
+  Button,
+  FormLabel,
+  FormHelperText,
+  TextField
+} from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 // Components
@@ -16,13 +24,19 @@ import * as commandsData from '../data/commandData';
 import { ReactIsInDevelomentMode } from '../functions';
 
 const useStyles = makeStyles((theme) => ({
+  content: {
+    width: 'calc(100% - 300px)',
+    marginLeft: 300
+  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120
   },
-  content: {
-    width: 'calc(100% - 300px)',
-    marginLeft: 300
+  formLabel: {
+    marginBottom: theme.spacing(2)
+  },
+  textField: {
+    width: 700
   }
 }));
 
@@ -32,7 +46,6 @@ export default function Guild(props) {
 
   // Data
   const [settings, setSettings] = React.useState();
-  const [commands, setCommands] = React.useState();
 
   // Errors
   const [errors, setErrors] = React.useState([]);
@@ -46,8 +59,11 @@ export default function Guild(props) {
   // Menu
   const [currentTab, setCurrentTab] = React.useState('disable_commands');
 
+  // dmOnjoin text error
+  const [dmOnJoinError, setDmOnJoinError] = React.useState(null);
+
   React.useEffect(() => {
-    if (commands || settings) return;
+    if (settings) return;
     const cookies = new Cookies();
     if (cookies.get('access-token')) {
       async function fetchData() {
@@ -67,10 +83,7 @@ export default function Guild(props) {
           .json()
           .then((json) => {
             if (json.result.message) addError(json.result.message);
-            else {
-              setCommands(json.result.commands);
-              setSettings({}); // Change this later when settings are introduced
-            }
+            else setSettings(json.result);
           })
           .catch((error) => addError(error.message));
       }
@@ -90,9 +103,7 @@ export default function Guild(props) {
         'access-token': new Cookies().get('access-token'),
         env: ReactIsInDevelomentMode() ? 'development' : 'production',
         guild: guildID,
-        settings: JSON.stringify({
-          commands: commands
-        })
+        settings: JSON.stringify(settings)
       })
     })
       .then((res) => res.json())
@@ -137,8 +148,20 @@ export default function Guild(props) {
               }
             }}
             severity="info"
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  save();
+                  setSaveStatus('no_popup');
+                }}
+              >
+                SAVE
+              </Button>
+            }
           >
-            You have unsaved settings! Close this to save.
+            You have unsaved settings!
           </Alert>
         </Snackbar>
 
@@ -162,52 +185,27 @@ export default function Guild(props) {
         </Snackbar>
 
         <div className={classes.content}>
-          {!commands && !settings && <Typography variant="h4">Loading...</Typography>}
+          {!settings && <Typography variant="h4">Loading...</Typography>}
 
-          {errors.length === 0 &&
-            currentTab === 'disable_commands' &&
-            commands &&
-            settings &&
-            Object.keys(commands).map((key) => {
-              // eslint-disable-next-line array-callback-return
-              const cmdData = commandsData.commands.find((cmd) => {
-                if (cmd.command === key) return true;
-              });
-              if (cmdData) {
-                return (
+          {errors.length === 0 && currentTab === 'disable_commands' && settings && (
+            <FormControl className={classes.formControl}>
+              <FormLabel>Enable/Disable commands</FormLabel>
+              {Object.keys(settings.commands).map((key) => {
+                const cmdData = commandsData.commands.find((cmd) => cmd.command === key);
+                return cmdData ? (
                   <Tooltip title={cmdData.help_description}>
-                    <FormControl className={classes.formControl}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={Boolean(commands[key])}
-                            color="primary"
-                            onChange={(event) => {
-                              setCommands({
-                                ...commands,
-                                [key]: event.target.checked ? 1 : 0
-                              });
-                              setSaveStatus('unsaved');
-                            }}
-                          />
-                        }
-                        label={key}
-                      />
-                    </FormControl>
-                  </Tooltip>
-                );
-              } else {
-                return (
-                  <FormControl className={classes.formControl}>
                     <FormControlLabel
                       control={
                         <Switch
-                          checked={Boolean(commands[key])}
+                          checked={Boolean(settings.commands[key])}
                           color="primary"
                           onChange={(event) => {
-                            setCommands({
-                              ...commands,
-                              [key]: event.target.checked ? 1 : 0
+                            setSettings({
+                              ...settings,
+                              commands: {
+                                ...settings.commands,
+                                [key]: event.target.checked ? 1 : 0
+                              }
                             });
                             setSaveStatus('unsaved');
                           }}
@@ -215,10 +213,34 @@ export default function Guild(props) {
                       }
                       label={key}
                     />
-                  </FormControl>
+                  </Tooltip>
+                ) : (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={Boolean(settings.commands[key])}
+                        color="primary"
+                        onChange={(event) => {
+                          setSettings({
+                            ...settings,
+                            commands: {
+                              ...settings.commands,
+                              [key]: event.target.checked ? 1 : 0
+                            }
+                          });
+                          setSaveStatus('unsaved');
+                        }}
+                      />
+                    }
+                    label={key}
+                  />
                 );
-              }
-            })}
+              })}
+              <FormHelperText>
+                Additional switches may be found in their respective sidebar tab.
+              </FormHelperText>
+            </FormControl>
+          )}
 
           {errors.length === 0 && currentTab === 'welcomer' && settings && (
             <Typography color="inherit">
@@ -233,16 +255,57 @@ export default function Guild(props) {
           )}
 
           {errors.length === 0 && currentTab === 'dmOnJoin' && settings && (
-            <Typography color="inherit">
-              DM on join: This feature has not been added yet! Coming Soon!
-            </Typography>
+            <div>
+              <FormControl className={classes.formControl}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={settings.dmTextEnabled == 1}
+                      color="primary"
+                      onChange={(event) => {
+                        setSettings({
+                          ...settings,
+                          dmTextEnabled: event.target.checked ? 1 : 0
+                        });
+                        setSaveStatus('unsaved');
+                      }}
+                    />
+                  }
+                  label="DM on server join"
+                />
+              </FormControl>
+              <br />
+              <br />
+              <Typography color="inherit" style={{ fontSize: '16px' }}>
+                Text to DM to new users
+              </Typography>
+              <TextField
+                error={dmOnJoinError}
+                className={classes.textField}
+                placeholder={
+                  ' __**Welcome to Example Server!**__\n Here is our website: https://example.com\n Put your rules and other server info here'
+                }
+                defaultValue={settings.dmText}
+                multiline
+                rows={15}
+                rowsMax={Infinity}
+                variant="filled"
+                disabled={settings.dmTextEnabled != 1}
+                helperText={dmOnJoinError}
+                onChange={(event) => {
+                  if (event.target.value.length > 2000)
+                    setDmOnJoinError('Messages cannot be longer than 2000 characters.');
+                  else {
+                    setDmOnJoinError(null);
+                    setSettings({ ...settings, dmText: event.target.value });
+                    setSaveStatus('unsaved');
+                  }
+                }}
+              />
+            </div>
           )}
 
-          {errors.length === 0 && currentTab === 'dmOnJoin' && settings && (
-            <Typography color="inherit">
-              Other settings: This feature has not been added yet! Coming Soon!
-            </Typography>
-          )}
+          {errors.length === 0 && currentTab === 'other' && settings && <h1>temp</h1>}
         </div>
       </div>
     </div>

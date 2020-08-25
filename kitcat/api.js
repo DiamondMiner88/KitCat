@@ -74,7 +74,7 @@ app.get('/guild/:guildID', (req, res) => {
             if (member.hasPermission('ADMINISTRATOR')) {
               addGuildToSettings(guild.id).then(() => {
                 db.get(
-                  'SELECT commands FROM settings WHERE guild=?',
+                  'SELECT * FROM settings WHERE guild=?',
                   [req.params.guildID],
                   (err, result) => {
                     if (err) {
@@ -87,7 +87,10 @@ app.get('/guild/:guildID', (req, res) => {
 
                     return res.json({
                       status: 0,
-                      commands: JSON.parse(result.commands)
+                      prefix: result.prefix,
+                      commands: JSON.parse(result.commands),
+                      dmTextEnabled: result.dmTextEnabled,
+                      dmText: result.dmText
                     });
                   }
                 );
@@ -160,7 +163,7 @@ app.get('/guild/:guildID/save', (req, res) => {
           .fetch(json.id)
           .then((member) => {
             if (member.hasPermission('ADMINISTRATOR')) {
-              const { commands } = JSON.parse(req.headers.settings);
+              const { commands, prefix, dmTextEnabled, dmText } = JSON.parse(req.headers.settings);
               Object.keys(commands).map((commandName) => {
                 // Dont transform === undefined into !
                 if (acceptableCmds[commandName] === undefined)
@@ -170,8 +173,9 @@ app.get('/guild/:guildID/save', (req, res) => {
                   });
               });
 
-              const sql = 'UPDATE settings SET commands = ?';
-              db.run(sql, [JSON.stringify(commands)], (err) => {
+              const sql =
+                'UPDATE settings SET commands = ?, prefix = ?, dmTextEnabled = ?, dmText = ?';
+              db.run(sql, [JSON.stringify(commands), prefix, dmTextEnabled, dmText], (err) => {
                 if (err) {
                   console.error(err);
                   return res.json({
