@@ -2,7 +2,7 @@ import React from 'react';
 import MUICookieConsent from 'material-ui-cookie-consent';
 
 export function ReactIsInDevelomentMode() {
-  return true;
+  return false;
   // return '_self' in React.createElement('div');
 }
 
