@@ -65,32 +65,31 @@ async function getTopPost(message, subreddit_name) {
 
       sendPost(message, postToUse);
     }
-  }
-  else {
+  } else {
     if (!id_list.dms[message.author.id]) id_list.dms[message.author.id] = [];
 
-      const subreddit = await reddit.getSubreddit(subreddit_name);
+    const subreddit = await reddit.getSubreddit(subreddit_name);
 
-      const topPosts = await subreddit.getTop({
-        limit: 100
-      });
-      
-      let postToUse;
+    const topPosts = await subreddit.getTop({
+      limit: 100
+    });
 
-      for (const submission of topPosts) {
-        if (!id_list.dms[message.author.id].includes(submission.id)) {
-          postToUse = submission;
-          id_list.dms[message.author.id].push(submission.id);
-          break;
-        }
+    let postToUse;
+
+    for (const submission of topPosts) {
+      if (!id_list.dms[message.author.id].includes(submission.id)) {
+        postToUse = submission;
+        id_list.dms[message.author.id].push(submission.id);
+        break;
       }
+    }
 
-      if (postToUse.over_18 && !message.channel.nsfw)
-        return message.channel.send(
-          'Post is NSFW while the channel is not. Getting a new one, please hold on...'
-        );
+    if (postToUse.over_18 && !message.channel.nsfw)
+      return message.channel.send(
+        'Post is NSFW while the channel is not. Getting a new one, please hold on...'
+      );
 
-      sendPost(message, postToUse);
+    sendPost(message, postToUse);
   }
 }
 
@@ -101,17 +100,14 @@ function sendPost(message, post) {
     .setTitle(post.title)
     .setURL(`https://reddit.com${post.permalink}`)
     .setImage(post.url)
-    .setFooter(
-      `👍 ${(Math.round(post.score / 1000) * 1000).toString().slice(0, -3)}k`
-    )
+    .setFooter(`👍 ${(Math.round(post.score / 1000) * 1000).toString().slice(0, -3)}k`)
     .setTimestamp(new Date(post.created_utc * 1000));
   message.channel.send(embed);
 }
 
 // function linkImagesFromPosts(message) {
-//   let redditThreadRegex = /https?:\/\/www.reddit.com\/r\/.+?(?=\/)\/comments\/.+?(?=\/)\/.+/g;
-//   if (message.content.match(redditThreadRegex)) {
-//     // TODO: connect to reddit, get the thread from url and post the content on discord
+//   if (message.content.match(/https?:\/\/www.reddit.com\/r\/.+?(?=\/)\/comments\/.+?(?=\/)\/.+/g)) {
+//     // get submission from url and post the content
 //   }
 // }
 
