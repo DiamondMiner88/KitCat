@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "http-proxy-middleware": "^1.0.5",
+    "material-ui-cookie-consent": "^0.1.0",
     "node-fetch": "^2.6.0",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",

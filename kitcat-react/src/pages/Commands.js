@@ -7,6 +7,7 @@ import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 // Components
 import { Navbar, HomeSidebar } from '../components';
+import { CookieConsent } from '../functions';
 
 // Other
 import commandData from '../data/commandData';
@@ -37,6 +38,7 @@ export default function Commands(props) {
     <div className={classes.root}>
       <Navbar location={props.location} />
       <HomeSidebar />
+      <CookieConsent />
       <div className="container">{GetCommands()}</div>
     </div>
   );

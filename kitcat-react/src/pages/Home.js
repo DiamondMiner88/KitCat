@@ -5,11 +5,12 @@ import { Link } from '@material-ui/core';
 
 // Components
 import { HomeSidebar, Navbar } from '../components';
+import { CookieConsent } from '../functions';
 
 // Other
 import Cookies from 'universal-cookie';
 import { ReactIsInDevelomentMode } from '../functions';
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 export default function Home(props) {
   React.useEffect(() => {
@@ -52,6 +53,7 @@ export default function Home(props) {
     <div>
       <Navbar location={props.location} />
       <HomeSidebar />
+      <CookieConsent />
       <div className="container">
         <h1>KitCat</h1>
         <h2>What is this bot?</h2>

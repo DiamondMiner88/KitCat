@@ -74,7 +74,27 @@ client.on('messageReactionAdd', (messageReaction, user) => {
   require('./commands/2048.js').onReactionAdded(messageReaction, user);
 });
 
+async function cacheGuildSettings(guild) {
+  if (client.guildSettingsCache.has(guild.id)) Promise.resolve();
+  else {
+    addGuildToSettings(guild.id).then(() => {
+      db.get('SELECT * FROM settings WHERE guild = ?', [guild.id], (err, result) => {
+        if (err) console.error(err);
+        else if (result.guild) {
+          client.guildSettingsCache.set(
+            guild.id,
+            result,
+            guild.memberCount > 1000 ? 60 * 60 * 4 : 60 * 60
+          );
+          Promise.resolve();
+        }
+      });
+    });
+  }
+}
+
 client.on('message', async (message) => {
+  if (message.author.bot) return;
   /*
   var url = undefined;
   if (message.attachments.size > 0) url = message.attachments.first().url;
@@ -98,9 +118,12 @@ client.on('message', async (message) => {
     }
   }
   */
-  if (message.author.bot) return;
 
-  if (message.mentions.has(client.user)) return message.channel.send(`Do ${pfx} for commands!`);
+  cacheGuildSettings(message.guild).then(() => {
+    console.log(client.guildSettingsCache.get(message.guild.id));
+  });
+
+  if (message.mentions.has(client.user)) return message.channel.send(`Do ${pfx}help for commands!`);
 
   const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
 

@@ -16,6 +16,7 @@ import { Alert } from '@material-ui/lab';
 
 // Components
 import { Navbar, GuildSidebar } from '../components';
+import { CookieConsent } from '../functions';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -116,8 +117,9 @@ export default function Guild(props) {
 
   return (
     <div>
-      <GuildSidebar onTabChange={setCurrentTab} />
       <Navbar location={props.location} />
+      <GuildSidebar onTabChange={setCurrentTab} />
+      <CookieConsent />
 
       <div className="container">
         <Snackbar open={errors.length > 0} autoHideDuration={null}>
@@ -260,7 +262,7 @@ export default function Guild(props) {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={settings.dmTextEnabled == 1}
+                      checked={settings.dmTextEnabled === 1}
                       color="primary"
                       onChange={(event) => {
                         setSettings({
@@ -290,7 +292,7 @@ export default function Guild(props) {
                 rows={15}
                 rowsMax={Infinity}
                 variant="filled"
-                disabled={settings.dmTextEnabled != 1}
+                disabled={settings.dmTextEnabled !== 1}
                 helperText={dmOnJoinError}
                 onChange={(event) => {
                   if (event.target.value.length > 2000)
@@ -305,7 +307,19 @@ export default function Guild(props) {
             </div>
           )}
 
-          {errors.length === 0 && currentTab === 'other' && settings && <h1>temp</h1>}
+          {errors.length === 0 && currentTab === 'other' && settings && (
+            <TextField
+              label="Prefix"
+              InputLabelProps={{
+                shrink: true
+              }}
+              defaultValue={settings.prefix}
+              onChange={(event) => {
+                setSettings({ ...settings, prefix: event.target.value });
+                setSaveStatus('unsaved');
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ import {
 
 // Components
 import { Navbar, HomeSidebar } from '../components';
+import { CookieConsent } from '../functions';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -128,6 +129,7 @@ export default function Guilds(props) {
     <div>
       <Navbar location={props.location} />
       <HomeSidebar />
+      <CookieConsent />
       <div className="container">
         {guilds ? guildsComponents() : <Typography>Loading...</Typography>}
       </div>
