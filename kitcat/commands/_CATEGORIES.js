@@ -1,4 +1,4 @@
-const pfx = process.env.BOT_PREFIX;
+const pfx = 'k!'; // Change this later to use the guild's prefix
 
 /**
  * Are used in the "category" variable in commands.

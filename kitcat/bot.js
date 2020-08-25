@@ -38,31 +38,17 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
   console.log(`Bot is ready.`);
-  client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
+  client.user.setActivity(
+    `Ping me for help | Serving ${client.guilds.cache.array().length} servers`
+  );
   require('./api.js').startExpress(client);
 });
 
 client.on('guildMemberAdd', (member) => {
-  function sendJoinDM(member) {
+  cacheGuildSettings(member.guild).then(() => {
     const { dmTextEnabled, dmText } = client.guildSettingsCache.get(member.guild.id);
     if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
-  }
-  if (client.guildSettingsCache.has(member.guild.id)) sendJoinDM(member);
-  else {
-    addGuildToSettings(member.guild.id).then(() => {
-      db.get('SELECT * FROM settings WHERE guild = ?', [member.guild.id], (err, result) => {
-        if (err) console.error(err);
-        else if (result.guild) {
-          client.guildSettingsCache.set(
-            member.guild.id,
-            result,
-            member.guild.memberCount > 1000 ? 60 * 60 * 6 : 60 * 60
-          );
-          sendJoinDM(member);
-        }
-      });
-    });
-  }
+  });
 });
 
 client.on('guildMemberRemove', (member) => {
@@ -73,25 +59,6 @@ client.on('guildMemberRemove', (member) => {
 client.on('messageReactionAdd', (messageReaction, user) => {
   require('./commands/2048.js').onReactionAdded(messageReaction, user);
 });
-
-async function cacheGuildSettings(guild) {
-  if (client.guildSettingsCache.has(guild.id)) Promise.resolve();
-  else {
-    addGuildToSettings(guild.id).then(() => {
-      db.get('SELECT * FROM settings WHERE guild = ?', [guild.id], (err, result) => {
-        if (err) console.error(err);
-        else if (result.guild) {
-          client.guildSettingsCache.set(
-            guild.id,
-            result,
-            guild.memberCount > 1000 ? 60 * 60 * 4 : 60 * 60
-          );
-          Promise.resolve();
-        }
-      });
-    });
-  }
-}
 
 client.on('message', async (message) => {
   if (message.author.bot) return;
@@ -119,30 +86,23 @@ client.on('message', async (message) => {
   }
   */
 
-  cacheGuildSettings(message.guild).then(() => {
-    console.log(client.guildSettingsCache.get(message.guild.id));
-  });
+  const settings =
+    message.channel.type !== 'dm' ? await cacheGuildSettings(message.guild) : { prefix: 'k!' };
+  const { prefix: pfx } = settings;
 
   if (message.mentions.has(client.user)) return message.channel.send(`Do ${pfx}help for commands!`);
 
-  const args = message.content.slice(pfx.length).trim().split(/ +/); // args is an array of text after the command that were seperated by a whitespace
-
   if (/\{\d{1,6}\}/.test(message.content)) {
     if (message.channel.type === 'dm') return require('./commands/nhentai.js').multiMatch(message);
-    db.get('SELECT nhentai FROM commands WHERE guild=?', [message.guild.id], (err, result) => {
-      if (err) {
-        console.log('Error retrieving command data\n' + err.message);
-        return message.channel.send('An error occured');
-      } else if (result.nhentai === 'enabled')
-        return require('./commands/nhentai.js').multiMatch(message);
-      else if (result.nhentai === 'disabled')
-        return message.channel.send('This command has been disabled on this server.');
-      else if (!result.nhentai) return message.channel.send('An error occured');
-    });
+    const enabled = JSON.parse(settings.commands).nhentai;
+    if (enabled === 1) return require('./commands/nhentai.js').multiMatch(message);
+    else if (enabled === 0)
+      return message.channel.send('This command has been disabled on this server.');
   }
 
-  const commandName = args.shift().toLowerCase(); // command is the word after the prefix
-  if (message.content.indexOf(pfx) !== 0) return; // Skip any messages that dont include the prefix at the front
+  const args = message.content.slice(pfx.length).trim().split(/ +/g);
+  const commandName = args.shift().toLowerCase();
+  if (message.content.indexOf(pfx) !== 0) return;
 
   const command = client.commands.get(commandName);
   if (command && command.guildOnly && message.channel.type !== 'text')
@@ -173,5 +133,26 @@ client.on('message', async (message) => {
     }
   }
 });
+
+function cacheGuildSettings(guild) {
+  return new Promise((resolve, reject) => {
+    if (client.guildSettingsCache.has(guild.id)) resolve(client.guildSettingsCache.get(guild.id));
+    else {
+      addGuildToSettings(guild.id).then(() => {
+        db.get('SELECT * FROM settings WHERE guild = ?', [guild.id], (err, result) => {
+          if (err) reject(err);
+          else if (result.guild) {
+            client.guildSettingsCache.set(
+              guild.id,
+              result,
+              guild.memberCount > 10000 ? 60 * 60 * 4 : 60 * 60
+            );
+            resolve(result);
+          }
+        });
+      });
+    }
+  });
+}
 
 client.login(process.env.BOT_TOKEN);

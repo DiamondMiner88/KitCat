@@ -183,6 +183,7 @@ app.get('/guild/:guildID/save', (req, res) => {
                     message: 'An internal error occured.'
                   });
                 }
+                client.guildSettingsCache.del(guild.id);
                 return res.json({
                   status: 0
                 });

@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
+const pfx = 'k!'; //fix this later
 
 const ImageCmdHelp = [
   {
@@ -23,6 +23,7 @@ module.exports = {
    * @param {Array.<String>} args
    */
   execute(message, args) {
+    const pfx = message.client.guildSettingsCache.get(message.guild.id).prefix;
     if (args.length === 0) {
       return message.channel.send(
         `Didn't provide any image type run \`${pfx}image help\` for image commands.`

@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
 const categories = require('./_CATEGORIES.js');
 
 module.exports = {
@@ -17,6 +16,7 @@ module.exports = {
    * @param {Array.<String>} args
    */
   execute(message, args) {
+    const pfx = message.client.guildSettingsCache.get(message.guild.id).prefix;
     if (args.length === 0) {
       var embed = new Discord.MessageEmbed().setColor(0x0099ff).setTitle('Categories:');
       for (const key in categories) {

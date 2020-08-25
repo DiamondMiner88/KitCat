@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
 const fetch = require('node-fetch');
 const Entities = require('html-entities').AllHtmlEntities;
 var { db } = require('../db.js');
@@ -61,7 +60,7 @@ module.exports = {
   command: 'trivia',
   category: require('./_CATEGORIES.js').fun,
   help_name: `:question: Trivia`,
-  help_description: `Asks a trivia question!. If you get the question right, you earn oof coins, if you get it wrong, you loose oofcoins.\nRun \`${pfx}trivia help\` for help with the trivia command.`,
+  help_description: `Asks a trivia question!. If you get the question right, you earn oof coins, if you get it wrong, you loose oofcoins.\nRun \`k!trivia help\` for help with the trivia command.`,
   usage: `trivia {optional: difficulty} {optional: category}`,
   guildOnly: false,
   unlisted: false,
@@ -72,6 +71,7 @@ module.exports = {
    * @param {Array.<String>} args
    */
   execute(message, args) {
+    const pfx = message.client.guildSettingsCache.get(message.guild.id).prefix;
     require('../db.js').checkForProfile(message.author);
     if (args[0] === 'help') {
       return message.channel.send(triviaHelp);

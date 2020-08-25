@@ -1,4 +1,3 @@
-const pfx = require("../../config/config.json").prefix;
 const Discord = require("discord.js");
 
 module.exports = {

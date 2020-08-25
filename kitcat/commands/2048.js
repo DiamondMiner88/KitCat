@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
 const path = require('path');
 const { createCanvas, loadImage } = require('canvas');
 
@@ -270,6 +269,7 @@ module.exports = {
    * @param {Array.<String>} args
    */
   execute(message, args) {
+    const pfx = message.client.guildSettingsCache.get(message.guild.id).prefix;
     switch (args[0]) {
       case 'help':
         var embed = new Discord.MessageEmbed()

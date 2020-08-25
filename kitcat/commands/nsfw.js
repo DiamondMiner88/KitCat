@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
+const pfx = 'k!'; //Change embeds to be built inside the execute() function to use the guild's prefix
 const fetch = require('node-fetch');
 
 // https://pornopics.co/

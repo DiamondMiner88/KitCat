@@ -77,7 +77,7 @@ module.exports = {
     const matches = message.content.match(/\{\d{1,6}\}/g);
     for (let number of matches) {
       number = number.substring(1, number.length - 1);
-      this.execute(undefined, message, [number]);
+      this.execute(message, [number]);
     }
   },
   constructEmbed,

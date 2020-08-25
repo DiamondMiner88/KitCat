@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const pfx = process.env.BOT_PREFIX;
 
 module.exports = {
   command: 'roulette',
@@ -16,7 +15,7 @@ module.exports = {
    * @param {Array.<String>} args
    */
   execute(message, args) {
-    // console.log(message.mentions.members.first(message.mentions.members.size));
+    const pfx = message.client.guildSettingsCache.get(message.guild.id).prefix;
     if (args[0] === 'help') {
       return message.channel.send(
         new Discord.MessageEmbed()
