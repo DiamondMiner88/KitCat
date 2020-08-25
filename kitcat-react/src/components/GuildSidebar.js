@@ -141,7 +141,7 @@ export default function GuildSidebar(props) {
               <ListItemIcon>
                 <SmsFailedIcon />
               </ListItemIcon>
-              <ListItemText primary="DM on join" />
+              <ListItemText primary="DM new members" />
             </ListItem>
           </List>
 

@@ -271,13 +271,13 @@ export default function Guild(props) {
                       }}
                     />
                   }
-                  label="DM on server join"
+                  label="DM new members"
                 />
               </FormControl>
               <br />
               <br />
               <Typography color="inherit" style={{ fontSize: '16px' }}>
-                Text to DM to new users
+                DM new members
               </Typography>
               <TextField
                 error={dmOnJoinError}

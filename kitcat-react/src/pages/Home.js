@@ -14,7 +14,7 @@ const fetch = require('node-fetch');
 export default function Home(props) {
   React.useEffect(() => {
     const cookies = new Cookies();
-    
+
     const code = /\?code=(.{30})/.exec(window.location.href);
 
     if (window.location.href.includes('?error=')) window.location = process.env.PUBLIC_URL + '#/';

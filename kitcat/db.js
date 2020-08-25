@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS "settings" (
 	"guild"	INTEGER NOT NULL,
 	"commands"	TEXT NOT NULL,
 	"prefix"	TEXT NOT NULL DEFAULT 'k!',
-	"dmTextEnabled"	TEXT NOT NULL DEFAULT 0,
+	"dmTextEnabled"	INTEGER NOT NULL DEFAULT 0,
 	"dmText"	TEXT NOT NULL DEFAULT '',
 	PRIMARY KEY("guild")
 );

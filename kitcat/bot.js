@@ -4,10 +4,13 @@ require('dotenv-flow').config({
   path: path.join(__dirname, 'config')
 });
 const Discord = require('discord.js');
+const NodeCache = require('node-cache');
 const pfx = process.env.BOT_PREFIX;
 
 var { db, addGuildToSettings } = require('./db.js');
+
 var client = new Discord.Client();
+client.guildSettingsCache = new NodeCache();
 
 if (process.platform === 'win32') {
   var rl = require('readline').createInterface({
@@ -37,6 +40,29 @@ client.on('ready', () => {
   console.log(`Bot is ready.`);
   client.user.setActivity(`${pfx}help | Serving ${client.guilds.cache.array().length} servers`);
   require('./api.js').startExpress(client);
+});
+
+client.on('guildMemberAdd', (member) => {
+  function sendJoinDM(member) {
+    const { dmTextEnabled, dmText } = client.guildSettingsCache.get(member.guild.id);
+    if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
+  }
+  if (client.guildSettingsCache.has(member.guild.id)) sendJoinDM(member);
+  else {
+    addGuildToSettings(member.guild.id).then(() => {
+      db.get('SELECT * FROM settings WHERE guild = ?', [member.guild.id], (err, result) => {
+        if (err) console.error(err);
+        else if (result.guild) {
+          client.guildSettingsCache.set(
+            member.guild.id,
+            result,
+            member.guild.memberCount > 1000 ? 60 * 60 * 6 : 60 * 60
+          );
+          sendJoinDM(member);
+        }
+      });
+    });
+  }
 });
 
 client.on('guildMemberRemove', (member) => {
