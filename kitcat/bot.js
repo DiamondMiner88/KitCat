@@ -98,7 +98,7 @@ client.on('message', async (message) => {
       else if (commands[commandName] === 0)
         message.channel.send('This command has been disabled on this server.');
       else if (commands[commandName] === UNDEFINED) {
-        if (acceptableCmds[commandName] === 1) {
+        if (acceptableCmds[commandName] === 1 || acceptableCmds[commandName] === UNDEFINED) {
           db.run('UPDATE settings SET commands = ?', [JSON.stringify(commands)], (err) => {
             if (err) {
               console.error(err);
