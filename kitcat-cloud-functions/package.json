@@ -1,17 +1,11 @@
 {
   "name": "kitcat-cloud-functions",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "DiamondMiner88 (https://github.com/DiamondMiner88)",
+  "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
     "form-data": "^3.0.0",
-    "node-fetch": "^2.6.0"
-  },
-  "devDependencies": {}
+    "node-fetch": "^2.6.1"
+  }
 }

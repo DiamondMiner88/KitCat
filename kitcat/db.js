@@ -1,16 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const image_blacklist_tbl = `
-CREATE TABLE IF NOT EXISTS "image_blacklist" (
-  "hash" TEXT NOT NULL UNIQUE,
-  "guild" INTEGER NOT NULL,
-  "user" INTEGER NOT NULL,
-  "reason" TEXT,
-  "url"	INTEGER,
-  PRIMARY KEY("hash")
-);
-`;
-
 const currency_tbl = `
 CREATE TABLE IF NOT EXISTS "currency" (
 	"user" INTEGER NOT NULL,
@@ -48,10 +37,6 @@ const db = new sqlite3.Database(
     else console.info('Connected to data.db!');
   }
 );
-
-db.run(image_blacklist_tbl, [], (err) => {
-  if (err) console.log(`Error creating table: ${err}`);
-});
 
 db.run(currency_tbl, [], (err) => {
   if (err) console.log(`Error creating table: ${err}`);

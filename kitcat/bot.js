@@ -6,8 +6,9 @@ require('dotenv-flow').config({
 const Discord = require('discord.js');
 const NodeCache = require('node-cache');
 const pfx = process.env.BOT_PREFIX;
+const UNDEFINED = undefined;
 
-var { db, addGuildToSettings } = require('./db.js');
+var { db, addGuildToSettings, acceptableCmds } = require('./db.js');
 
 var client = new Discord.Client();
 client.guildSettingsCache = new NodeCache();
@@ -45,16 +46,16 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberAdd', (member) => {
-  cacheGuildSettings(member.guild).then(() => {
-    const { dmTextEnabled, dmText } = client.guildSettingsCache.get(member.guild.id);
+  cacheGuildSettings(member.guild).then((settings) => {
+    const { dmTextEnabled, dmText } = settings;
     if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
   });
 });
 
-client.on('guildMemberRemove', (member) => {
-  const general = member.guild.systemChannel;
-  if (general) general.send(`${member.user} (${member.user.tag}) has left the server.`);
-});
+// client.on('guildMemberRemove', (member) => {
+//   const general = member.guild.systemChannel;
+//   if (general) general.send(`${member.user} (${member.user.tag}) has left the server.`);
+// });
 
 client.on('messageReactionAdd', (messageReaction, user) => {
   require('./commands/2048.js').onReactionAdded(messageReaction, user);
@@ -62,33 +63,11 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 
 client.on('message', async (message) => {
   if (message.author.bot) return;
-  /*
-  var url = undefined;
-  if (message.attachments.size > 0) url = message.attachments.first().url;
-  if (
-    message.content.match(/http?s:\/\/cdn\.discordapp\.com\/attachments\/.+?(?=\/)\/.+?(?=\/)\/.+/g)
-  )
-    url = message.content;
-  if (url) {
-    if (url.toLowerCase().indexOf('png', url.length - 3) !== -1) {
-      require('image-hash').imageHash(url, 16, true, (error, hash) => {
-        if (error) throw error;
-        require('./db.js').db.get(
-          'SELECT * FROM image_blacklist WHERE hash=?',
-          [hash],
-          (err, result) => {
-            if (err) console.log('Error trying get data: ' + err);
-            if (result) message.delete();
-          }
-        );
-      });
-    }
-  }
-  */
 
   const settings =
     message.channel.type !== 'dm' ? await cacheGuildSettings(message.guild) : { prefix: 'k!' };
   const { prefix: pfx } = settings;
+  const commands = JSON.parse(settings.commands);
 
   if (message.mentions.has(client.user)) return message.channel.send(`Do ${pfx}help for commands!`);
 
@@ -105,31 +84,36 @@ client.on('message', async (message) => {
   if (message.content.indexOf(pfx) !== 0) return;
 
   const command = client.commands.get(commandName);
-  if (command && command.guildOnly && message.channel.type !== 'text')
+  if (!command) return;
+  if (command.guildOnly && message.channel.type !== 'text')
     message.channel.send('This command only works in Guild Text Channels!');
-  else if (command && command.command === commandName) {
+  else if (command.nsfw === false && !message.channel.nsfw)
+    message.channel.send(
+      "This is a NSFW command. Per Discord's policy, these can only be executed in NSFW channels."
+    );
+  else if (command.command === commandName) {
     if (message.channel.type === 'dm') command.execute(message, args);
     else {
-      addGuildToSettings(message.guild.id)
-        .then(() => {
-          db.get(
-            'SELECT commands FROM settings WHERE guild=?',
-            [message.guild.id],
-            (err, result) => {
-              if (err) {
-                console.log(err.message);
-                message.channel.send('Error retrieving command data\n' + err.message);
-              } else {
-                if (JSON.parse(result.commands)[commandName] === 0)
-                  message.channel.send(
-                    'This command has been disabled on this server by administrators.'
-                  );
-                else command.execute(message, args);
-              }
+      if (commands[commandName] === 1) command.execute(message, args);
+      else if (commands[commandName] === 0)
+        message.channel.send('This command has been disabled on this server.');
+      else if (commands[commandName] === UNDEFINED) {
+        if (acceptableCmds[commandName] === 1) {
+          db.run('UPDATE settings SET commands = ?', [JSON.stringify(commands)], (err) => {
+            if (err) {
+              console.error(err);
+              message.channel.send('An error occured. Please try again later.');
             }
-          );
-        })
-        .catch((err) => message.channel.send(err));
+            client.guildSettingsCache.del(message.guild.id);
+            cacheGuildSettings(message.guild)
+              .then(() => command.execute(message, args))
+              .catch((err) => {
+                message.channel.send(err);
+                console.error(err);
+              });
+          });
+        } else message.channel.send('This command has been disabled on this server.');
+      }
     }
   }
 });

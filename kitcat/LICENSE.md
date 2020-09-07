@@ -1,0 +1,1 @@
+(c) Copyright 2015 Timofey Ignatov, all rights reserved.
