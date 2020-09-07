@@ -58,9 +58,9 @@ exports.acceptableCmds = {
   purge: 1,
   purgechannel: 1,
   say: 1,
-  sban: 1,
+  sban: 0,
   serverinfo: 1,
-  skick: 1,
+  skick: 0,
   submission: 1,
   tts: 1,
   warn: 1

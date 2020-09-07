@@ -33,7 +33,7 @@ module.exports = {
 
   /**
    * Gets random string from /config/8ball.json and sends it
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   execute(message, args) {

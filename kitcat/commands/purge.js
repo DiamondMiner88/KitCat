@@ -11,7 +11,7 @@ module.exports = {
 
   /**
    * Purges a specified amount of message from the channel
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   execute(message, args) {

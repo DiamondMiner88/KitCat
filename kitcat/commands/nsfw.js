@@ -69,11 +69,11 @@ const help = [
   }
 ];
 
-  /**
-   * Idk the specifics of this
-   * @param {Discord.TextChannel} message
-   * @param {Array.<String>} args
-   */
+/**
+ * NSFW content
+ * @param {Discord.Message} message
+ * @param {Array.<String>} args
+ */
 module.exports = {
   command: 'nsfw',
   category: require('./_CATEGORIES.js').fun,
@@ -142,18 +142,18 @@ module.exports = {
         url = `https://nekos.life/api/v2/img/${args[1]}`;
       }
       fetch(url)
-        .then(res => res.text())
-        .then(body => {
+        .then((res) => res.text())
+        .then((body) => {
           const hEmbed = new Discord.MessageEmbed()
-              .setColor('#FF69B4')
-              .setTitle("Here's some hentai")
-              .setImage(body.url)
-              .setTimestamp()
-              .setFooter(
-                `${message.author.tag} ran the commnd | Content gotten from nekos.life`,
-                message.author.avatarURL()
-              );
-            return message.channel.send(hEmbed);
+            .setColor('#FF69B4')
+            .setTitle("Here's some hentai")
+            .setImage(body.url)
+            .setTimestamp()
+            .setFooter(
+              `${message.author.tag} ran the commnd | Content gotten from nekos.life`,
+              message.author.avatarURL()
+            );
+          return message.channel.send(hEmbed);
         });
     }
   }

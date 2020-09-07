@@ -12,7 +12,7 @@ module.exports = {
   /**
    * Calculates ping between sending a message and editing it, giving a round-trip latency.
    * The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    */
   async execute(message) {
     let m = await message.channel.send('Ping?');

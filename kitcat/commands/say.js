@@ -11,7 +11,7 @@ module.exports = {
 
   /**
    * Make the bot say something
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   execute(message, args) {

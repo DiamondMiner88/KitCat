@@ -12,7 +12,7 @@ module.exports = {
 
   /**
    * Gets a random quote from https://api.quotable.io/random
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    */
   async execute(message) {
     const response = await fetch('https://api.quotable.io/random');

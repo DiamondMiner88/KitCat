@@ -11,8 +11,7 @@ module.exports = {
 
   /**
    * Claim daily oofcoins
-   * @param {Discord.TextChannel} message
-   * @param {Array.<String>} args
+   * @param {Discord.Message} message
    */
   execute(message) {
     require('../db.js').checkForProfile(message.author);

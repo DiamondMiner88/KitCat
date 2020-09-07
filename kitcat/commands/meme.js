@@ -11,7 +11,7 @@ module.exports = {
 
   /**
    * Displays a meme from r/memes
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    */
   execute(message) {
     require('../reddit.js').getTopPost(message, 'memes');

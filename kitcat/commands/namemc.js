@@ -15,7 +15,7 @@ module.exports = {
 
   /**
    * Shows info about the target Minecraft username
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   execute(message, args) {

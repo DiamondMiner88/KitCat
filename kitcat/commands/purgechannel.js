@@ -11,10 +11,9 @@ module.exports = {
 
   /**
    * Deletes the channel and creates a new one with the same properties
-   * @param {Discord.TextChannel} message
-   * @param {Array.<String>} args
+   * @param {Discord.Message} message
    */
-  execute(message, args) {
+  execute(message) {
     if (!message.member.hasPermission('MANAGE_MESSAGES'))
       return message.channel.send('You do not have the permission to manage messages.');
     if (!message.channel.deletable)

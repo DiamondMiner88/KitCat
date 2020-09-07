@@ -11,7 +11,7 @@ module.exports = {
 
   /**
    * Google TTS in a Discord VC
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   async execute(message, args) {

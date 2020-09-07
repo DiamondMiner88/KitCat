@@ -11,7 +11,7 @@ module.exports = {
 
   /**
    * Show guild info
-   * @param {Discord.TextChannel} message
+   * @param {Discord.Message} message
    * @param {Array.<String>} args
    */
   execute(message) {
