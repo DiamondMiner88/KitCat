@@ -39,62 +39,40 @@ export default function Commands(props) {
       <Navbar location={props.location} />
       <HomeSidebar />
       <CookieConsent />
-      <div className="container">{GetCommands()}</div>
-    </div>
-  );
-}
-
-function Command(title, text, id, code, perms) {
-  /**
-   * title - required
-   * text  - required
-   * id    - required
-   * code  - required
-   * perms - optional
-   */
-
-  const classes = useStyles();
-  return (
-    <Accordion className={classes.Accordion}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls={id + '-content'}
-        id={id + '-header'}
-      >
-        <Typography className={classes.heading}>{title}</Typography>
-      </AccordionSummary>
-      <AccordionDetails className={classes.background}>
-        <Typography>
-          {text}
-          <br></br>
-          <strong>Usage</strong>
-          <br></br>
-          <code className={classes.code}>{'oof ' + code}</code>
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
-  );
-}
-
-function GetCommands() {
-  const classes = useStyles();
-  return (
-    <div>
-      {commandData.categories.map((cat) => {
-        return (
-          <div>
-            <h2>{cat.help_name}</h2>
-            <div className={classes.root}>
-              {cat.commands.map((cmdName) => {
-                const cmd = commandData.commands.find((cmd) => cmd.command === cmdName);
+      <div className="container">
+        {commandData.categories.map((category) => {
+          return (
+            <div>
+              <h2>{category.display_name}</h2>
+              {category.commands.map((cmdName) => {
+                const cmd = commandData.commands.find((cmd) => cmd.executor === cmdName);
                 return (
-                  <div>{Command(cmd.help_name, cmd.help_description, cmd.command, cmd.usage)}</div>
+                  <div>
+                    <Accordion className={classes.Accordion}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls={`command-content-${cmd.executor}`}
+                        id={`command-header-${cmd.executor}`}
+                      >
+                        <Typography className={classes.heading}>{cmd.displayName}</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails className={classes.background}>
+                        <Typography>
+                          {cmd.description}
+                          <br />
+                          <strong>Usage</strong>
+                          <br />
+                          <code className={classes.code}>{`k!${cmd.executor} ${cmd.usage}`}</code>
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  </div>
                 );
               })}
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

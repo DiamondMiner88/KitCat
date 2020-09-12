@@ -1,9 +1,5 @@
 node_modules/
-config.json
-data.db
+logs/
+build/
+
 commands.json
-
-*.log
-
-.env.local
-.env.*.local
