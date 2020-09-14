@@ -4,8 +4,7 @@ import React from 'react';
 import { Link } from '@material-ui/core';
 
 // Components
-import { HomeSidebar, Navbar } from '../components';
-import { CookieConsent } from '../functions';
+import { HomeSidebar, Navbar, CookieConsent } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -51,9 +50,9 @@ export default function Home(props) {
 
   return (
     <div>
+      <CookieConsent />
       <Navbar location={props.location} />
       <HomeSidebar />
-      <CookieConsent />
       <div className="container">
         <h1>KitCat</h1>
         <h2>What is this bot?</h2>

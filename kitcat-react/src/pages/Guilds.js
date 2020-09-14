@@ -12,8 +12,7 @@ import {
 } from '@material-ui/core';
 
 // Components
-import { Navbar, HomeSidebar } from '../components';
-import { CookieConsent } from '../functions';
+import { Navbar, HomeSidebar, CookieConsent } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -127,9 +126,9 @@ export default function Guilds(props) {
 
   return (
     <div>
+      <CookieConsent />
       <Navbar location={props.location} />
       <HomeSidebar />
-      <CookieConsent />
       <div className="container">
         {guilds ? guildsComponents() : <Typography>Loading...</Typography>}
       </div>

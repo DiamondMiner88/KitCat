@@ -15,8 +15,7 @@ import {
 import { Alert } from '@material-ui/lab';
 
 // Components
-import { Navbar, GuildSidebar } from '../components';
-import { CookieConsent } from '../functions';
+import { Navbar, GuildSidebar, CookieConsent } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
@@ -117,9 +116,9 @@ export default function Guild(props) {
 
   return (
     <div>
+      <CookieConsent />
       <Navbar location={props.location} />
       <GuildSidebar onTabChange={setCurrentTab} />
-      <CookieConsent />
 
       <div className="container">
         <Snackbar open={errors.length > 0} autoHideDuration={null}>

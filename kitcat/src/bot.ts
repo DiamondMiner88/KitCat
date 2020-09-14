@@ -1,3 +1,8 @@
+// Logging
+import { initLogger } from './util/logging';
+import log4js from 'log4js';
+initLogger();
+
 // Setup Enviromenmt variables
 import path from 'path';
 import { config as dotenvconfig } from 'dotenv-flow';
@@ -9,38 +14,27 @@ dotenvconfig({
 import Discord from 'discord.js';
 import { toggleableCmds, db } from './db';
 import { getGuildSettings, IGuildSettings } from './cache';
+import { startAPI } from './api/api';
+import cleanup from 'node-cleanup';
 
 // Register commands
 import { registerCommands, commands } from './commands';
 registerCommands();
 
-const bot = new Discord.Client();
+export const bot = new Discord.Client();
+const LOGGER = log4js.getLogger('bot');
 
-// // i have no idea how this works
-// process.stdin.resume();
-// function exitHandler(options: any, exitCode: number | undefined) {
-//   if (exitCode || exitCode === 0) console.log(exitCode);
-//   if (options.exit) {
-//     console.log(`Stopping Bot and API...`);
-//     db.close();
-//     bot.destroy();
-//     process.exit();
-//   }
-// }
-// //do something when app is closing
-// process.on('exit', exitHandler.bind(null, { cleanup: true }));
-// //catches ctrl+c event
-// process.on('SIGINT', exitHandler.bind(null, { exit: true }));
-// // catches "kill pid" (for example: nodemon restart)
-// process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
-// process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
-// //catches uncaught exceptions
-// process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+cleanup((code, signal) => {
+  LOGGER.debug(`Exiting with code ${code} and signal ${signal}`);
+  bot.destroy();
+  db.close();
+  log4js.shutdown();
+});
 
 bot.on('ready', () => {
-  console.log(`Bot is ready.`);
+  LOGGER.debug('Bot is ready');
   bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.array().length} servers`);
-  // require('./api.js').startExpress(bot);
+  startAPI();
 });
 
 bot.on('guildMemberAdd', (member) => {
@@ -60,14 +54,6 @@ bot.on('message', (message) => {
   const prefix = settings ? settings.prefix : 'k!';
 
   if (message.mentions.has(bot.user)) return message.channel.send(`Do ${prefix}help for commands!`);
-
-  // if (/\{\d{1,6}\}/.test(message.content)) {
-  //   if (message.channel.type === 'dm') return require('./commands/nhentai.js').multiMatch(message);
-  //   const nhEnabled = settings.commands.nhentai;
-  //   if (nhEnabled === 1) return require('./commands/nhentai.js').multiMatch(message);
-  //   else if (nhEnabled === 0)
-  //     return message.channel.send('This command has been disabled on this server.');
-  // }
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const commandName = args.shift().toLowerCase();

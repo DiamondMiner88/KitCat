@@ -6,8 +6,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mate
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 
 // Components
-import { Navbar, HomeSidebar } from '../components';
-import { CookieConsent } from '../functions';
+import { Navbar, HomeSidebar, CookieConsent } from '../components';
 
 // Other
 import commandData from '../data/commandData';
@@ -36,9 +35,9 @@ export default function Commands(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <CookieConsent />
       <Navbar location={props.location} />
       <HomeSidebar />
-      <CookieConsent />
       <div className="container">
         {commandData.categories.map((category) => {
           return (

@@ -8,20 +8,19 @@ CREATE TABLE IF NOT EXISTS "users" (
   "user" INTEGER NOT NULL,
   "warns" INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY("guild","user")
-  );
-  `;
+);`;
 db.prepare(users_tbl).run();
 
 const settings_tbl = `
-  CREATE TABLE IF NOT EXISTS "settings" (
-    "guild"	INTEGER NOT NULL,
-    "commands"	TEXT NOT NULL,
-    "prefix"	TEXT NOT NULL DEFAULT 'k!',
-    "dmTextEnabled"	INTEGER NOT NULL DEFAULT 0,
-    "dmText"	TEXT NOT NULL DEFAULT '',
-    PRIMARY KEY("guild")
-    );
-    `;
+CREATE TABLE IF NOT EXISTS "settings" (
+  "guild"	INTEGER NOT NULL,
+  "commands" TEXT NOT NULL,
+  "prefix" TEXT NOT NULL DEFAULT 'k!',
+  "dmTextEnabled" INTEGER NOT NULL DEFAULT 0,
+  "dmText" TEXT NOT NULL DEFAULT '',
+  "audit_channel" TEXT,
+  PRIMARY KEY("guild")
+);`;
 db.prepare(settings_tbl).run();
 
 export const toggleableCmds = {

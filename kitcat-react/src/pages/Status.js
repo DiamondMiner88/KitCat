@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 
 // Components
-import { CookieConsent } from '../functions';
+import { CookieConsent } from '../components';
 
 export default function Status(prop) {
   const history = useHistory();
