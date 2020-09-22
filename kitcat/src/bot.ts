@@ -46,9 +46,9 @@ bot.on('guildMemberAdd', member => {
   if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
 });
 
-bot.on('messageReactionAdd', (messageReaction, user) => {
-  require('./commands/2048.js').onReactionAdded(messageReaction, user);
-});
+// bot.on('messageReactionAdd', (messageReaction, user) => {
+//   require('./commands/2048.js').onReactionAdded(messageReaction, user);
+// });
 
 bot.on('message', message => {
   if (message.author.bot) return;
