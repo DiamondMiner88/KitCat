@@ -5,7 +5,7 @@ import { Command } from './commands/_Command';
 import { Avatar } from './commands/avatar';
 import { Ban } from './commands/ban';
 import { CustomImg } from './commands/custom-img';
-import { DashBoard } from './commands/dashBoard';
+import { DashBoard } from './commands/dashboard';
 import { EightBall } from './commands/8ball';
 import { Help } from './commands/help';
 import { Kick } from './commands/kick';
