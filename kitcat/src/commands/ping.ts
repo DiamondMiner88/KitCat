@@ -7,7 +7,7 @@ export class Ping extends Command {
     super();
     this.executor = 'ping';
     this.category = 'kitcat';
-    this.displayName = `Bot's Ping`;
+    this.display_name = `Bot's Ping`;
     this.description = `Gets my latency.`;
     this.usage = '';
     this.guildOnly = false;

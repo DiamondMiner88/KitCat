@@ -7,7 +7,7 @@ export class Status extends Command {
     super();
     this.executor = 'status';
     this.category = 'kitcat';
-    this.displayName = `KitCat's Status`;
+    this.display_name = `KitCat's Status`;
     this.description = `KitCat's Service's Statuses`;
     this.usage = '';
     this.guildOnly = false;

@@ -18,12 +18,14 @@ CREATE TABLE IF NOT EXISTS "settings" (
   "prefix" TEXT NOT NULL DEFAULT 'k!',
   "dmTextEnabled" INTEGER NOT NULL DEFAULT 0,
   "dmText" TEXT NOT NULL DEFAULT '',
-  "audit_channel" TEXT,
+  "audit_channel" TEXT NOT NULL DEFAULT '',
   PRIMARY KEY("guild")
 );`;
 db.prepare(settings_tbl).run();
 
-export const toggleableCmds = {
+export const toggleableCmds: {
+  [key: string]: 0 | 1;
+} = {
   ban: 1,
   kick: 1,
   meme: 1,
@@ -31,7 +33,6 @@ export const toggleableCmds = {
   nsfw: 1,
   purge: 1,
   purgechannel: 1,
-  serverinfo: 1,
   submission: 1,
   tts: 1,
   warn: 1

@@ -8,7 +8,7 @@ export class Meme extends Command {
     super();
     this.executor = 'meme';
     this.category = 'fun';
-    this.displayName = '😂 Memes';
+    this.display_name = '😂 Memes';
     this.description = `Get a meme from r/dankmemes`;
     this.usage = 'meme';
     this.guildOnly = false;

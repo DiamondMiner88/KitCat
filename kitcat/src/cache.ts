@@ -1,18 +1,19 @@
 import NodeCache from 'node-cache';
-import Discord from 'discord.js';
+import { Guild, Snowflake } from 'discord.js';
 import { db, addDefaultGuildSettings, toggleableCmds } from './db';
 
 const guildSettingsCache = new NodeCache();
 
 export type IGuildSettings = {
-  guild: Discord.Snowflake;
-  commands: typeof toggleableCmds;
+  guild?: Snowflake;
   prefix: string;
-  dmTextEnabled: 0 | 1;
-  dmText: string;
+  commands?: typeof toggleableCmds;
+  dmTextEnabled?: 0 | 1;
+  dmText?: string;
+  audit_channel?: string;
 };
 
-export function getGuildSettings(guild: Discord.Guild): IGuildSettings | undefined {
+export function getGuildSettings(guild: Guild): IGuildSettings | undefined {
   const { id } = guild;
   if (guildSettingsCache.has(id)) return guildSettingsCache.get(id);
   else {
@@ -20,6 +21,7 @@ export function getGuildSettings(guild: Discord.Guild): IGuildSettings | undefin
     let row = db.prepare('SELECT * FROM settings WHERE guild = ?').get(id);
     row.commands = JSON.parse(row.commands);
     guildSettingsCache.set(guild.id, row, guild.memberCount > 10000 ? 60 * 60 * 4 : 60 * 60);
+    
     return row;
   }
 }

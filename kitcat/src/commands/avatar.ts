@@ -7,7 +7,7 @@ export class Avatar extends Command {
     super();
     this.executor = 'avatar';
     this.category = 'util';
-    this.displayName = 'Avatar';
+    this.display_name = 'Avatar';
     this.description = `Get the avatar of a user.`;
     this.usage = '{Mention | UserID | user#0000}';
     this.guildOnly = true;
@@ -22,7 +22,7 @@ export class Avatar extends Command {
     const t: Discord.GuildMember =
       message.mentions.members.first() ||
       message.guild.members.cache.get(args[0]) ||
-      message.guild.members.cache.find((member) => member.user.tag === args.join(' '));
+      message.guild.members.cache.find(member => member.user.tag === args.join(' '));
 
     if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
     const embed = new Discord.MessageEmbed()

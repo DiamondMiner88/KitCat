@@ -7,7 +7,7 @@ export class PurgeChannel extends Command {
     super();
     this.executor = 'purgechannel';
     this.category = 'moderation';
-    this.displayName = `🗑️ Purge Channel`;
+    this.display_name = `🗑️ Purge Channel`;
     this.description = `Used to delete to wipe all messages in a channel. ***This command deletes and makes a new channel. Pins will be gone***`;
     this.usage = '';
     this.guildOnly = true;
@@ -37,7 +37,7 @@ export class PurgeChannel extends Command {
       .then(() => {
         newChnl.setPosition(rawPosition);
       })
-      .catch((err) => {
+      .catch(err => {
         message.channel.send('Error deleting this channel!\n' + err.message);
       });
   }

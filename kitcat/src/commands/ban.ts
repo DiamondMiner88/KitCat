@@ -7,7 +7,7 @@ export class Ban extends Command {
     super();
     this.executor = 'ban';
     this.category = 'moderation';
-    this.displayName = '⛔ Ban';
+    this.display_name = '⛔ Ban';
     this.description = `Used to ban members.`;
     this.usage = '{Mention | UserID} [reason]';
     this.guildOnly = true;
@@ -47,11 +47,11 @@ export class Ban extends Command {
       .addField('Time', message.createdAt)
       .addField('Reason', reason);
 
-    message.channel.send(logMsg).catch((err) => {});
-    t.send(uGotBanned).catch((err) => {});
+    message.channel.send(logMsg).catch(err => {});
+    t.send(uGotBanned).catch(err => {});
 
     t.ban({
       reason: reason
-    }).catch((err) => message.channel.send(`Can't ban the user:\n${err.message}`));
+    }).catch(err => message.channel.send(`Can't ban the user:\n${err.message}`));
   }
 }

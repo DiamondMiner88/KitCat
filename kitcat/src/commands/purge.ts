@@ -7,7 +7,7 @@ export class Purge extends Command {
     super();
     this.executor = 'purge';
     this.category = 'moderation';
-    this.displayName = '🗑️ Purge';
+    this.display_name = '🗑️ Purge';
     this.description = `Used to delete messages in bulk.`;
     this.usage = '{amount: default = 5}';
     this.guildOnly = true;
@@ -32,7 +32,7 @@ export class Purge extends Command {
         .then((messages: Discord.Collection<Discord.Snowflake, Discord.Message>) => {
           message.channel
             .send(`Purged ${messages.size} messages, deleting this in 2 seconds.`)
-            .then((msg) => {
+            .then(msg => {
               msg
                 .delete({
                   timeout: 2000

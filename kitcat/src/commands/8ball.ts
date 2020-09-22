@@ -32,7 +32,7 @@ export class EightBall extends Command {
     super();
     this.executor = '8ball';
     this.category = 'fun';
-    this.displayName = '🎱 8Ball';
+    this.display_name = '🎱 8Ball';
     this.description = 'Ask the 8ball a question, and it will give you an answer.';
     this.usage = '{question}';
     this.guildOnly = false;

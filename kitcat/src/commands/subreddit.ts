@@ -8,7 +8,7 @@ export class Subreddit extends Command {
     super();
     this.executor = 'subreddit';
     this.category = 'fun';
-    this.displayName = '🌐 Subreddit';
+    this.display_name = '🌐 Subreddit';
     this.description = `Get a top post from a subreddit! (NSFW subreddits allowed in NSFW channels)`;
     this.usage = '{subreddit}';
     this.guildOnly = false;

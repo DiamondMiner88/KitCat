@@ -7,7 +7,7 @@ export class Kick extends Command {
     super();
     this.executor = 'kick';
     this.category = 'moderation';
-    this.displayName = '🦵 Kick';
+    this.display_name = '🦵 Kick';
     this.description = `Used to kick members.`;
     this.usage = '{Mention | UserID} [reason]';
     this.guildOnly = true;
@@ -47,11 +47,11 @@ export class Kick extends Command {
       .addField('Time', message.createdAt)
       .addField('Reason', reason);
 
-    message.channel.send(logMsg).catch((err) => {});
-    t.send(uGotKicked).catch((err) => {});
+    message.channel.send(logMsg).catch(err => {});
+    t.send(uGotKicked).catch(err => {});
 
     t.ban({
       reason: reason
-    }).catch((err) => message.channel.send(`Error kicking user: ${err.message}`));
+    }).catch(err => message.channel.send(`Error kicking user: ${err.message}`));
   }
 }

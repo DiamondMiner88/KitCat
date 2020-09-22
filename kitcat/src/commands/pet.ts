@@ -8,7 +8,7 @@ export class Pet extends Command {
     super();
     this.executor = 'pet';
     this.category = 'fun';
-    this.displayName = '🌭 Pet';
+    this.display_name = '🌭 Pet';
     this.description = `Get a photo/gif of kitties, dogs or other cute pets!`;
     this.usage = '{animal name | help}';
     this.guildOnly = false;

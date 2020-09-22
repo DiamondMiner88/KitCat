@@ -7,7 +7,7 @@ export class CustomImg extends Command {
     super();
     this.executor = 'custom-img';
     this.category = 'fun';
-    this.displayName = '📷 Photo Commands';
+    this.display_name = '📷 Photo Commands';
     this.description = 'Image commands to make kool custom photos.';
     this.usage = 'help';
     this.guildOnly = false;

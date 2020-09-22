@@ -1,11 +1,15 @@
 {
   "name": "kitcat-cloud-functions",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KitCat-Bot/KitCat-Source.git"
+  },
   "version": "1.0.0",
   "main": "main.js",
   "author": "DiamondMiner88 (https://github.com/DiamondMiner88)",
   "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
-    "form-data": "^3.0.0",
     "node-fetch": "^2.6.1"
   }
 }

@@ -13,28 +13,34 @@ import bodyParser from 'body-parser';
 const //
   api = express(),
   keyPath = path.join(__dirname, '../../config/ssl/server.key'),
-  certPath = path.join(__dirname, '../../config/ssl/server.cert');
+  certPath = path.join(__dirname, '../../config/ssl/server.cert'),
+  useHTTPS = fs.existsSync(keyPath) && fs.existsSync(certPath);
 api.use(bodyParser.json());
 
 // APIs by version
 import v1_0_0 from './api-1.0.0';
-api.use('/api/v1.0.0', v1_0_0);
+api.use('/', v1_0_0);
 
 export function startAPI() {
-  const onStart = () => LOGGER.debug('Listening at port 4000');
+  if (!useHTTPS)
+    LOGGER.debug('Private key/cert are missing so starting a http server instead of https');
 
-  if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
-    https
-      .createServer(
+  const server = useHTTPS
+    ? https.createServer(
         {
           key: fs.readFileSync(keyPath),
           cert: fs.readFileSync(certPath)
         },
         api
       )
-      .listen(4000, onStart);
-  } else {
-    LOGGER.debug('Private key or cert is missing so starting a http server instead of https');
-    http.createServer(api).listen(4000, onStart);
+    : http.createServer(api);
+
+  server.on('listening', () => LOGGER.debug('API listening at port 4000'));
+  server.on('error', (error) => LOGGER.fatal(error.message));
+
+  try {
+    server.listen(4000);
+  } catch (error) {
+    JSON.parse(JSON.stringify(error));
   }
 }

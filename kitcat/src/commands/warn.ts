@@ -8,7 +8,7 @@ export class Warn extends Command {
     super();
     this.executor = 'warn';
     this.category = 'moderation';
-    this.displayName = `⚠️ Warn`;
+    this.display_name = `⚠️ Warn`;
     this.description = `Joins your VC and says what you want it to say!`;
     this.usage = '{Mention | UserID} [reason]';
     this.guildOnly = true;

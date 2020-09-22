@@ -1,18 +1,16 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './_Command';
-
 import fetch from 'node-fetch';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
+import dateformat from 'dateformat';
+import markdownescape from '../util/markdownescape';
 
 export class NameMC extends Command {
   constructor() {
     super();
     this.executor = 'namemc';
     this.category = 'util';
-    this.displayName = 'Minecarft Username History';
+    this.display_name = 'Minecarft Username History';
     this.description = `See usernames's skin, username history, and a link to thier NameMC.`;
     this.usage = '{username}';
     this.guildOnly = false;
@@ -23,11 +21,11 @@ export class NameMC extends Command {
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
     if (args.length === 0) return message.channel.send("You didn't provide a username. :P");
     fetch(`https://api.mojang.com/users/profiles/minecraft/${args[0]}`)
-      .then((res) => res.json())
-      .then((user) => {
+      .then(res => res.json())
+      .then(user => {
         fetch(`https://api.mojang.com/user/profiles/${user.id}/names`)
-          .then((res) => res.json())
-          .then((names) => {
+          .then(res => res.json())
+          .then(names => {
             let embed = new Discord.MessageEmbed()
               .setTitle(user.name)
               .setDescription('Usernames:')
@@ -36,26 +34,25 @@ export class NameMC extends Command {
               .setImage(`https://minotar.net/armor/body/${user.name}/100.png`);
 
             if (names.error)
-              message.channel.send(
+              return message.channel.send(
                 names.errorMessage +
                   '\nPlease try again in a few seconds. I have no idea why this happens. Will try to fix later.'
               );
-            else {
-              for (const name of names) {
-                const date = dayjs(name.changedToAt).utc().format('MMM D, YYYY h:mm:ss A');
-                embed.addField(
-                  name.name.replace('_', '\\_'),
-                  name.changedToAt ? (date + ' UTC').replace('_', '\\_') : 'Initial name'
-                );
-              }
-              message.channel.send(embed);
-            }
+
+            names.forEach((name: any) => {
+              // const date = dayjs(name.changedToAt).utc().format('MMM D, YYYY h:mm:ss A');
+              const date = 'temp';
+              embed.addField(
+                markdownescape(name.name),
+                markdownescape(name.changedToAt ? `${date} UTC` : 'Initial username')
+              );
+            });
+
+            message.channel.send(embed);
           })
-          .catch((error) => {
-            message.channel.send(error.message);
-          });
+          .catch(error => message.channel.send(error.message));
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.message.startsWith('invalid json response body at'))
           message.channel.send('This this not a valid user!');
         else {

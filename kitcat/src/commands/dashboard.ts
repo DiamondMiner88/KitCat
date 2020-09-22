@@ -7,7 +7,7 @@ export class DashBoard extends Command {
     super();
     this.executor = 'dashboard';
     this.category = 'kitcat';
-    this.displayName = 'Dashboard';
+    this.display_name = 'Dashboard';
     this.description = `Link to this server's dashboard.`;
     this.usage = '';
     this.guildOnly = true;

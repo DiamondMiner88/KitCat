@@ -11,7 +11,7 @@ export class Help extends Command {
     super();
     this.executor = 'help';
     this.category = 'kitcat';
-    this.displayName = 'Help';
+    this.display_name = 'Help';
     this.description = `What you're looking at right now.`;
     this.usage = '[category]';
     this.guildOnly = false;
@@ -22,37 +22,44 @@ export class Help extends Command {
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
     const prefix = settings ? settings.prefix : 'k!';
     if (args.length === 0) {
-      const help = new Discord.MessageEmbed()
-        .setColor(0xf9f5ea)
-        .setTitle('Categories')
-        .setFooter(footer);
-      categories.forEach((category) => {
+      const embed = new Discord.MessageEmbed().setColor(0xf9f5ea).setTitle('Categories');
+      categories.forEach(category => {
         let desc = category.description !== '' ? category.description + '\n' : '';
         desc += `\`${prefix}help ${category.name}\``;
 
-        help.addField(category.display_name, desc);
+        embed.addField(category.display_name, desc);
       });
-      help.addField('Bugs', `See an issue? Report it [here](${gh_issues}).`);
-      message.channel.send(help);
-    } else if (!categories.some((category) => category.name === args[0])) {
-      message.channel.send(`That category doesn't exist!`);
-    } else {
-      const category = categories.find((category) => category.name === args[0]);
+      embed.addField('Bugs', `See an issue? Report it [here](${gh_issues}).\n${footer}`);
+      message.channel.send(embed);
+    } else if (
+      !categories.some(c => c.name === args[0]) &&
+      !commands.some(c => c.executor === args[0])
+    )
+      message.channel.send(`No commands or categories under that name exist!`);
+    else {
+      const target =
+        categories.find(c => c.name === args[0]) || commands.find(c => c.executor === args[0]);
 
-      const help = new Discord.MessageEmbed()
-        .setColor(0xf9f5ea)
-        .setTitle('Commands')
-        .setDescription(category.display_name)
-        .setFooter(footer);
+      const embed = new Discord.MessageEmbed().setColor(0xf9f5ea);
 
-      commands
-        .filter((command) => command.category === category.name)
-        .forEach((command) => {
-          const commandHelp = command.getCommandHelp(settings);
-          help.addField(commandHelp[0], commandHelp[1]);
-        });
-      help.addField('Bugs', `See an issue? Report it [here](${gh_issues}).`);
-      message.channel.send(help);
+      if (target instanceof Command) {
+        embed.setTitle(target.display_name);
+        embed.addField(
+          target.description !== '' ? target.description : '\u200B',
+          target.getUsage(settings)
+        );
+      } else {
+        embed.setTitle(target.display_name);
+        commands
+          .filter(c => c.category === target.name && !c.unlisted)
+          .forEach(c => {
+            const commandHelp = c.getCommandHelp(settings);
+            embed.addField(commandHelp[0], commandHelp[1]);
+          });
+      }
+
+      embed.addField('Bugs', `See an issue? Report it [here](${gh_issues}).\n${footer}`);
+      message.channel.send(embed);
     }
   }
 }

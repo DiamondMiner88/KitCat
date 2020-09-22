@@ -9,7 +9,7 @@ export class NHentai extends Command {
     super();
     this.executor = 'nhentai';
     this.category = 'util';
-    this.displayName = 'NHentai';
+    this.display_name = 'NHentai';
     this.description = `Details about a certain doujinshi.`;
     this.usage = '{number}';
     this.guildOnly = false;
@@ -19,7 +19,7 @@ export class NHentai extends Command {
 
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
     if (args.length === 0) return message.channel.send(`You didn't provide a number to research!`);
-    args.forEach((str) => {
+    args.forEach(str => {
       if (!str.match(/\d{1,6}/g)) return message.channel.send(`\`${str}\` is not a valid number`);
       else getByID(message, Number(str));
     });
@@ -28,8 +28,8 @@ export class NHentai extends Command {
 
 function getByID(message: Discord.Message, doujin: number) {
   getData(doujin)
-    .then((data) => message.channel.send(constructEmbed(data)))
-    .catch((error) => {
+    .then(data => message.channel.send(constructEmbed(data)))
+    .catch(error => {
       if (error === 'Request failed with status code 404')
         message.channel.send(`\`${doujin}\` is not a valid doujinshi!`);
       else message.channel.send('Error: ' + error);
@@ -60,21 +60,21 @@ function getData(bookID: number): Promise<TBookData> {
   return new Promise((resolve, reject) => {
     api
       .getBook(bookID)
-      .then((book) => {
+      .then(book => {
         resolve({
           url: 'https://nhentai.net/g/' + book.id,
           id: book.id,
           titles: book.title,
-          parodies: book.tags.filter((tag) => tag.type.type === 'parody'),
-          characters: book.tags.filter((tag) => tag.type.type === 'character'),
-          tags: book.tags.filter((tag) => tag.type.type === 'tag'),
-          artists: book.tags.filter((tag) => tag.type.type === 'artist'),
-          groups: book.tags.filter((tag) => tag.type.type === 'group'),
-          lang: book.tags.filter((tag) => tag.type.type === 'language'),
+          parodies: book.tags.filter(tag => tag.type.type === 'parody'),
+          characters: book.tags.filter(tag => tag.type.type === 'character'),
+          tags: book.tags.filter(tag => tag.type.type === 'tag'),
+          artists: book.tags.filter(tag => tag.type.type === 'artist'),
+          groups: book.tags.filter(tag => tag.type.type === 'group'),
+          lang: book.tags.filter(tag => tag.type.type === 'language'),
           coverURL: `https://t.nhentai.net/galleries/${book.media}/cover.${book.cover.type.extension}`
         });
       })
-      .catch((error) => reject(error.message));
+      .catch(error => reject(error.message));
   });
 }
 

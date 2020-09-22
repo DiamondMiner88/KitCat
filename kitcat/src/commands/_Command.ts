@@ -1,23 +1,29 @@
 import { Message } from 'discord.js';
+import { Logger, getLogger } from 'log4js';
 import { IGuildSettings } from '../cache';
 
 export class Command {
+  // LOGGER: Logger;
   executor: string;
   category: ICategories;
-  displayName: string | undefined;
+  display_name: string | undefined;
   description: string | undefined;
   usage: string | undefined;
   guildOnly: boolean | undefined;
   unlisted: boolean | undefined;
   nsfw: boolean | undefined;
 
-  protected getUsage(settings: IGuildSettings) {
+  constructor() {
+    // this.LOGGER = getLogger(`CMD-${this.executor}`);
+  }
+
+  getUsage(settings: IGuildSettings) {
     return `\`${settings.prefix}${this.executor}${this.usage != null ? ' ' + this.usage : ''}\``;
   }
 
   getCommandHelp(settings: IGuildSettings): [string, string] {
     return [
-      this.displayName != null ? this.displayName : this.executor,
+      this.display_name != null ? this.display_name : this.executor,
       (this.description != null ? this.description + '\n' : '') + this.getUsage(settings)
     ];
   }

@@ -6,7 +6,7 @@ import { commands, registerCommands } from '../commands';
 registerCommands();
 
 type DataCategory = ICategory & { commands: string[] }; // ICategory type + a 'command' field thats a string array
-type DataCommand = Omit<Command, 'unlisted' | 'run' | 'getCommandHelp'>; // Remove certain properties from Command to make an optimized type
+type DataCommand = Pick<Command, 'executor' | 'category' | 'display_name' | 'description' | 'usage' | 'guildOnly' | 'nsfw'>; // Remove certain properties from Command to make an optimized type
 
 const data: {
   commands: DataCommand[];

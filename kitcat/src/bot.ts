@@ -3,11 +3,15 @@ import { initLogger } from './util/logging';
 import log4js from 'log4js';
 initLogger();
 
-// Setup Enviromenmt variables
+// Setup Enviromenmt variables/Command line arguments
+import yargs from 'yargs';
 import path from 'path';
 import { config as dotenvconfig } from 'dotenv-flow';
+export const argv = yargs
+  .choices('enviroment', ['development', 'production'])
+  .option('no-api', { description: 'Start bot without api', type: 'boolean' }).argv;
 dotenvconfig({
-  node_env: process.argv[2] || 'development',
+  node_env: argv.enviroment || 'development',
   path: path.join(__dirname, '../config')
 });
 
@@ -33,11 +37,11 @@ cleanup((code, signal) => {
 
 bot.on('ready', () => {
   LOGGER.debug('Bot is ready');
-  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.array().length} servers`);
-  startAPI();
+  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`);
+  if (argv.api) startAPI();
 });
 
-bot.on('guildMemberAdd', (member) => {
+bot.on('guildMemberAdd', member => {
   const { dmTextEnabled, dmText } = getGuildSettings(member.guild);
   if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
 });
@@ -46,18 +50,18 @@ bot.on('messageReactionAdd', (messageReaction, user) => {
   require('./commands/2048.js').onReactionAdded(messageReaction, user);
 });
 
-bot.on('message', (message) => {
+bot.on('message', message => {
   if (message.author.bot) return;
 
-  const settings: IGuildSettings | undefined =
-    message.channel.type !== 'dm' ? getGuildSettings(message.guild) : null;
-  const prefix = settings ? settings.prefix : 'k!';
+  const settings: IGuildSettings =
+    message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
+  const { prefix } = settings;
 
   if (message.mentions.has(bot.user)) return message.channel.send(`Do ${prefix}help for commands!`);
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const commandName = args.shift().toLowerCase();
-  if (message.content.indexOf(prefix) !== 0) return;
+  if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
 
   const command = commands.get(commandName);
   if (!command) return;
@@ -70,23 +74,17 @@ bot.on('message', (message) => {
   else if (command.executor === commandName) {
     if (message.channel.type === 'dm') command.run(message, args, settings);
     else {
-      // @ts-ignore // FIX THIS LATER I HAVE NO IDEA HOW TO FIX LMAO
-      const commandEnabled = settings.commands[commandName];
-      switch (commandEnabled) {
+      switch (settings.commands[commandName]) {
         case 1:
-          command.run(message, args, settings);
-          break;
+          return command.run(message, args, settings);
         case 0:
-          message.channel.send('This command has been disabled on this server.');
-          break;
+          return message.channel.send('This command has been disabled on this server.');
         case undefined:
-          // @ts-ignore same as above comment
           if (toggleableCmds[commandName] === undefined || toggleableCmds[commandName] === 1)
             command.run(message, args, settings);
           else message.channel.send('This command has been disabled on this server.');
-          // @ts-ignore same as above comment
           if (toggleableCmds[commandName] !== undefined) {
-            // add update db to enable command
+            // add update db to enable command to
           }
       }
     }
