@@ -2,13 +2,13 @@ import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './_Command';
 
-export class Avatar extends Command {
+export class Pfp extends Command {
   constructor() {
     super();
-    this.executor = 'avatar';
+    this.executor = 'pfp';
     this.category = 'util';
-    this.display_name = 'Avatar';
-    this.description = `Get the avatar of a user.`;
+    this.display_name = 'Profile Picture';
+    this.description = `Get the profile picture of a user.`;
     this.usage = '{Mention | UserID | user#0000}';
     this.guildOnly = true;
     this.unlisted = false;
@@ -26,7 +26,7 @@ export class Avatar extends Command {
 
     if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${message.author.tag}'s avatar`)
+      .setTitle(`${t.user.tag}'s avatar`)
       .setColor(0xf9f5ea)
       .addField(
         'PNG Format',
