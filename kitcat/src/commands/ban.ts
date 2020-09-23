@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
+import { userBypass } from '../util/permissions';
 
 export class Ban extends Command {
   constructor() {
@@ -16,7 +17,7 @@ export class Ban extends Command {
   }
 
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
-    if (!message.member.hasPermission('BAN_MEMBERS'))
+    if (!message.member.hasPermission('BAN_MEMBERS') && !userBypass(message.author.id))
       return message.channel.send(`You can't ban people!`);
 
     if (args.length === 0)

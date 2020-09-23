@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
+import { userBypass } from '../util/permissions';
 
 export class Eval extends Command {
   constructor() {
@@ -16,7 +17,7 @@ export class Eval extends Command {
   }
 
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
-    if (!['295190422244950017'].includes(message.author.id)) return;
+    if (!userBypass(message.author.id)) return;
     function clean(text: string) {
       if (typeof text === 'string')
         return text
@@ -26,14 +27,13 @@ export class Eval extends Command {
     }
 
     try {
-      const code = args.join(' ');
-      let evaled = eval(code);
+      const Discord = require('discord.js'); // Import lib so you don't have to do it when evaling
 
+      let evaled = eval(args.join(' '));
       if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
-
       message.channel.send(clean(evaled), { code: 'xl' });
-    } catch (err) {
-      message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+    } catch (error) {
+      message.channel.send(`\`\`\`xl\n${clean(error)}\n\`\`\``);
     }
   }
 }

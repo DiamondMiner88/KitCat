@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
+import { userBypass } from '../util/permissions';
 
 export class Purge extends Command {
   constructor() {
@@ -18,7 +19,7 @@ export class Purge extends Command {
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
     if (message.channel.type === 'dm') return; // Avoid TS errors
 
-    if (!message.member.hasPermission('MANAGE_MESSAGES')) {
+    if (!message.member.hasPermission('MANAGE_MESSAGES') && !userBypass(message.author.id)) {
       message.channel.send('You do not have the permission to manage messages.');
       return;
     }
