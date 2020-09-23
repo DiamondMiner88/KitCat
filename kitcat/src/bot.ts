@@ -46,9 +46,13 @@ bot.on('guildMemberAdd', member => {
   if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
 });
 
-// bot.on('messageReactionAdd', (messageReaction, user) => {
-//   require('./commands/2048.js').onReactionAdded(messageReaction, user);
-// });
+bot.on('guildCreate', guild =>
+  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`)
+);
+
+bot.on('guildDelete', guild =>
+  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`)
+);
 
 bot.on('message', message => {
   if (message.author.bot) return;
