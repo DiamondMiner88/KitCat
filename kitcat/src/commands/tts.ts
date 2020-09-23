@@ -7,7 +7,7 @@ import Discord, {
   VoiceChannel
 } from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import { bot } from '../bot';
 
 const queue: Record<

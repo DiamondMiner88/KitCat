@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import { db } from '../db';
 
 export class Warn extends Command {

@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
 
 // Must be first command import or it becomes some sort of dependency loop
-import { Command } from './commands/_Command';
+import { Command } from './commands/CommandBase';
 
 import { Ban } from './commands/ban';
 import { CustomImg } from './commands/custom-img';

@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import { API as NHAPI, Tag, BookTitle } from 'nhentai-api';
 const api = new NHAPI();
 

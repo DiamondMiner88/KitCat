@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import dateformat from 'dateformat';
 
 export class ServerInfo extends Command {

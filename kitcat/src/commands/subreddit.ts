@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import { getTopPost } from '../util/reddit';
 
 export class Subreddit extends Command {

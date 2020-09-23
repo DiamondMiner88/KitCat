@@ -1,7 +1,7 @@
 console.log('It will say "Connected to data.db!" This is normal.');
 
 import fs from 'fs';
-import { categories, ICategory, Command } from '../commands/_Command';
+import { categories, ICategory, Command } from '../commands/CommandBase';
 import { commands, registerCommands } from '../commands';
 registerCommands();
 

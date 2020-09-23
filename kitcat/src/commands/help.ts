@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command, categories } from './_Command';
+import { Command, categories } from './CommandBase';
 import { commands } from '../commands';
 
 const gh_issues = 'https://github.com/KitCat-Bot/KitCat/issues';

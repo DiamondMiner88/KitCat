@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
 import fetch from 'node-fetch';
 import dateformat from 'dateformat';
 import markdownescape from '../util/markdownescape';

@@ -3,15 +3,16 @@ import { Logger, getLogger } from 'log4js';
 import { IGuildSettings } from '../cache';
 
 export class Command {
-  // LOGGER: Logger;
   executor: string;
+  aliases: string[];
   category: ICategories;
-  display_name: string | undefined;
-  description: string | undefined;
-  usage: string | undefined;
-  guildOnly: boolean | undefined;
-  unlisted: boolean | undefined;
-  nsfw: boolean | undefined;
+  display_name: string;
+  description?: string;
+  usage?: string;
+  guildOnly?: boolean = true;
+  unlisted?: boolean = false;
+  nsfw?: boolean = false;
+  // LOGGER: Logger = getLogger(`CMD-${this.executor}`);
 
   constructor() {
     // this.LOGGER = getLogger(`CMD-${this.executor}`);
