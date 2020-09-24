@@ -31,6 +31,8 @@ export class Eval extends Command {
 
       let evaled = eval(args.join(' '));
       if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
+      if (clean(evaled).length > 2000)
+        return message.channel.send(`Can't send message, is bigger than 2000 characters.`);
       message.channel.send(clean(evaled), { code: 'xl' });
     } catch (error) {
       message.channel.send(`\`\`\`xl\n${clean(error)}\n\`\`\``);
