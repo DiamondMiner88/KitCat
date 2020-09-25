@@ -57,6 +57,17 @@ bot.on('guildDelete', guild =>
 bot.on('message', message => {
   if (message.author.bot) return;
 
+  if (
+    (message.content.includes('gay') || message.content.includes('gae')) &&
+    message.guild.id === '752212085672247296'
+  ) {
+    message.delete().catch(() => {});
+    message.author
+      .send("Your message was deleted because 'gay' is forbidden on this server.")
+      .catch(() => {});
+    return;
+  }
+
   const settings: IGuildSettings =
     message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
   const { prefix } = settings;
