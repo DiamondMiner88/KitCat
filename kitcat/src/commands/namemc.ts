@@ -3,7 +3,7 @@ import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import fetch from 'node-fetch';
 import dateformat from 'dateformat';
-import markdownescape from '../util/markdownescape';
+import markdownescape from '../util/escapeMarkdown';
 
 export class NameMC extends Command {
   constructor() {
