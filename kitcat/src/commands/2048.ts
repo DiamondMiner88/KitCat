@@ -10,6 +10,7 @@ type Game = {
   score: number;
   tiles: Record<string, number>;
   collector: MessageCollector;
+  lastMoveTime?: Date;
 };
 
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -82,9 +83,10 @@ async function updateBoard(channel: TextChannel) {
   }
 
   const embed = new MessageEmbed()
-    .setTitle(`:two::zero::four::eight:`)
+    .setTitle(`2048`)
     .setDescription(`Score: ${data.score} | Moves: ${data.moves}`)
     .setColor(0xf9f5ea)
+    .setFooter('Move by saying the direction or w/a/s/d')
     .setImage('attachment://grid.png');
 
   channel.send({
@@ -153,14 +155,9 @@ function newGame(channel: TextChannel, size: number) {
     }
   });
 
-  data.collector.on('end', () => {
-    updateBoard(channel).then(() => {
-      delete games[channel.guild.id];
-    });
-  });
+  data.collector.on('end', () => updateBoard(channel).then(() => delete games[channel.guild.id]));
 }
 
-// fix this
 function isGameOver(guildid: Snowflake) {
   const data = games[guildid];
   for (let y = 0; y < data.size; y++) {
