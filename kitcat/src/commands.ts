@@ -23,6 +23,7 @@ import { Status } from './commands/status';
 import { Subreddit } from './commands/subreddit';
 import { TTS } from './commands/tts';
 import { Warn } from './commands/warn';
+import { TwoThousandFortyEight } from './commands/2048';
 
 export const commands: Collection<string, Command> = new Collection();
 
@@ -47,7 +48,8 @@ export function registerCommands() {
     new Status(),
     new Subreddit(),
     new TTS(),
-    new Warn()
+    new Warn(),
+    new TwoThousandFortyEight()
   ];
   cmdsToRegister.forEach(command => commands.set(command.executor, command));
 }
