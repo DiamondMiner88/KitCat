@@ -32,10 +32,13 @@ export class Pet extends Command {
         );
       case 'cat':
       case 'kitty':
-        return message.channel.send('No cat images for now! Coming very soon!');
+        return message.channel.send(new Discord.MessageEmbed()
+          .setTitle('Here\'s a cat for you!')
+          .setImage("https://cataas.com/cat")
+        );
       case 'dog':
-        const res = await fetch('https://dog.ceo/api/breeds/image/random');
-        const json = await res.json();
+        var res = await fetch('https://dog.ceo/api/breeds/image/random');
+        var json = await res.json();
         if (json.status !== 'success') {
           console.error('Dog image api error!');
           console.error(json);
@@ -46,7 +49,7 @@ export class Pet extends Command {
         return message.channel.send(
           new Discord.MessageEmbed()
             .setColor(0xf9f5ea)
-            .setTitle("Here's A Doggo For You!")
+            .setTitle("Here's A doggo For You!")
             .setImage(json.message)
         );
     }
