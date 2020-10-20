@@ -56,15 +56,28 @@ const hentai_commands = [
   'erokemo'
 ];
 
+// const NSFW_HELP = {
+//   "hentai": {
+//     extension: "hentai",
+//     description: "Gives Hentai images/gifs",
+//     usuage: "{hentai category | help}"
+//   }
+// }
+
+const NSFW_HELP = new Discord.MessageEmbed()
+  .setTitle("NSFW Help")
+  .addFields(
+    { name: 'Hentai', value: 'Gives Hentai imgages/gifs' }
+  );
 
 export class NSFW extends Command {
   constructor() {
     super();
     this.executor = 'nsfw';
     this.category = 'fun';
-    this.display_name = '🎱 8Ball';
-    this.description = 'Ask the 8ball a question, and it will give you an answer.';
-    this.usage = '{question}';
+    this.display_name = '😏 NSFW';
+    this.description = 'Get NSFW images/gifs/videos.';
+    this.usage = '{hentai category | help}';
     this.guildOnly = false;
     this.unlisted = false;
     this.nsfw = false;
@@ -109,6 +122,8 @@ export class NSFW extends Command {
             message.author.avatarURL()
           )
         );
+      case 'help':
+        return message.channel.send(NSFW_HELP);
     }
   }
 }
