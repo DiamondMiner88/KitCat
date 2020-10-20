@@ -24,6 +24,7 @@ import { Subreddit } from './commands/subreddit';
 import { TTS } from './commands/tts';
 import { Warn } from './commands/warn';
 import { TwoThousandFortyEight } from './commands/2048';
+import { NSFW } from './commands/nsfw';
 
 export const commands: Collection<string, Command> = new Collection();
 
@@ -49,7 +50,8 @@ export function registerCommands() {
     new Subreddit(),
     new TTS(),
     new Warn(),
-    new TwoThousandFortyEight()
+    new TwoThousandFortyEight(),
+    new NSFW()
   ];
   cmdsToRegister.forEach(command => commands.set(command.executor, command));
 }
