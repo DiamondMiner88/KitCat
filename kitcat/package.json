@@ -31,6 +31,7 @@
     "node-cache": "^5.1.2",
     "node-cleanup": "^2.1.2",
     "node-fetch": "^2.6.1",
+    "pornhub.js": "^0.2.2",
     "request": "^2.88.2",
     "snoowrap": "^1.21.0",
     "yargs": "^16.1.0"
