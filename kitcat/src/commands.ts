@@ -25,6 +25,7 @@ import { TTS } from './commands/tts';
 import { Warn } from './commands/warn';
 import { TwoThousandFortyEight } from './commands/2048';
 import { NSFW } from './commands/nsfw';
+import { Hug } from './commands/hug';
 
 export const commands: Collection<string, Command> = new Collection();
 
@@ -51,7 +52,8 @@ export function registerCommands() {
     new TTS(),
     new Warn(),
     new TwoThousandFortyEight(),
-    new NSFW()
+    new NSFW(),
+    new Hug()
   ];
   cmdsToRegister.forEach(command => commands.set(command.executor, command));
 }

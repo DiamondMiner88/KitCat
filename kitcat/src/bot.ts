@@ -61,8 +61,8 @@ bot.on('message', message => {
     message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
   const { prefix } = settings;
 
-  if (message.mentions.has(bot.user, { ignoreRoles: true, ignoreEveryone: true }))
-    return message.channel.send(`Do ${prefix}help for commands!`);
+  if (message.mentions.has(bot.user, { ignoreRoles: true, ignoreEveryone: true }) && !message.toString().toLowerCase().includes(prefix.toLowerCase()))
+    return message.channel.send(`Do ${prefix} help for commands!`);
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const commandName = args.shift().toLowerCase();
