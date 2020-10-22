@@ -13,7 +13,7 @@ db.prepare(users_tbl).run();
 
 const settings_tbl = `
 CREATE TABLE IF NOT EXISTS "settings" (
-  "guild"	INTEGER NOT NULL,
+  "guild"	TEXT NOT NULL,
   "commands" TEXT NOT NULL,
   "prefix" TEXT NOT NULL DEFAULT 'k!',
   "dmTextEnabled" INTEGER NOT NULL DEFAULT 0,
@@ -23,9 +23,16 @@ CREATE TABLE IF NOT EXISTS "settings" (
 );`;
 db.prepare(settings_tbl).run();
 
-export const toggleableCmds: {
-  [key: string]: 0 | 1;
-} = {
+const selfroles_tbl = `
+CREATE TABLE IF NOT EXISTS "selfroles" (
+	"message" TEXT NOT NULL UNIQUE,
+  "guild" TEXT NOT NULL,
+	"roles" TEXT NOT NULL,
+	PRIMARY KEY("message")
+);`;
+db.prepare(selfroles_tbl).run();
+
+export const toggleableCmds: Record<string, 0 | 1> = {
   ban: 1,
   kick: 1,
   meme: 1,

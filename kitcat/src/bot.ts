@@ -20,12 +20,13 @@ import { toggleableCmds, db } from './db';
 import { getGuildSettings, IGuildSettings } from './cache';
 import { startAPI } from './api/api';
 import cleanup from 'node-cleanup';
+import * as selfroles from './commands/roles';
 
 // Register commands
 import { registerCommands, commands } from './commands';
 registerCommands();
 
-export const bot = new Discord.Client();
+export const bot = new Discord.Client({ partials: ['REACTION', 'MESSAGE'] });
 const LOGGER = log4js.getLogger('bot');
 
 cleanup((code, signal) => {
@@ -34,6 +35,9 @@ cleanup((code, signal) => {
   db.close();
   log4js.shutdown();
 });
+
+bot.on('messageReactionAdd', selfroles.onMessageReactionAdd);
+bot.on('messageReactionRemove', selfroles.onMessageReactionRemove);
 
 bot.on('ready', () => {
   LOGGER.debug('Bot is ready');
@@ -54,7 +58,15 @@ bot.on('guildDelete', guild =>
   bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`)
 );
 
-bot.on('message', message => {
+bot.on('message', async message => {
+  try {
+    await message.fetch();
+  } catch (error) {
+    console.log('message partial error');
+    console.log(error);
+    return;
+  }
+
   if (message.author.bot) return;
 
   const settings: IGuildSettings =
