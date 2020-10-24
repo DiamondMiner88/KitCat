@@ -27,6 +27,7 @@ import { TwoThousandFortyEight } from './commands/2048';
 import { NSFW } from './commands/nsfw';
 import { Roles } from './commands/roles';
 import { Hug } from './commands/hug';
+import { Joke } from './commands/joke';
 
 export const commands: Collection<string, Command> = new Collection();
 
@@ -55,7 +56,8 @@ export function registerCommands() {
     new TwoThousandFortyEight(),
     new NSFW(),
     new Roles(),
-    new Hug()
+    new Hug(),
+    new Joke()
   ];
   cmdsToRegister.forEach(command => commands.set(command.executor, command));
 }

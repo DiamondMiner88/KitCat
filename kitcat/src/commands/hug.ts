@@ -12,6 +12,12 @@ const PEOPLE_HUG = [
   "https://media.giphy.com/media/3bqtLDeiDtwhq/giphy.gif",
   "https://media.giphy.com/media/rSNAVVANV5XhK/giphy.gif",
   "https://media.giphy.com/media/VXP04aclCaUfe/giphy.gif",
+  "https://media.giphy.com/media/1MI7djBqXTWrm/giphy.gif",
+  "https://media.giphy.com/media/szxw88uS1cq4M/giphy.gif",
+  "https://media.giphy.com/media/pN4sNFDT0vEwU/giphy.gif",
+  "https://media.giphy.com/media/GJ5ktSzR3ffos/giphy.gif",
+  "https://media.giphy.com/media/3o6ZsTopjMRVkJXAWI/giphy.gif",
+  "https://media.giphy.com/media/jTSOClK7HBoMaVn5Hi/giphy.gif"
 ]
 
 export class Hug extends Command {
@@ -29,6 +35,7 @@ export class Hug extends Command {
 
   run(message: Discord.Message, args: string[], settings: IGuildSettings) {
     var mentions = message.mentions.users;
+    if (mentions.size === 0) return message.channel.send("You didn't mention someone to hug!");
     var hug = new Discord.MessageEmbed().setImage(PEOPLE_HUG[Math.floor(Math.random() * PEOPLE_HUG.length)]);
     if (mentions.has(message.author.id)) {
       return message.channel.send("I see you need a hug!\n", hug);
@@ -40,6 +47,6 @@ export class Hug extends Command {
       else if (!mentions.has(mention)) peoples.push("**" + mention.username + "**");
     });
     var people = peoples.join(', ');
-    return message.channel.send(`:people_hugging: ${people} has been hugged by **${message.author.username}**!`, hug);
+    return message.channel.send(`:people_hugging: ${people} have/has been hugged by **${message.author.username}**!`, hug);
   }
 }
