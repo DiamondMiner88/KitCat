@@ -4,7 +4,7 @@ import { bot } from '../bot';
 
 export default async function (request: Request, response: Response) {
   const { username, action, channel } = request.body;
-  if (!username || !action) return response.status(400).send('');
+  if (!username || !action || !channel) return response.status(400).send('');
 
   let chnl: Channel;
   try {

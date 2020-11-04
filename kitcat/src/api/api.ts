@@ -14,8 +14,7 @@ const //
   api = express(),
   keyPath = path.join(__dirname, '../../config/ssl/server.key'),
   certPath = path.join(__dirname, '../../config/ssl/server.cert'),
-  // useHTTPS = fs.existsSync(keyPath) && fs.existsSync(certPath);
-  useHTTPS = false;
+  useHTTPS = fs.existsSync(keyPath) && fs.existsSync(certPath);
 api.use(bodyParser.json());
 
 // APIs by version
