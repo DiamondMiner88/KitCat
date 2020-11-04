@@ -18,8 +18,12 @@ const //
 api.use(bodyParser.json());
 
 // APIs by version
-import v1_0_0 from './api-1.0.0';
-api.use('/', v1_0_0);
+// import v1_0_0 from './api-1.0.0';
+// api.use('/', v1_0_0);
+
+// mc logging
+import mclogging from './mclogging';
+api.post('/mclog', mclogging);
 
 export function startAPI() {
   if (!useHTTPS)
@@ -36,7 +40,7 @@ export function startAPI() {
     : http.createServer(api);
 
   server.on('listening', () => LOGGER.debug('API listening at port 4000'));
-  server.on('error', (error) => LOGGER.fatal(error.message));
+  server.on('error', error => LOGGER.error(error.message));
 
   try {
     server.listen(4000);
