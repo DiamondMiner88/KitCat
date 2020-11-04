@@ -42,7 +42,8 @@ bot.on('messageReactionRemove', selfroles.onMessageReactionRemove);
 bot.on('ready', () => {
   LOGGER.debug('Bot is ready');
   bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`);
-  if (argv.api) startAPI();
+  
+  if (argv.api !== false) startAPI();
 });
 
 bot.on('guildMemberAdd', member => {
