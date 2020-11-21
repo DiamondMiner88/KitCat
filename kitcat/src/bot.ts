@@ -1,3 +1,7 @@
+// Clear the console
+import clear from 'clear';
+clear();
+
 // Logging
 import { initLogger } from './util/logging';
 import log4js from 'log4js';

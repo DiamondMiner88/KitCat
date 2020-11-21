@@ -4,8 +4,8 @@
     "description": "The only thing this bot has is stupidity and power.",
     "scripts": {
         "build": "rm -rf build && \"node_modules/.bin/tsc\"",
-        "start": "npm run build && cd build && clear && node bot.js --enviroment development",
-        "prod": "npm run build && cd build && clear && node bot.js --enviroment production",
+        "development": "npm run build && cd build && node bot.js --enviroment development",
+        "production": "npm run build && cd build && node bot.js --enviroment production",
         "pi": "putty -load \"pi\" -l pi -pw raspberry"
     },
     "repository": {
@@ -20,6 +20,7 @@
         "better-sqlite3": "^7.1.1",
         "body-parser": "^1.19.0",
         "canvas": "^2.6.1",
+        "clear": "^0.1.0",
         "dateformat": "^4.0.0",
         "discord.js": "^12.4.1",
         "dotenv-flow": "^3.2.0",
@@ -33,14 +34,16 @@
         "pornhub.js": "^0.2.4",
         "request": "^2.88.2",
         "snoowrap": "^1.21.0",
+        "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz",
         "yargs": "^16.1.1"
     },
     "devDependencies": {
         "@types/better-sqlite3": "^5.4.1",
         "@types/body-parser": "^1.19.0",
+        "@types/clear": "^0.1.0",
         "@types/dateformat": "^3.0.1",
         "@types/dotenv-flow": "^3.1.0",
-        "@types/express": "^4.17.9",
+        "@types/express": "^4.17.8",
         "@types/node": "^14.14.9",
         "@types/node-cleanup": "^2.1.1",
         "@types/node-fetch": "^2.5.7",
