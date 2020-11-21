@@ -34,7 +34,6 @@
         "pornhub.js": "^0.2.4",
         "request": "^2.88.2",
         "snoowrap": "^1.21.0",
-        "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz",
         "yargs": "^16.1.1"
     },
     "devDependencies": {
