@@ -3,6 +3,6 @@ export const CUSTOM_EMOJI_REGEX = /<?(a)?:?(\w{2,32}):(\d{17,19})>?/;
 export const NAMED_CUSTOM_EMOJI_REGEX = /<?(?<animated>a)?:?(?<name>\w{2,32}):(?<id>\d{17,19})>?/;
 
 // number clamp
-export function clamp(number: number, min: number, max: number) {
-  return Math.max(min, Math.min(number, max));
-};
+export function clamp(num: number, min: number, max: number) {
+    return Math.max(min, Math.min(num, max));
+}

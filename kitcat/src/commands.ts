@@ -12,9 +12,8 @@ import { Help } from './commands/help';
 import { Kick } from './commands/kick';
 import { Meme } from './commands/meme';
 import { NameMC } from './commands/namemc';
-import { NHentai } from './commands/nhentai';
 import { Pet } from './commands/pet';
-import { Pfp } from './commands/pfp';
+import { Pfp } from './commands/avatar';
 import { Ping } from './commands/ping';
 import { Purge } from './commands/purge';
 import { PurgeChannel } from './commands/purgechannel';
@@ -24,7 +23,6 @@ import { Subreddit } from './commands/subreddit';
 import { TTS } from './commands/tts';
 import { Warn } from './commands/warn';
 import { TwoThousandFortyEight } from './commands/2048';
-import { NSFW } from './commands/nsfw';
 import { Roles } from './commands/roles';
 import { Hug } from './commands/hug';
 import { Joke } from './commands/joke';
@@ -32,32 +30,30 @@ import { Joke } from './commands/joke';
 export const commands: Collection<string, Command> = new Collection();
 
 export function registerCommands() {
-  const cmdsToRegister: Command[] = [
-    new Ban(),
-    new CustomImg(),
-    new DashBoard(),
-    new EightBall(),
-    new Eval(),
-    new Help(),
-    new Kick(),
-    new Meme(),
-    new NameMC(),
-    new NHentai(),
-    new Pet(),
-    new Pfp(),
-    new Ping(),
-    new Purge(),
-    new PurgeChannel(),
-    new ServerInfo(),
-    new Status(),
-    new Subreddit(),
-    new TTS(),
-    new Warn(),
-    new TwoThousandFortyEight(),
-    new NSFW(),
-    new Roles(),
-    new Hug(),
-    new Joke()
-  ];
-  cmdsToRegister.forEach(command => commands.set(command.executor, command));
+    const cmdsToRegister: Command[] = [
+        new Ban(),
+        new CustomImg(),
+        new DashBoard(),
+        new EightBall(),
+        new Eval(),
+        new Help(),
+        new Kick(),
+        new Meme(),
+        new NameMC(),
+        new Pet(),
+        new Pfp(),
+        new Ping(),
+        new Purge(),
+        new PurgeChannel(),
+        new ServerInfo(),
+        new Status(),
+        new Subreddit(),
+        new TTS(),
+        new Warn(),
+        new TwoThousandFortyEight(),
+        new Roles(),
+        new Hug(),
+        new Joke(),
+    ];
+    cmdsToRegister.forEach((command) => commands.set(command.executor, command));
 }

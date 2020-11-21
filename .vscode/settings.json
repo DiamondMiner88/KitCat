@@ -1,11 +1,6 @@
 {
-    "prettier.printWidth": 100,
-    "prettier.trailingComma": "none",
-    "prettier.singleQuote": true,
     "files.exclude": {
         "**/node_modules": true
     },
-    "editor.tabSize": 2,
-    "prettier.arrowParens": "avoid",
-    "prettier.quoteProps": "consistent"
+    "editor.tabSize": 4
 }

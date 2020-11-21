@@ -1,6 +1,14 @@
+import { settings } from 'cluster';
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
-import { Command } from './_Command';
+import { Command } from './CommandBase';
+import { TextChannel } from 'discord.js';
+import { showCompletionScript, strict } from 'yargs';
+
+const fetch = require('node-fetch');
+
+const PH = require('pornhub.js');
+const phub = new PH();
 
 const hentai_commands = [
   'classic',
@@ -49,106 +57,98 @@ const hentai_commands = [
   'waifu',
   'pwankg',
   'eron',
-  'erokemo'
+  'erokemo',
+  'ass',
+  'thighs',
+  'panties',
+  'feet'
 ];
 
-const help = [
-  {
-    name: ':hot_face: Hentai',
-    description: `Gives a gif or image out of a category of Hentai.\n\`${pfx}nsfw hentai {type}\`. Run \`${pfx}nsfw hentai help\` for all the available categories.`
-  },
-  {
-    name: ':paperclip: Custom Clip Search',
-    description: `Gives a small video clip (WITH AUDIO).\n\`${pfx}nsfw clip {query}\``
-  },
-  {
-    name: ':play_pause: Video',
-    description: `Sends embed with title of video, thumbnail (Doesn't work sometimes), and link. \`${pfx}nsfw video {query}\``
-  }
+const DABI_OPTIONS = [
+  'ass',
+  'thighs',
+  'panties',
+  'feet'
 ];
 
+// const NSFW_HELP = {
+//   "hentai": {
+//     extension: "hentai",
+//     description: "Gives Hentai images/gifs",
+//     usuage: "{hentai category | help}"
+//   }
+// }
 
-export class EightBall extends Command {
+const NSFW_HELP = new Discord.MessageEmbed()
+  .setTitle("NSFW Help")
+  .addFields(
+    { name: 'Hentai', value: 'Gives Hentai imgages/gifs\n``hentai {category}``' },
+    { name: 'Search', value: 'Search for videos/images/gifs\n``search {type: video/gif/album/pornstar} {query}``' }
+  );
+
+export class NSFW extends Command {
   constructor() {
     super();
-    this.executor = '';
-    this.category = 'Category';
-    this.displayName = 'Display Name';
-    this.description = 'Description';
-    this.usage = 'Usage';
+    this.executor = 'nsfw';
+    this.category = 'fun';
+    this.display_name = '😏 NSFW';
+    this.description = 'Get NSFW images/gifs/videos.';
+    this.usage = '{help}';
     this.guildOnly = false;
     this.unlisted = false;
     this.nsfw = false;
   }
 
-  run(message: Discord.Message, args: string[], settings: IGuildSettings) {
-    if (!message.channel.nsfw) {
-      message.channel.send('This command can only be run in channels marked NSFW.');
-      return;
+  async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    const { prefix } = settings;
+    if (!(message.channel as TextChannel).nsfw) {
+      return message.channel.send('This command can only be run in channels marked NSFW.');;
     }
     if (args.length === 0) {
-      message.channel.send(`No paramaters entered. Run \`${pfx}nsfw help\` for more information.`);
+      message.channel.send(`No paramaters entered. Run \`${prefix}nsfw help\` for more information.`);
       return;
     }
     switch(args[0].toLowerCase()) {
-      case 'help':
-        const hEmbed = new Discord.MessageEmbed().setColor(0xf9f5ea).setTitle('Help');
-        for (var items in help) {
-          hEmbed.addField(help[items].name, help[items].description);
-        }
-        return message.channel.send(hEmbed);
-      case 'clip':
-        const search = require('pornsearch');
-        const searcher = search.search(args.slice(1, args.length).join(' '));
-        searcher.gifs().then((gifs: any) => {
-          var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
-          return message.channel.send(`Title: \`${random.title}\`\n${random.webm}`);
+      case 'search':
+        var search = phub.search(args[1].toLowerCase().charAt(0).toUpperCase() + args[1].toLowerCase().slice(1), args.slice(2).join(" "), {})
+        if (search === undefined) return message.channel.send("Unknown category or unknown seach.");
+        search.then((res: any) => {
+          return message.channel.send(res.data[Math.floor(Math.random() * res.data.length)]);
         });
-      case 'video':
-        const search = require('pornsearch');
-        const searcher = search.search(args.slice(1, args.length).join(' '), (driver = 'sex'));
-        searcher.videos().then((gifs: any) => {
-          var random = gifs.slice(1, gifs.length)[Math.floor(Math.random() * gifs.length)];
-          var embed = new Discord.MessageEmbed()
-            .setTitle(random.title.replace(/\n/gm, '').replace(/\ {2,}/gm, ' '))
-            .setColor(0xf9f5ea)
-            .setImage(random.thumb)
-            .addField('Video Link', random.url)
-            .setTimestamp()
-            .setFooter(`${message.author.tag} ran the commnd`, message.author.avatarURL());
-          return message.channel.send(embed);
-        });
+        break;
       case 'hentai':
         if (args[1] === 'help') {
-          message.channel.send(`Here are your options: \`${hentai_commands.join(', ')}\``);
-          return;
+          return message.channel.send(`Here are your options: \`${hentai_commands.join(', ')}\``);
         }
         if (!hentai_commands.includes(args[1])) {
-          message.channel.send(
-            `You didn't provide a valid hentai type. Run \`${pfx}nsfw hentai help\``
+          return message.channel.send(
+            `You didn't provide a valid hentai type. Run \`${prefix}nsfw hentai help\``
           );
-          return;
         }
-        var url = '';
+        var url;
+      
+        var nekos_url;
         if (args.length < 2) {
-          url = `https://nekos.life/api/v2/img/Random_hentai_gif`;
+          nekos_url = `https://nekos.life/api/v2/img/Random_hentai_gif`;
         } else {
-          url = `https://nekos.life/api/v2/img/${args[1]}`;
+          nekos_url = `https://nekos.life/api/v2/img/${args[1]}`;
         }
-        fetch(url)
-          .then((res) => res.text())
-          .then((body) => {
-            const hEmbed = new Discord.MessageEmbed()
-              .setColor('#FF69B4')
-              .setTitle("Here's some hentai")
-              .setImage(body.url)
-              .setTimestamp()
-              .setFooter(
-                `${message.author.tag} ran the commnd | Content gotten from nekos.life`,
-                message.author.avatarURL()
-              );
-            return message.channel.send(hEmbed);
-          });
+        var res = await fetch(nekos_url);
+        var json = await res.json();
+        url = json.url;
+        console.log(url)
+        return message.channel.send(new Discord.MessageEmbed()
+          .setColor('#FF69B4')
+          .setTitle("Here's some Hentai")
+          .setImage(url)
+          .setTimestamp()
+          .setFooter(
+            `${message.author.tag} ran the commnd | ❤️ Content gotten from nekos.life ❤️`,
+            message.author.avatarURL()
+          )
+        );
+      case 'help':
+        return message.channel.send(NSFW_HELP);
     }
   }
 }

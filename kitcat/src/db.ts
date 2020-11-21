@@ -33,21 +33,21 @@ CREATE TABLE IF NOT EXISTS "selfroles" (
 db.prepare(selfroles_tbl).run();
 
 export const toggleableCmds: Record<string, 0 | 1> = {
-  ban: 1,
-  kick: 1,
-  meme: 1,
-  nhentai: 1,
-  nsfw: 1,
-  purge: 1,
-  purgechannel: 1,
-  submission: 1,
-  tts: 1,
-  warn: 1
+    ban: 1,
+    kick: 1,
+    meme: 1,
+    nhentai: 1,
+    nsfw: 1,
+    purge: 1,
+    purgechannel: 1,
+    submission: 1,
+    tts: 1,
+    warn: 1,
 };
 
 export function addDefaultGuildSettings(guildid: string) {
-  db.prepare('INSERT OR IGNORE INTO settings (guild, commands) VALUES(?, ?)').run(
-    guildid,
-    JSON.stringify(toggleableCmds)
-  );
+    db.prepare('INSERT OR IGNORE INTO settings (guild, commands) VALUES(?, ?)').run(
+        guildid,
+        JSON.stringify(toggleableCmds)
+    );
 }

@@ -8,11 +8,11 @@ import yargs from 'yargs';
 import path from 'path';
 import { config as dotenvconfig } from 'dotenv-flow';
 export const argv = yargs
-  .choices('enviroment', ['development', 'production'])
-  .option('no-api', { description: 'Start bot without api', type: 'boolean' }).argv;
+    .choices('enviroment', ['development', 'production'])
+    .option('no-api', { description: 'Start bot without api', type: 'boolean' }).argv;
 dotenvconfig({
-  node_env: argv.enviroment || 'development',
-  path: path.join(__dirname, '../config')
+    node_env: argv.enviroment || 'development',
+    path: path.join(__dirname, '../config'),
 });
 
 import Discord from 'discord.js';
@@ -30,83 +30,79 @@ export const bot = new Discord.Client({ partials: ['REACTION', 'MESSAGE'] });
 const LOGGER = log4js.getLogger('bot');
 
 cleanup((code, signal) => {
-  LOGGER.debug(`Exiting with code ${code} and signal ${signal}`);
-  bot.destroy();
-  db.close();
-  log4js.shutdown();
+    LOGGER.debug(`Exiting with code ${code} and signal ${signal}`);
+    bot.destroy();
+    db.close();
+    log4js.shutdown();
 });
 
 bot.on('messageReactionAdd', selfroles.onMessageReactionAdd);
 bot.on('messageReactionRemove', selfroles.onMessageReactionRemove);
 
 bot.on('ready', () => {
-  LOGGER.debug('Bot is ready');
-  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`);
-  
-  if (argv.api !== false) startAPI();
+    LOGGER.debug('Bot is ready');
+    bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`);
+
+    if (argv.api !== false) startAPI();
 });
 
-bot.on('guildMemberAdd', member => {
-  const { dmTextEnabled, dmText } = getGuildSettings(member.guild);
-  if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
+bot.on('guildMemberAdd', (member) => {
+    const { dmTextEnabled, dmText } = getGuildSettings(member.guild);
+    if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
 });
 
-bot.on('guildCreate', guild =>
-  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`)
-);
+bot.on('guildCreate', (_guild) => bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`));
 
-bot.on('guildDelete', guild =>
-  bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`)
-);
+bot.on('guildDelete', (_guild) => bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`));
 
-bot.on('message', async message => {
-  try {
-    await message.fetch();
-  } catch (error) {
-    console.log('message partial error');
-    console.log(error);
-    return;
-  }
-
-  if (message.author.bot) return;
-
-  const settings: IGuildSettings =
-    message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
-  const { prefix } = settings;
-
-  if (message.mentions.has(bot.user, { ignoreRoles: true, ignoreEveryone: true }) && !message.toString().toLowerCase().includes(prefix.toLowerCase()))
-    return message.channel.send(`Do ${prefix} help for commands!`);
-
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
-  const commandName = args.shift().toLowerCase();
-  if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
-
-  const command = commands.get(commandName);
-  if (!command) return;
-  if (command.guildOnly && message.channel.type !== 'text')
-    message.channel.send('This command only works in Guild Text Channels!');
-  else if (message.channel.type !== 'dm' && command.nsfw === true && !message.channel.nsfw)
-    message.channel.send(
-      "This is a NSFW command. Per Discord's policy, these can only be executed in NSFW channels."
-    );
-  else if (command.executor === commandName) {
-    if (message.channel.type === 'dm') command.run(message, args, settings);
-    else {
-      switch (settings.commands[commandName]) {
-        case 1:
-          return command.run(message, args, settings);
-        case 0:
-          return message.channel.send('This command has been disabled on this server.');
-        case undefined:
-          if (toggleableCmds[commandName] === undefined || toggleableCmds[commandName] === 1)
-            command.run(message, args, settings);
-          else message.channel.send('This command has been disabled on this server.');
-          if (toggleableCmds[commandName] !== undefined) {
-            // add update db to enable command to
-          }
-      }
+bot.on('message', async (message) => {
+    try {
+        await message.fetch();
+    } catch (error) {
+        return;
     }
-  }
+
+    if (message.author.bot) return;
+
+    const settings: IGuildSettings = message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
+    const { prefix } = settings;
+
+    if (
+        message.mentions.has(bot.user, { ignoreRoles: true, ignoreEveryone: true }) &&
+        !message.toString().toLowerCase().includes(prefix.toLowerCase())
+    )
+        return message.channel.send(`Do ${prefix} help for commands!`);
+
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const commandName = args.shift().toLowerCase();
+    if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
+
+    const command = commands.get(commandName);
+    if (!command) return;
+    if (command.guildOnly && message.channel.type !== 'text')
+        message.channel.send('This command only works in Guild Text Channels!');
+    else if (message.channel.type !== 'dm' && command.nsfw === true && !message.channel.nsfw)
+        message.channel.send(
+            `This is a NSFW command. Per Discord's policy, these can only be executed in NSFW channels.`
+        );
+    else if (command.executor === commandName) {
+        if (message.channel.type === 'dm') command.run(message, args, settings);
+        else {
+            switch (settings.commands[commandName]) {
+                case 1:
+                    return command.run(message, args, settings);
+                case 0:
+                    return message.channel.send('This command has been disabled on this server.');
+                case undefined:
+                    if (toggleableCmds[commandName] === undefined || toggleableCmds[commandName] === 1)
+                        command.run(message, args, settings);
+                    else message.channel.send('This command has been disabled on this server.');
+                    if (toggleableCmds[commandName] !== undefined) {
+                        // add update db to enable command to
+                    }
+            }
+        }
+    }
 });
 
 bot.login(process.env.BOT_TOKEN);
