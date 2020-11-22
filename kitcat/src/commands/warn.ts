@@ -5,17 +5,14 @@ import { db } from '../db';
 import { userBypass } from '../util/permissions';
 
 export class Warn extends Command {
-    constructor() {
-        super();
-        this.executor = 'warn';
-        this.category = 'moderation';
-        this.display_name = `⚠️ Warn`;
-        this.description = `Joins your VC and says what you want it to say!`;
-        this.usage = '{Mention | UserID} [reason]';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'warn';
+    category = 'moderation';
+    display_name = `⚠️ Warn`;
+    description = `Joins your VC and says what you want it to say!`;
+    usage = '{Mention | UserID} [reason]';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('KICK_MEMBERS') && !userBypass(message.author.id)) {

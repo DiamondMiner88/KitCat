@@ -3,17 +3,14 @@ import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 export class Pfp extends Command {
-    constructor() {
-        super();
-        this.executor = 'avatar';
-        this.category = 'util';
-        this.display_name = 'Profile Picture';
-        this.description = `Get the profile picture of a user.`;
-        this.usage = '{Mention | UserID | user#0000}';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'avatar';
+    category = 'util';
+    display_name = 'Profile Picture';
+    description = `Get the profile picture of a user.`;
+    usage = '{Mention | UserID | user#0000}';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.getUsage(settings));

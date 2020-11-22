@@ -3,17 +3,14 @@ import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 export class CustomImg extends Command {
-    constructor() {
-        super();
-        this.executor = 'custom-img';
-        this.category = 'fun';
-        this.display_name = '📷 Photo Commands';
-        this.description = 'Image commands to make kool custom photos.';
-        this.usage = 'help';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'custom-img';
+    category = 'fun';
+    display_name = '📷 Photo Commands';
+    description = 'Image commands to make kool custom photos.';
+    usage = 'help';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         const prefix = settings ? settings.prefix : 'k!';

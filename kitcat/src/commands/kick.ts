@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import { userBypass } from '../util/permissions';
 
 export class Kick extends Command {
-    constructor() {
-        super();
-        this.executor = 'kick';
-        this.category = 'moderation';
-        this.display_name = '🦵 Kick';
-        this.description = `Used to kick members.`;
-        this.usage = '{Mention | UserID} [reason]';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'kick';
+    category = 'moderation';
+    display_name = '🦵 Kick';
+    description = `Used to kick members.`;
+    usage = '{Mention | UserID} [reason]';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('KICK_MEMBERS') && !userBypass(message.author.id))

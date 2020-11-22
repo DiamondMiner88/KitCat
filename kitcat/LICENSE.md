@@ -1,1 +1,1 @@
-(c) Copyright 2015 Timofey Ignatov, all rights reserved.
+(c) Copyright 2020 DiamondMiner88, all rights reserved.

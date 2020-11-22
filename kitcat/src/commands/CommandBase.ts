@@ -5,7 +5,7 @@ import { IGuildSettings } from '../cache';
 export class Command {
     executor: string;
     aliases: string[];
-    category: ICategories;
+    category: string;
     display_name: string;
     description?: string;
     usage?: string;

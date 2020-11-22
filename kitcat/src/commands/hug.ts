@@ -21,17 +21,14 @@ const PEOPLE_HUG = [
 ];
 
 export class Hug extends Command {
-    constructor() {
-        super();
-        this.executor = 'hug';
-        this.category = 'fun';
-        this.display_name = '🤗 Hug';
-        this.description = 'Hug someone!';
-        this.usage = '{Mention}';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'hug';
+    category = 'fun';
+    display_name = '🤗 Hug';
+    description = 'Hug someone!';
+    usage = '{Mention}';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         const mentions = message.mentions.users;

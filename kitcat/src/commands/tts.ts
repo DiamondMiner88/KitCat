@@ -15,17 +15,14 @@ const queue: Record<
 const playing: Record<Snowflake, boolean> = {};
 
 export class TTS extends Command {
-    constructor() {
-        super();
-        this.executor = 'tts';
-        this.category = 'util';
-        this.display_name = `🤖 Text-To-Speech`;
-        this.description = `Joins your VC and says what you want it to say!`;
-        this.usage = '{Text}';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'tts';
+    category = 'util';
+    display_name = `🤖 Text-To-Speech`;
+    description = `Joins your VC and says what you want it to say!`;
+    usage = '{Text}';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     async run(message: Message, args: string[], settings: IGuildSettings) {
         if (args.length === 0) {

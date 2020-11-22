@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import fetch from 'node-fetch';
 
 export class Pet extends Command {
-    constructor() {
-        super();
-        this.executor = 'pet';
-        this.category = 'fun';
-        this.display_name = '🌭 Pet';
-        this.description = `Get a photo/gif of kitties, dogs or other cute pets!`;
-        this.usage = '{animal name | help}';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'pet';
+    category = 'fun';
+    display_name = '🌭 Pet';
+    description = `Get a photo/gif of kitties, dogs or other cute pets!`;
+    usage = '{animal name | help}';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         const { prefix } = settings;

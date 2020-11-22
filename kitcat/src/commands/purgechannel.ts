@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import { userBypass } from '../util/permissions';
 
 export class PurgeChannel extends Command {
-    constructor() {
-        super();
-        this.executor = 'purgechannel';
-        this.category = 'moderation';
-        this.display_name = `🗑️ Purge Channel`;
-        this.description = `Used to delete to wipe all messages in a channel. ***This command deletes and makes a new channel. Pins will be gone***`;
-        this.usage = '';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'purgechannel';
+    category = 'moderation';
+    display_name = `🗑️ Purge Channel`;
+    description = `Used to delete to wipe all messages in a channel. ***This command deletes and makes a new channel. Pins will be gone***`;
+    usage = '';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (message.channel.type === 'dm') return; // Avoid TS errors

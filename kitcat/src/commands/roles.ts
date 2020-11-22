@@ -17,17 +17,14 @@ import { addSelfRolesToDB } from '../cache';
 import { userBypass } from '../util/permissions';
 
 export class Roles extends Command {
-    constructor() {
-        super();
-        this.executor = 'roles';
-        this.category = 'moderation';
-        this.display_name = 'Reaction Roles';
-        this.description = `Make a message that when reacted to, assigns you a role.`;
-        this.usage = '';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'roles';
+    category = 'moderation';
+    display_name = 'Reaction Roles';
+    description = `Make a message that when reacted to, assigns you a role.`;
+    usage = '';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('MANAGE_ROLES') && !userBypass(message.author.id))

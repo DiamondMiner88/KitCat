@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import { userBypass } from '../util/permissions';
 
 export class Purge extends Command {
-    constructor() {
-        super();
-        this.executor = 'purge';
-        this.category = 'moderation';
-        this.display_name = '🗑️ Purge';
-        this.description = `Used to delete messages in bulk.`;
-        this.usage = '{amount: default = 5}';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'purge';
+    category = 'moderation';
+    display_name = '🗑️ Purge';
+    description = `Used to delete messages in bulk.`;
+    usage = '{amount: default = 5}';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('MANAGE_MESSAGES') && !userBypass(message.author.id)) {

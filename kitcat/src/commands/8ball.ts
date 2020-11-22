@@ -28,17 +28,14 @@ const eightball_config = {
 };
 
 export class EightBall extends Command {
-    constructor() {
-        super();
-        this.executor = '8ball';
-        this.category = 'fun';
-        this.display_name = '🎱 8Ball';
-        this.description = 'Ask the 8ball a question, and it will give you an answer.';
-        this.usage = '{question}';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = '8ball';
+    category = 'fun';
+    display_name = '🎱 8Ball';
+    description = 'Ask the 8ball a question, and it will give you an answer.';
+    usage = '{question}';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (args.length === 0) message.channel.send(`You didn't ask a question! ;(`);

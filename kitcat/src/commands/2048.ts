@@ -18,17 +18,14 @@ type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 const games: Record<Snowflake, Game> = {};
 
 export class TwoThousandFortyEight extends Command {
-    constructor() {
-        super();
-        this.executor = '2048';
-        this.category = 'games';
-        this.display_name = ':1234: 2048';
-        this.description = 'Play 2048 in Discord';
-        this.usage = 'help';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = '2048';
+    category = 'games';
+    display_name = ':1234: 2048';
+    description = 'Play 2048 in Discord';
+    usage = 'help';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Message, args: string[], settings: IGuildSettings) {
         const { prefix } = settings;

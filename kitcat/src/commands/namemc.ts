@@ -6,17 +6,14 @@ import fetch from 'node-fetch';
 import markdownescape from '../util/escapeMarkdown';
 
 export class NameMC extends Command {
-    constructor() {
-        super();
-        this.executor = 'namemc';
-        this.category = 'util';
-        this.display_name = 'Minecarft Username History';
-        this.description = `See usernames's skin, username history, and a link to thier NameMC.`;
-        this.usage = '{username}';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'namemc';
+    category = 'util';
+    display_name = 'Minecarft Username History';
+    description = `See usernames's skin, username history, and a link to thier NameMC.`;
+    usage = '{username}';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (args.length === 0) return message.channel.send(`You didn't provide a username. :P`);

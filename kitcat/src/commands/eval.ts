@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import { userBypass } from '../util/permissions';
 
 export class Eval extends Command {
-    constructor() {
-        super();
-        this.executor = 'eval';
-        this.category = 'util';
-        this.display_name = 'Eval';
-        this.description = `Eval command`;
-        this.usage = '';
-        this.guildOnly = false;
-        this.unlisted = true;
-        this.nsfw = false;
-    }
+    executor = 'eval';
+    category = 'util';
+    display_name = 'Eval';
+    description = `Eval command`;
+    usage = '';
+    guildOnly = false;
+    unlisted = true;
+    nsfw = false;
 
     async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!userBypass(message.author.id)) return;

@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import dateformat from 'dateformat';
 
 export class ServerInfo extends Command {
-    constructor() {
-        super();
-        this.executor = 'serverinfo';
-        this.category = 'util';
-        this.display_name = 'Server Info';
-        this.description = `Gives statu on this server.`;
-        this.usage = '';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'serverinfo';
+    category = 'util';
+    display_name = 'Server Info';
+    description = `Gives statu on this server.`;
+    usage = '';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         const guild = await message.guild.fetch();

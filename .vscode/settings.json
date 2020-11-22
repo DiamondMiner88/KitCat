@@ -1,3 +1,8 @@
 {
-    "editor.tabSize": 4
+    "editor.tabSize": 4,
+    "files.exclude": {
+        "**/build": true,
+        "**/package-lock.json": true,
+        "**/node_modules": true
+    }
 }

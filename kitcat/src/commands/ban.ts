@@ -4,17 +4,14 @@ import { Command } from './CommandBase';
 import { userBypass } from '../util/permissions';
 
 export class Ban extends Command {
-    constructor() {
-        super();
-        this.executor = 'ban';
-        this.category = 'moderation';
-        this.display_name = '⛔ Ban';
-        this.description = `Used to ban members.`;
-        this.usage = '{Mention | UserID} [reason]';
-        this.guildOnly = true;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'ban';
+    category = 'moderation';
+    display_name = '⛔ Ban';
+    description = `Used to ban members.`;
+    usage = '{Mention | UserID} [reason]';
+    guildOnly = true;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('BAN_MEMBERS') && !userBypass(message.author.id))

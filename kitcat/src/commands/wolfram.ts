@@ -325,7 +325,6 @@ const api = new WolframAlphaAPI('3K5593-UJEWH5VHRJ');
 
 export class Wolfram extends Command {
     executor = 'wolfram';
-    // @ts-expect-error
     category = 'util';
     display_name = `Bot's Ping`;
     description = `Ask a mathematical or analytical question you want answered.`;

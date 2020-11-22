@@ -7,17 +7,14 @@ const gh_issues = 'https://github.com/KitCat-Bot/KitCat/issues';
 const footer = 'Command format: `[]` = Optional, `{}` = Required, `|` = Or';
 
 export class Help extends Command {
-    constructor() {
-        super();
-        this.executor = 'help';
-        this.category = 'kitcat';
-        this.display_name = 'Help';
-        this.description = `What you're looking at right now.`;
-        this.usage = '[category]';
-        this.guildOnly = false;
-        this.unlisted = false;
-        this.nsfw = false;
-    }
+    executor = 'help';
+    category = 'kitcat';
+    display_name = 'Help';
+    description = `What you're looking at right now.`;
+    usage = '[category]';
+    guildOnly = false;
+    unlisted = false;
+    nsfw = false;
 
     run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         const prefix = settings ? settings.prefix : 'k!';
