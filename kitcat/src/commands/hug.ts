@@ -42,7 +42,7 @@ export class Hug extends Command {
             return message.channel.send('Thanks for the hug :blush:!', hug);
 
         const people = mentions
-            .map((u) => (u === message.client.user ? 'me (thanks! :blush:)' : `**${u.username}**`))
+            .map((u) => (u === message.client.user ? `**${u.username}** (thanks! :blush:)` : `**${u.username}**`))
             .join(', ');
 
         return message.channel.send(`${people}, you got hugged by **${message.author.username}**!`, hug);

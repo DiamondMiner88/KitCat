@@ -7,7 +7,7 @@ export class Joke extends Command {
     executor = 'joke';
     category = 'fun';
     display_name = '😂 Joke';
-    description = `Get a (probably bad) joke. (Isn't your life a big enough joke already?)`;
+    description = `Get a (probably bad) joke.`;
     usage = '';
     guildOnly = false;
     unlisted = false;
