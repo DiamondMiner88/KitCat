@@ -1,12 +1,9 @@
 import Discord, { Collection } from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 //#region WolframAlphaAPI
 import https from 'https';
 import querystring from 'querystring';
-import { inspect } from 'util';
-import { splitInChunks } from '../util/utils';
 
 const baseApiUrl = 'https://api.wolframalpha.com/';
 const createApiParamsRejectMsg = 'method only receives string or object';
@@ -334,7 +331,7 @@ export class Wolfram extends Command {
     unlisted = true;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[]): Promise<any> {
         const query = args.join(' ');
 
         api.getFull(

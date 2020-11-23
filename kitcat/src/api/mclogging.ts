@@ -2,7 +2,7 @@ import { Channel, TextChannel } from 'discord.js';
 import { Request, Response } from 'express';
 import { bot } from '../bot';
 
-export default async function (request: Request, response: Response) {
+export default async function (request: Request, response: Response): Promise<Response<any>> {
     const { username, action, channel } = request.body;
     if (!username || !action || !channel) return response.status(400).send('');
 

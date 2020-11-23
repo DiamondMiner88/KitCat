@@ -45,7 +45,7 @@ export const toggleableCmds: Record<string, 0 | 1> = {
     warn: 1,
 };
 
-export function addDefaultGuildSettings(guildid: string) {
+export function addDefaultGuildSettings(guildid: string): void {
     db.prepare('INSERT OR IGNORE INTO settings (guild, commands) VALUES(?, ?)').run(
         guildid,
         JSON.stringify(toggleableCmds)

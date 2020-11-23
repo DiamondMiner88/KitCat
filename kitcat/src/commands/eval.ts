@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import { userBypass } from '../util/utils';
+import { inspect } from 'util';
 
 export class Eval extends Command {
     executor = 'eval';
@@ -13,7 +13,7 @@ export class Eval extends Command {
     unlisted = true;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[]): Promise<any> {
         if (!userBypass(message.author.id)) return;
         function clean(text: string) {
             if (typeof text === 'string')
@@ -24,10 +24,8 @@ export class Eval extends Command {
         }
 
         try {
-            /* tslint:disable */
             let evaled = await eval(args.join(' '));
-            /* tslint:enable */
-            if (typeof evaled !== 'string') evaled = require('util').inspect(evaled);
+            if (typeof evaled !== 'string') evaled = inspect(evaled);
             if (clean(evaled).length > 2000)
                 return message.channel.send(`Can't send message, is bigger than 2000 characters.`);
             message.channel.send(clean(evaled), { code: 'xl' });

@@ -1,5 +1,4 @@
 import Discord, { TextChannel } from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import { userBypass } from '../util/utils';
 
@@ -13,7 +12,7 @@ export class Purge extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message, args: string[]): any {
         if (!message.member.hasPermission('MANAGE_MESSAGES') && !userBypass(message.author.id)) {
             message.channel.send('You do not have the permission to manage messages.');
             return;

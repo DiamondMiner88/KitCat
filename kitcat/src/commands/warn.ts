@@ -14,7 +14,7 @@ export class Warn extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
         if (!message.member.hasPermission('KICK_MEMBERS') && !userBypass(message.author.id)) {
             return message.channel.send(`You don't have the perms to run this command`);
         }

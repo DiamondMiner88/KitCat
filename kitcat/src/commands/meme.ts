@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import { getTopPost } from '../util/reddit';
 
@@ -13,7 +12,7 @@ export class Meme extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message): void {
         getTopPost(message, 'dankmemes');
     }
 }

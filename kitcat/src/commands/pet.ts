@@ -13,12 +13,12 @@ export class Pet extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
         const { prefix } = settings;
         if (args.length === 0) return message.channel.send(`What pet do you want? \`${prefix}pet {animal}\``);
         const subcommand = args.shift();
         switch (subcommand) {
-            case 'help':
+            case 'help': {
                 return message.channel.send(
                     new Discord.MessageEmbed()
                         .setColor(0xf9f5ea)
@@ -26,12 +26,14 @@ export class Pet extends Command {
                         .addField(':cat: Cat', `\`${prefix}pet cat\``)
                         .addField(':dog: Doggo', `\`${prefix}pet dog\``)
                 );
+            }
             case 'cat':
-            case 'kitty':
+            case 'kitty': {
                 return message.channel.send(
                     new Discord.MessageEmbed().setTitle(`Here's a cat for you!`).setImage('https://cataas.com/cat')
                 );
-            case 'dog':
+            }
+            case 'dog': {
                 const res = await fetch('https://dog.ceo/api/breeds/image/random');
                 const json = await res.json();
                 if (json.status !== 'success') {
@@ -44,6 +46,7 @@ export class Pet extends Command {
                         .setTitle(`Here's A doggo For You!`)
                         .setImage(json.message)
                 );
+            }
         }
     }
 }

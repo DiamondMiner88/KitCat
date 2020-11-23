@@ -18,7 +18,7 @@ export class Command {
         this.LOGGER = getLogger(`command-${this.executor}`);
     }
 
-    getUsage(settings: IGuildSettings) {
+    getUsage(settings: IGuildSettings): string {
         return `\`${settings.prefix}${this.executor}${this.usage != null ? ' ' + this.usage : ''}\``;
     }
 
@@ -29,7 +29,8 @@ export class Command {
         ];
     }
 
-    run(message: Message, args: string[], settings: IGuildSettings) {
+    // eslint-disable-next-line
+    run(message: Message, args: string[], settings: IGuildSettings): void {
         message.channel
             .send('This command has not been implemented yet! Coming soon to a shard near you! :P')
             .catch((e) => this.LOGGER.error(e));

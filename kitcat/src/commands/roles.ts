@@ -10,7 +10,7 @@ import {
     GuildEmoji,
     PartialUser,
 } from 'discord.js';
-import { getGuildSelfRoles, IGuildSettings } from '../cache';
+import { getGuildSelfRoles } from '../cache';
 import { Command } from './CommandBase';
 import { UNICODE_EMOJI_REGEX, CUSTOM_EMOJI_REGEX, clamp } from '../util/utils';
 import { addSelfRolesToDB } from '../cache';
@@ -26,7 +26,7 @@ export class Roles extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Message, args: string[], settings: IGuildSettings) {
+    run(message: Message): any {
         if (!message.member.hasPermission('MANAGE_ROLES') && !userBypass(message.author.id))
             return message.channel.send(`You don't have the permission to manage roles.`);
 

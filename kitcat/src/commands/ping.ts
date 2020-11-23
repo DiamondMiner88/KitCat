@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 export class Ping extends Command {
@@ -12,7 +11,7 @@ export class Ping extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message): Promise<void> {
         const m = await message.channel.send('Ping?');
         m.edit(
             `Pong! Round trip latency is ${

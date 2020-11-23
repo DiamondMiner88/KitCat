@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import dateformat from 'dateformat';
 
@@ -13,7 +12,7 @@ export class ServerInfo extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message): Promise<any> {
         const guild = await message.guild.fetch();
         const timecreated = dateformat(message.guild.createdAt, 'UTC:yyyy/mm/dd HH:MM:ss "GMT"');
 

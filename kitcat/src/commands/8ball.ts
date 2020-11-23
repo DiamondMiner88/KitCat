@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 const eightball_config = {
@@ -37,7 +36,7 @@ export class EightBall extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message, args: string[]): any {
         if (args.length === 0) message.channel.send(`You didn't ask a question! ;(`);
         else {
             const embed = new Discord.MessageEmbed()
