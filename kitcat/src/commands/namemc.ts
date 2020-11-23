@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import fetch from 'node-fetch';
 // import dateformat from 'dateformat';
@@ -15,7 +14,7 @@ export class NameMC extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message, args: string[]): any {
         if (args.length === 0) return message.channel.send(`You didn't provide a username. :P`);
         fetch(`https://api.mojang.com/users/profiles/minecraft/${args[0]}`)
             .then((res) => res.json())

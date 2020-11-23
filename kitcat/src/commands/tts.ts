@@ -24,7 +24,7 @@ export class TTS extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Message, args: string[], settings: IGuildSettings) {
+    async run(message: Message, args: string[], settings: IGuildSettings): Promise<any> {
         if (args.length === 0) {
             const collector = message.channel.createMessageCollector(
                 (m: Message) => m.author.id === message.author.id && m.channel.id === message.channel.id,
@@ -78,11 +78,9 @@ async function play(guildid: Snowflake) {
         return;
     }
 
-    // @ts-expect-error
-    const vc: VoiceChannel = guild.channels.resolve(toPlay.channel);
+    const vc: VoiceChannel = guild.channels.resolve(toPlay.channel) as VoiceChannel;
     if (!vc) {
-        // @ts-expect-error
-        const authorChannel: TextChannel = await guild.channels.resolve(toPlay.authorChannel);
+        const authorChannel: TextChannel = (await guild.channels.resolve(toPlay.authorChannel)) as TextChannel;
         const embed = new MessageEmbed()
             .setTitle('TTS Error')
             .setColor(0xf9f5ea)

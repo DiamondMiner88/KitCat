@@ -30,7 +30,7 @@ import { Wolfram } from './commands/wolfram';
 
 export const commands: Collection<string, Command> = new Collection();
 
-export function registerCommands() {
+export function registerCommands(): void {
     const cmdsToRegister: Command[] = [
         new Ban(),
         new CustomImg(),
@@ -55,7 +55,7 @@ export function registerCommands() {
         new TTS(),
         new TwoThousandFortyEight(),
         new Warn(),
-        new Wolfram()
+        new Wolfram(),
     ];
     cmdsToRegister.forEach((command) => commands.set(command.executor, command));
 }

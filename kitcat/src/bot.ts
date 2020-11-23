@@ -22,7 +22,7 @@ dotenvconfig({
 import Discord from 'discord.js';
 import { toggleableCmds, db } from './db';
 import { getGuildSettings, IGuildSettings } from './cache';
-import { startAPI } from './api/api';
+import { startAPI } from './api/express';
 import cleanup from 'node-cleanup';
 import * as selfroles from './commands/roles';
 

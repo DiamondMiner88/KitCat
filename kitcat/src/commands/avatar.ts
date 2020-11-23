@@ -13,7 +13,7 @@ export class Avatar extends Command {
     nsfw = false;
     aliases = ['pfp'];
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
         if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.getUsage(settings));
 
         let t: Discord.GuildMember;

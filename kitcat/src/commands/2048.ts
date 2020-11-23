@@ -27,22 +27,23 @@ export class TwoThousandFortyEight extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Message, args: string[], settings: IGuildSettings) {
+    run(message: Message, args: string[], settings: IGuildSettings): any {
         const { prefix } = settings;
         message.channel = message.channel as TextChannel;
 
         switch (args[0]) {
             case 'help':
-                const embed = new MessageEmbed()
-                    .setColor(0xf9f5ea)
-                    .setTitle('2048 commands:')
-                    .addField('help', `What you're looking at right now.\n\`${prefix}2048 help\``)
-                    .addField(
-                        'new',
-                        `Start a new game. *This cancels any current game*\n\`${prefix}2048 new {optional size: default: 4}\``
-                    )
-                    .addField('stop', `End the current game\n\`2048 stop\``);
-                message.channel.send(embed);
+                message.channel.send(
+                    new MessageEmbed()
+                        .setColor(0xf9f5ea)
+                        .setTitle('2048 commands:')
+                        .addField('help', `What you're looking at right now.\n\`${prefix}2048 help\``)
+                        .addField(
+                            'new',
+                            `Start a new game. *This cancels any current game*\n\`${prefix}2048 new {optional size: default: 4}\``
+                        )
+                        .addField('stop', `End the current game\n\`2048 stop\``)
+                );
                 break;
             case 'new':
                 if (!args[1]) {

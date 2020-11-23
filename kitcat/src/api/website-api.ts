@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import fetch from 'node-fetch';
-import { db, toggleableCmds, addDefaultGuildSettings } from '../db';
+import { db, toggleableCmds } from '../db';
 import { getGuildSettings, guildSettingsCache } from '../cache';
 import { bot } from '../bot';
 import { getLogger } from 'log4js';
@@ -10,47 +10,40 @@ import FormData from 'form-data';
 const api = Router();
 export default api;
 
-const LOGGER = getLogger('api');
+const LOGGER = getLogger('website-api');
 
 /**
- * Response will always be 200 OK, but the json might not tell the same story
+ * Response status code will always be 200, but the json might not tell the same story
  *
- * Response JSON format with everything ok: {status: 0}
- * With errors: {status: ERROR_CODE, message: 'English error message here', error: "raw error if it exists"}
+ * Examples responses:
+ * OK: { status: 0 }
+ * Error: { status: [error code], message: 'English error message here', error: [raw error if exists] }
  *
  * Codes:
- * 0 == Request executed successfully
- * 1 == Invalid request (ie. Missing data in the guild save url)
- * 2 == Invalid Authorization / Discord Error
- * 3 ==
- * 4 ==
- * 5 == Guild Error (ie. missing permissions, channel does not exist by the time)
- * 6 == Internal error
+ * 0 = Request executed successfully
+ * 1 = Invalid request (ie. Missing data in the guild save url)
+ * 2 = Invalid Authorization
+ * 3 = Discord Error
+ * 4 = Guild Error (ie. missing permissions, channel does not exist by the time)
+ * 5 = Internal error
  */
 
 api.post('/token', async (request, response) => {
-    console.log('accessed');
-    return response.json({
-        hello: 'hello',
-    });
-
-    if (!request.body.code || !request.body['redirect_uri'])
+    if (!request.body.code || !request.body.redirect_uri)
         return response.json({
             code: 1,
             message: 'Invalid request!',
         });
 
     const data = new FormData();
-
-    data.append('client_id', '744613719501176893');
-    data.append('client_secret', '');
+    data.append('client_id', process.env.KITCAT_APP_CLIENT);
+    data.append('client_secret', process.env.KITCAT_APP_SECERT);
     data.append('grant_type', 'authorization_code');
-    data.append('redirect_uri', request.body['redirect_uri']);
+    data.append('redirect_uri', request.body.redirect_uri);
     data.append('scope', 'identify');
     data.append('code', request.body.code);
-    console.log(request.body);
 
-    let res;
+    let res: any;
     try {
         res = await fetch('https://discordapp.com/api/oauth2/token', {
             method: 'POST',
@@ -58,18 +51,17 @@ api.post('/token', async (request, response) => {
         });
         res = await res.json();
     } catch (error) {
-        LOGGER.error('Error sending request to discord.com to get access token. api-1.0.0 /token');
-        LOGGER.error(error.message);
+        LOGGER.error('Error sending request to discord.com to get access token.');
+        LOGGER.error(error);
         return response.json({
-            status: 6,
-            message: 'Error sending request to get access token.',
-            error: error,
+            status: 3,
+            message: 'Error authorizing.',
         });
     }
 
     if (!res.access_token) {
         return response.json({
-            status: 2,
+            status: 3,
             message: 'No access token present on response.',
             error: res,
         });
@@ -81,7 +73,7 @@ api.post('/token', async (request, response) => {
     });
 });
 
-api.post('/guilds/:guild', async (request, response) => {
+api.post('/servers/:guild', async (request, response) => {
     if (!request.body['access-token'] || !Array.isArray(request.body.info))
         return response.json({
             code: 1,
@@ -97,33 +89,32 @@ api.post('/guilds/:guild', async (request, response) => {
         });
         discordRes = await discordRes.json();
     } catch (error) {
-        LOGGER.error('Error sending request to discord.com to verify access token. api-1.0.0 /guild/:guild');
+        LOGGER.error('Error sending request to discord.com to verify access token.');
         LOGGER.error(error.message);
         return response.json({
             status: 5,
-            message: 'Error sending request to verify access token!',
-            error: error,
+            message: 'Error authorizing.',
+            error,
         });
     }
 
     if (discordRes.message)
         return response.json({
             status: 2,
-            message: discordRes.message === '401: Unauthorized' ? 'Invalid access token!' : discordRes.message,
+            message: discordRes.message === '401: Unauthorized' ? 'Invalid access token.' : discordRes.message,
             error: discordRes.message,
         });
 
     let guild: Guild;
-    let member: GuildMember;
     try {
         guild = await bot.guilds.fetch(request.params.guild);
         if (!guild)
             return response.json({
-                status: 5,
-                message: 'The bot is not in that guild.',
+                status: 4,
+                message: 'KitCat does not have access to that server.',
             });
 
-        member = await guild.members.fetch(discordRes.id);
+        await guild.members.fetch(discordRes.id);
     } catch (error) {
         return response.json({
             status: 5,
@@ -133,11 +124,11 @@ api.post('/guilds/:guild', async (request, response) => {
                     : error.message === 'Unknown Member'
                     ? 'You are not in that server'
                     : 'Check the error for more info',
-            error: error,
+            error,
         });
     }
 
-    const responseBody: { status: number; data: any } = {
+    const resdata: { status: number; data: any } = {
         status: 0,
         data: {},
     };
@@ -145,10 +136,10 @@ api.post('/guilds/:guild', async (request, response) => {
     request.body.info.forEach(async (infotype: any) => {
         switch (infotype) {
             case 'settings':
-                responseBody.data.settings = getGuildSettings(guild);
+                resdata.data.settings = getGuildSettings(guild);
                 break;
             case 'channels':
-                responseBody.data.channels = guild.channels.cache
+                resdata.data.channels = guild.channels.cache
                     .filter((channel) => channel.type !== 'category')
                     .map((channel) => {
                         return {
@@ -160,18 +151,13 @@ api.post('/guilds/:guild', async (request, response) => {
         }
     });
 
-    return response.json(responseBody);
+    return response.json(resdata);
 });
 
 /**
- * Example URL: /guilds/123456788901234567/save
- * Headers:
- *  - access-token: Discord oauth access token (Required)
- *  - data: (Required)
- *    - commands
- *    - settings
+ * Example URL: /severs/123456788901234567/save
  */
-api.post('/guilds/:guild/save', async (request, response) => {
+api.post('/servers/:guild/save', async (request, response) => {
     if (!request.body['access-token'] || !request.body.data)
         return response.json({
             code: 1,
@@ -195,17 +181,17 @@ api.post('/guilds/:guild/save', async (request, response) => {
         LOGGER.error('Error sending request to discord.com to verify access token. api-1.0.0 /guild/:guild/save');
         LOGGER.error(error.message);
         return response.json({
-            status: 5,
-            message: 'Error sending request to verify access token!',
-            error: error,
+            status: 3,
+            message: 'Error authorizing.',
+            error,
         });
     }
 
     if (discordRes.message)
         return response.json({
             status: 2,
-            message: discordRes.message === '401: Unauthorized' ? 'Invalid access token!' : discordRes.message,
-            error: discordRes.message,
+            message: discordRes.message === '401: Unauthorized' ? 'Invalid access token.' : discordRes.message,
+            error: discordRes,
         });
 
     let guild: Guild;
@@ -214,28 +200,28 @@ api.post('/guilds/:guild/save', async (request, response) => {
         guild = await bot.guilds.fetch(request.params.guild);
         if (!guild)
             return response.json({
-                status: 5,
-                message: 'The bot is not in that guild.',
+                status: 4,
+                message: 'KitCat does not have access to that server.',
             });
 
         member = await guild.members.fetch(discordRes.id);
     } catch (error) {
         return response.json({
-            status: 5,
+            status: 4,
             message:
                 error.message === 'Missing Access'
                     ? 'The bot is not in that server'
                     : error.message === 'Unknown Member'
                     ? 'You are not in that server'
                     : 'Check the error for more info',
-            error: error,
+            error,
         });
     }
 
     if (!member.hasPermission('ADMINISTRATOR'))
         return response.json({
-            status: 5,
-            message: 'You do not have the Administrator permission on that server',
+            status: 4,
+            message: 'You do not have the Administrator permission in that server.',
         });
 
     const { commands, prefix, dmTextEnabled, dmText, audit_channel } = request.body.data;
@@ -258,7 +244,7 @@ api.post('/guilds/:guild/save', async (request, response) => {
     const guildSettings = getGuildSettings(guild);
 
     let sql = 'UPDATE settings SET';
-    let sqlArgs = [];
+    const sqlArgs = [];
 
     if (commands !== undefined) {
         sql += ' commands = ?,';
@@ -288,10 +274,10 @@ api.post('/guilds/:guild/save', async (request, response) => {
     try {
         db.prepare(sql).run(sqlArgs);
     } catch (error) {
-        LOGGER.error('Error inserting new settings data API-1.0.0 /guilds/:guild/save');
+        LOGGER.error('Error updating server settings.');
         LOGGER.error(error);
         return response.json({
-            status: 6,
+            status: 5,
             message: 'An SQL error occured.',
         });
     }
@@ -301,7 +287,7 @@ api.post('/guilds/:guild/save', async (request, response) => {
     });
 });
 
-api.post('/guilds', async (request, response) => {
+api.post('/severs', async (request, response) => {
     if (!request.body['access-token'])
         return response.json({
             code: 1,
@@ -317,12 +303,12 @@ api.post('/guilds', async (request, response) => {
         });
         discordRes = await discordRes.json();
     } catch (error) {
-        LOGGER.error('Error sending request to discord.com to verify access token/get guilds. api-1.0.0 /guilds');
+        LOGGER.error('Error sending request to discord.com to verify access token/get guilds.');
         LOGGER.error(error.message);
         return response.json({
-            status: 5,
-            message: 'Error sending request to verify access token!',
-            error: error,
+            status: 3,
+            message: 'Error authorizing.',
+            error,
         });
     }
 
@@ -333,7 +319,7 @@ api.post('/guilds', async (request, response) => {
             error: discordRes.message,
         });
 
-    let guilds: {
+    const guilds: {
         id: string;
         name: string;
         nameAcronym: string;

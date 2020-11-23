@@ -1,5 +1,4 @@
-import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
+import Discord, { TextChannel } from 'discord.js';
 import { Command } from './CommandBase';
 import { userBypass } from '../util/utils';
 
@@ -13,8 +12,8 @@ export class PurgeChannel extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
-        if (message.channel.type === 'dm') return; // Avoid TS errors
+    async run(message: Discord.Message): Promise<any> {
+        message.channel = message.channel as TextChannel;
 
         if (!message.member.hasPermission('MANAGE_MESSAGES') && !userBypass(message.author.id))
             return message.channel.send('You do not have the permission to manage messages.');

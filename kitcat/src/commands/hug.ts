@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
 const PEOPLE_HUG = [
@@ -30,7 +29,7 @@ export class Hug extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message): any {
         const mentions = message.mentions.users;
         if (mentions.size === 0) return message.channel.send(`Who do you want to send a hug to?`);
 

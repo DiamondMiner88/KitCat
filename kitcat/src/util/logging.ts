@@ -10,12 +10,12 @@ export function initLogger() {
                 type: 'file',
                 filename: `../logs/${startTime}-latest.log`,
                 maxLogSize: 20971520, // 20 MB
-                layout: { type: 'pattern', pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p] %c - %m' },
+                layout: { type: 'pattern', pattern: '[%d{yyyy-MM-dd hh:mm:ss}] [%p] %c - %m' },
                 compress: true,
             },
             terminal: {
                 type: 'stdout',
-                layout: { type: 'pattern', pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] %[[%p] %c -%] %m' },
+                layout: { type: 'pattern', pattern: '[%d{yyyy-MM-dd hh:mm:ss}] %[[%p] %c -%] %m' },
             },
         },
         categories: {

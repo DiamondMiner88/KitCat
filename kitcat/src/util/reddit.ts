@@ -16,7 +16,7 @@ const guild_id_list: Collection<Discord.Snowflake, string[]> = new Collection();
 const dm_id_list: Collection<Discord.Snowflake, string[]> = new Collection();
 let idlist_last_cleared = new Date().getTime();
 
-export async function getTopPost(message: Discord.Message, subreddit_name: string) {
+export async function getTopPost(message: Discord.Message, subreddit_name: string): Promise<any> {
     // Reset list if its been 12 hrs
     // Change this later because it will reset in the middle of usage
     if (new Date().getTime() - 43200000 >= idlist_last_cleared) {

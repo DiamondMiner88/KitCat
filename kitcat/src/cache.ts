@@ -41,7 +41,7 @@ export function getGuildSelfRoles(guild: Guild): IGuildSelfRoles {
     return selfRoles;
 }
 
-export function addSelfRolesToDB(message: Message, roles: Record<string, Snowflake>) {
+export function addSelfRolesToDB(message: Message, roles: Record<string, Snowflake>): void {
     db.prepare('INSERT OR IGNORE INTO "selfroles" (message, guild, roles) VALUES (?, ?, ?)').run(
         message.id,
         message.guild.id,

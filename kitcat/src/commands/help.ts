@@ -16,7 +16,7 @@ export class Help extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    run(message: Discord.Message, args: string[], settings: IGuildSettings): any {
         const prefix = settings ? settings.prefix : 'k!';
         if (args.length === 0) {
             const embed = new Discord.MessageEmbed().setColor(0xf9f5ea).setTitle('Categories');

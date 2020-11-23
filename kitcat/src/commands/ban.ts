@@ -13,7 +13,7 @@ export class Ban extends Command {
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
         if (!message.member.hasPermission('BAN_MEMBERS') && !userBypass(message.author.id))
             return message.channel.send(`You can't ban people!`);
 
