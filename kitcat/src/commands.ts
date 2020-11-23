@@ -15,7 +15,7 @@ import { Kick } from './commands/kick';
 import { Meme } from './commands/meme';
 import { NameMC } from './commands/namemc';
 import { Pet } from './commands/pet';
-import { Pfp } from './commands/avatar';
+import { Avatar } from './commands/avatar';
 import { Ping } from './commands/ping';
 import { Purge } from './commands/purge';
 import { PurgeChannel } from './commands/purgechannel';
@@ -44,7 +44,7 @@ export function registerCommands() {
         new Meme(),
         new NameMC(),
         new Pet(),
-        new Pfp(),
+        new Avatar(),
         new Ping(),
         new Purge(),
         new PurgeChannel(),
@@ -55,7 +55,6 @@ export function registerCommands() {
         new TTS(),
         new TwoThousandFortyEight(),
         new Warn(),
-        // @ts-expect-error
         new Wolfram()
     ];
     cmdsToRegister.forEach((command) => commands.set(command.executor, command));

@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
-import { userBypass } from '../util/permissions';
+import { userBypass } from '../util/utils';
 
 export class Ban extends Command {
     executor = 'ban';
@@ -13,14 +13,21 @@ export class Ban extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('BAN_MEMBERS') && !userBypass(message.author.id))
             return message.channel.send(`You can't ban people!`);
 
         if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.getUsage(settings));
 
-        const t: Discord.GuildMember = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        let t: Discord.GuildMember;
+        try {
+            t = await (message.mentions.members.first() ||
+                message.guild.members.fetch(args[0]) ||
+                message.guild.members.cache.find((member) => member.user.tag === args.join(' ')));
+            if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        } catch (error) {
+            return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        }
 
         args.shift();
 

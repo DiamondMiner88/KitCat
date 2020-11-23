@@ -2,7 +2,59 @@ export const UNICODE_EMOJI_REGEX = /(?:\ud83d\udc68\ud83c\udffc\u200d\ud83e\udd1
 export const CUSTOM_EMOJI_REGEX = /<?(a)?:?(\w{2,32}):(\d{17,19})>?/;
 export const NAMED_CUSTOM_EMOJI_REGEX = /<?(?<animated>a)?:?(?<name>\w{2,32}):(?<id>\d{17,19})>?/;
 
-// number clamp
+/**
+ * Clamps a value to between min and max (inclusive iirc)
+ * @param num Number to clamp
+ * @param min Minimum value that the number can be
+ * @param max Maximum value that the number can be
+ * @returns New clamped number
+ */
 export function clamp(num: number, min: number, max: number) {
     return Math.max(min, Math.min(num, max));
+}
+
+/**
+ * Special users that bypass all permissions of guilds & bot to allow usage of perm-required commandsor dev only commands
+ * @param id User id
+ * @returns True if user has permission
+ */
+export function userBypass(id: string) {
+    const bypassAll = ['295190422244950017' /* DiamondMiner88 */, '407320720662855692' /* PixelDough */];
+    return bypassAll.includes(id);
+}
+
+const discordmarkdown: [RegExp, string, string][] = [
+    [/\*/g, '\\*', 'asterisk'],
+    [/\(/g, '\\(', 'parentheses'],
+    [/\)/g, '\\)', 'parentheses'],
+    [/\[/g, '\\[', 'square bracket'],
+    [/\]/g, '\\]', 'square bracket'],
+    [/</g, '\\<', 'angle bracket'],
+    [/>/g, '\\>', 'angle bracket'],
+    [/_/g, '\\_', 'underscore'],
+];
+
+/**
+ * Escape discord markdown
+ * @param str String you want to escape
+ * @returns Escaped string
+ */
+export function escapeMarkdown(str: string) {
+    discordmarkdown.forEach((replacement) => (str = str.replace(replacement[0], replacement[1])));
+    return str;
+}
+
+/**
+ * Split a string into chunks by length
+ * @param str String you want to split
+ * @param length Length of each split
+ * @returns Array of the split string
+ */
+export function splitInChunks(str: string, length: number) {
+    const chunks = [];
+
+    for (let i = 0; i < str.length; i += length) {
+        chunks.push(str.substring(i, i + 3));
+    }
+    return chunks;
 }

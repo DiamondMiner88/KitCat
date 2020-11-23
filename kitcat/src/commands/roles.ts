@@ -14,7 +14,7 @@ import { getGuildSelfRoles, IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import { UNICODE_EMOJI_REGEX, CUSTOM_EMOJI_REGEX, clamp } from '../util/utils';
 import { addSelfRolesToDB } from '../cache';
-import { userBypass } from '../util/permissions';
+import { userBypass } from '../util/utils';
 
 export class Roles extends Command {
     executor = 'roles';

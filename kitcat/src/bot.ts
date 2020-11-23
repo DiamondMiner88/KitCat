@@ -52,7 +52,7 @@ bot.on('ready', () => {
 
 bot.on('guildMemberAdd', (member) => {
     const { dmTextEnabled, dmText } = getGuildSettings(member.guild);
-    if (dmTextEnabled === 1) member.user.send(dmText).catch(() => {});
+    if (dmTextEnabled === 1) member.user.send(dmText).catch(() => undefined);
 });
 
 bot.on('guildCreate', (_guild) => bot.user.setActivity(`Ping me for help | Serving ${bot.guilds.cache.size} servers`));
@@ -77,35 +77,32 @@ bot.on('message', async (message) => {
     )
         return message.channel.send(`Do ${prefix} help for commands!`);
 
+    if (!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return;
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
-    if (message.content.toLowerCase().indexOf(prefix.toLowerCase()) !== 0) return;
 
-    const command = commands.get(commandName);
+    const command = commands.find((c) => c.executor === commandName || c.aliases?.includes(commandName));
     if (!command) return;
+
     if (command.guildOnly && message.channel.type !== 'text')
-        message.channel.send('This command only works in Guild Text Channels!');
-    else if (message.channel.type !== 'dm' && command.nsfw === true && !message.channel.nsfw)
-        message.channel.send(
-            `This is a NSFW command. Per Discord's policy, these can only be executed in NSFW channels.`
-        );
-    else if (command.executor === commandName) {
-        if (message.channel.type === 'dm') command.run(message, args, settings);
-        else {
-            switch (settings.commands[commandName]) {
-                case 1:
-                    return command.run(message, args, settings);
-                case 0:
-                    return message.channel.send('This command has been disabled on this server.');
-                case undefined:
-                    if (toggleableCmds[commandName] === undefined || toggleableCmds[commandName] === 1)
-                        command.run(message, args, settings);
-                    else message.channel.send('This command has been disabled on this server.');
-                    if (toggleableCmds[commandName] !== undefined) {
-                        // add update db to enable command to
-                    }
-            }
-        }
+        return message.channel.send('This command only works in Guild Text Channels!');
+    if (message.channel.type !== 'dm' && command.nsfw === true && !message.channel.nsfw)
+        return message.channel.send('NSFW commands can only be run in NSFW channels');
+
+    if (message.channel.type === 'dm') return command.run(message, args, settings);
+
+    switch (settings.commands[commandName]) {
+        case 1:
+            return command.run(message, args, settings);
+        case 0:
+            return message.channel.send('This command has been disabled on this server.');
+        case undefined:
+            if (toggleableCmds[commandName] === undefined || toggleableCmds[commandName] === 1)
+                command.run(message, args, settings);
+            else message.channel.send('This command has been disabled on this server.');
+            // if (toggleableCmds[commandName] !== undefined) {
+            //     // add update db to enable command to
+            // }
     }
 });
 

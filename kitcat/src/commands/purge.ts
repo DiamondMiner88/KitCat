@@ -1,7 +1,7 @@
 import Discord, { TextChannel } from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
-import { userBypass } from '../util/permissions';
+import { userBypass } from '../util/utils';
 
 export class Purge extends Command {
     executor = 'purge';

@@ -6,6 +6,7 @@ import { Command } from './CommandBase';
 import https from 'https';
 import querystring from 'querystring';
 import { inspect } from 'util';
+import { splitInChunks } from '../util/utils';
 
 const baseApiUrl = 'https://api.wolframalpha.com/';
 const createApiParamsRejectMsg = 'method only receives string or object';
@@ -344,19 +345,18 @@ export class Wolfram extends Command {
             new Collection([['ip', '127.0.0.1']])
         )
             .then((result: any) => {
-                message.channel.send(
-                    result.pods
-                        .map((pod: any) =>
-                            pod.subpods.map(
-                                (subpod: any) =>
-                                    (subpod.img.title || subpod.img.alt || subpod.title) +
-                                    ': ' +
-                                    pod.subpods[0].img.src +
-                                    '\n'
-                            )
+                const content = result.pods
+                    ?.map((pod: any) =>
+                        pod.subpods?.map(
+                            (subpod: any) =>
+                                (subpod.img.title || subpod.img.alt || subpod.title) +
+                                ': ' +
+                                pod.subpods[0].img.src +
+                                '\n'
                         )
-                        .join('\n')
-                );
+                    )
+                    .join('\n');
+                message.channel.send(content).catch((e) => message.channel.send(e));
             })
             .catch((e) => this.LOGGER.error(e));
     }

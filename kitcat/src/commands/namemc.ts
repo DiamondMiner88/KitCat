@@ -3,7 +3,7 @@ import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import fetch from 'node-fetch';
 // import dateformat from 'dateformat';
-import markdownescape from '../util/escapeMarkdown';
+import { escapeMarkdown } from '../util/utils';
 
 export class NameMC extends Command {
     executor = 'namemc';
@@ -40,8 +40,8 @@ export class NameMC extends Command {
                             // const date = dayjs(name.changedToAt).utc().format('MMM D, YYYY h:mm:ss A');
                             const date = 'temp';
                             embed.addField(
-                                markdownescape(name.name),
-                                markdownescape(name.changedToAt ? `${date} UTC` : 'Initial username')
+                                escapeMarkdown(name.name),
+                                escapeMarkdown(name.changedToAt ? `${date} UTC` : 'Initial username')
                             );
                         });
 

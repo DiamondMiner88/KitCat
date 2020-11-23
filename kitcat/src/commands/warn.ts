@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 import { db } from '../db';
-import { userBypass } from '../util/permissions';
+import { userBypass } from '../util/utils';
 
 export class Warn extends Command {
     executor = 'warn';
@@ -14,15 +14,22 @@ export class Warn extends Command {
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (!message.member.hasPermission('KICK_MEMBERS') && !userBypass(message.author.id)) {
             return message.channel.send(`You don't have the perms to run this command`);
         }
 
         if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.getUsage(settings));
 
-        const t: Discord.GuildMember = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        let t: Discord.GuildMember;
+        try {
+            t = await (message.mentions.members.first() ||
+                message.guild.members.fetch(args[0]) ||
+                message.guild.members.cache.find((member) => member.user.tag === args.join(' ')));
+            if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        } catch (error) {
+            return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        }
 
         args.shift();
 

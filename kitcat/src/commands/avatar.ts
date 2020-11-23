@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import { IGuildSettings } from '../cache';
 import { Command } from './CommandBase';
 
-export class Pfp extends Command {
+export class Avatar extends Command {
     executor = 'avatar';
     category = 'util';
     display_name = 'Profile Picture';
@@ -11,14 +11,20 @@ export class Pfp extends Command {
     guildOnly = true;
     unlisted = false;
     nsfw = false;
+    aliases = ['pfp'];
 
-    run(message: Discord.Message, args: string[], settings: IGuildSettings) {
+    async run(message: Discord.Message, args: string[], settings: IGuildSettings) {
         if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.getUsage(settings));
 
-        const t: Discord.GuildMember =
-            message.mentions.members.first() ||
-            message.guild.members.cache.get(args[0]) ||
-            message.guild.members.cache.find((member) => member.user.tag === args.join(' '));
+        let t: Discord.GuildMember;
+        try {
+            t = await (message.mentions.members.first() ||
+                message.guild.members.fetch(args[0]) ||
+                message.guild.members.cache.find((member) => member.user.tag === args.join(' ')));
+            if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        } catch (error) {
+            return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
+        }
 
         if (!t) return message.channel.send(`Couldn't find a user by \`${args[0]}\``);
         const embed = new Discord.MessageEmbed()
