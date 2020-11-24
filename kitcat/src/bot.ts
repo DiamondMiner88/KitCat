@@ -19,12 +19,13 @@ dotenvconfig({
     path: path.join(__dirname, '../config'),
 });
 
-import Discord from 'discord.js';
+import Discord, { Message } from 'discord.js';
 import { toggleableCmds, db } from './db';
 import { getGuildSettings, IGuildSettings } from './cache';
 import { startAPI } from './api/express';
 import cleanup from 'node-cleanup';
 import * as selfroles from './commands/roles';
+import { is_bad } from './commands/stupid_checker';
 
 // Register commands
 import { registerCommands, commands } from './commands';
@@ -68,6 +69,8 @@ bot.on('message', async (message) => {
 
     if (message.author.bot) return;
 
+    is_bad(message);
+
     const settings: IGuildSettings = message.channel.type !== 'dm' ? getGuildSettings(message.guild) : { prefix: 'k!' };
     const { prefix } = settings;
 
@@ -105,5 +108,9 @@ bot.on('message', async (message) => {
             // }
     }
 });
+
+// bot.on('messageDelete', async (message) => {
+//     message.channel.send(`${message.author} you deleted ||${message.content}||.`);
+// });
 
 bot.login(process.env.BOT_TOKEN);

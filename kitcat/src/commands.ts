@@ -27,6 +27,7 @@ import { TTS } from './commands/tts';
 import { TwoThousandFortyEight } from './commands/2048';
 import { Warn } from './commands/warn';
 import { Wolfram } from './commands/wolfram';
+import { TicTacToe } from './commands/tictactoe';
 
 export const commands: Collection<string, Command> = new Collection();
 
