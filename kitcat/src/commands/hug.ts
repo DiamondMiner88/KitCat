@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 
 const PEOPLE_HUG = [
     'https://media.giphy.com/media/4No2q4ROPXO7T6NWhS/giphy.gif',
@@ -19,7 +19,7 @@ const PEOPLE_HUG = [
     'https://media.giphy.com/media/jTSOClK7HBoMaVn5Hi/giphy.gif',
 ];
 
-export class Hug extends Command {
+export default class Hug extends Command {
     executor = 'hug';
     category = 'fun';
     display_name = '🤗 Hug';

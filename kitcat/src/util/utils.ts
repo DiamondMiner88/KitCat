@@ -9,7 +9,7 @@ export const NAMED_CUSTOM_EMOJI_REGEX = /<?(?<animated>a)?:?(?<name>\w{2,32}):(?
  * @param max Maximum value that the number can be
  * @returns New clamped number
  */
-export function clamp(num: number, min: number, max: number) {
+export function clamp(num: number, min: number, max: number): number {
     return Math.max(min, Math.min(num, max));
 }
 
@@ -18,7 +18,7 @@ export function clamp(num: number, min: number, max: number) {
  * @param id User id
  * @returns True if user has permission
  */
-export function userBypass(id: string) {
+export function userBypass(id: string): boolean {
     const bypassAll = ['295190422244950017' /* DiamondMiner88 */, '407320720662855692' /* PixelDough */];
     return bypassAll.includes(id);
 }
@@ -39,7 +39,7 @@ const discordmarkdown: [RegExp, string, string][] = [
  * @param str String you want to escape
  * @returns Escaped string
  */
-export function escapeMarkdown(str: string) {
+export function escapeMarkdown(str: string): string {
     discordmarkdown.forEach((replacement) => (str = str.replace(replacement[0], replacement[1])));
     return str;
 }
@@ -50,11 +50,17 @@ export function escapeMarkdown(str: string) {
  * @param length Length of each split
  * @returns Array of the split string
  */
-export function splitInChunks(str: string, length: number) {
+export function splitInChunks(str: string, length: number): string[] {
     const chunks = [];
-
-    for (let i = 0; i < str.length; i += length) {
-        chunks.push(str.substring(i, i + 3));
-    }
+    for (let i = 0; i < str.length; i += length) chunks.push(str.substring(i, i + 3));
     return chunks;
+}
+
+/**
+ * NOOP function
+ * @param params Any params
+ */
+// eslint-disable-next-line
+export function NOOP(...params: any): undefined {
+    return undefined;
 }

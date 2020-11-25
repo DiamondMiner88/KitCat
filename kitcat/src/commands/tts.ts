@@ -1,6 +1,6 @@
 import Discord, { Guild, Message, MessageEmbed, Snowflake, TextChannel, VoiceChannel } from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 import { bot } from '../bot';
 
 const queue: Record<
@@ -14,7 +14,7 @@ const queue: Record<
 > = {};
 const playing: Record<Snowflake, boolean> = {};
 
-export class TTS extends Command {
+export default class TTS extends Command {
     executor = 'tts';
     category = 'util';
     display_name = `🤖 Text-To-Speech`;

@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 
-export class CustomImg extends Command {
+export default class CustomImg extends Command {
     executor = 'custom-img';
     category = 'fun';
     display_name = '📷 Photo Commands';

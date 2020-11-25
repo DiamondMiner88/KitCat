@@ -1,5 +1,5 @@
 import Discord, { Collection } from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 
 //#region WolframAlphaAPI
 import https from 'https';
@@ -321,7 +321,7 @@ class WolframAlphaAPI {
 
 const api = new WolframAlphaAPI('3K5593-UJEWH5VHRJ');
 
-export class Wolfram extends Command {
+export default class Wolfram extends Command {
     executor = 'wolfram';
     category = 'util';
     display_name = `Bot's Ping`;

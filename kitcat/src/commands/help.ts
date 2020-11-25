@@ -1,12 +1,12 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command, categories } from './CommandBase';
-import { commands } from '../commands';
+import { IGuildSettings } from '../settings';
+import { Command, categories } from '../commands';
+import { commands } from '../bot';
 
 const gh_issues = 'https://github.com/KitCat-Bot/KitCat/issues';
 const footer = 'Command format: `[]` = Optional, `{}` = Required, `|` = Or';
 
-export class Help extends Command {
+export default class Help extends Command {
     executor = 'help';
     category = 'kitcat';
     display_name = 'Help';

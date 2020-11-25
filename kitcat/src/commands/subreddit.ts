@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import { getTopPost } from '../util/reddit';
 
-export class Subreddit extends Command {
+export default class Subreddit extends Command {
     executor = 'subreddit';
     category = 'fun';
     display_name = '🌐 Subreddit';

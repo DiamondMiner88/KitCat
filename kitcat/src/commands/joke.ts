@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import fetch from 'node-fetch';
 
-export class Joke extends Command {
+export default class Joke extends Command {
     executor = 'joke';
     category = 'fun';
     display_name = '😂 Joke';

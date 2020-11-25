@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 
 const eightball_config = {
     replies: [
@@ -26,7 +26,7 @@ const eightball_config = {
     ],
 };
 
-export class EightBall extends Command {
+export default class EightBall extends Command {
     executor = '8ball';
     category = 'fun';
     display_name = '🎱 8Ball';

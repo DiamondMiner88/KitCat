@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 
-export class Avatar extends Command {
+export default class Avatar extends Command {
     executor = 'avatar';
     category = 'util';
     display_name = 'Profile Picture';

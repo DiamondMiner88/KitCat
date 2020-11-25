@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import fetch from 'node-fetch';
 import { db, toggleableCmds } from '../db';
-import { getGuildSettings, guildSettingsCache } from '../cache';
+import { getGuildSettings, guildSettingsCache } from '../settings';
 import { bot } from '../bot';
 import { getLogger } from 'log4js';
 import { Guild, GuildMember } from 'discord.js';

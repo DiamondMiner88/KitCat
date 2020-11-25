@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 
-export class Ping extends Command {
+export default class Ping extends Command {
     executor = 'ping';
     category = 'kitcat';
     display_name = `Bot's Ping`;

@@ -1,10 +1,10 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import fetch from 'node-fetch';
 // import dateformat from 'dateformat';
 import { escapeMarkdown } from '../util/utils';
 
-export class NameMC extends Command {
+export default class NameMC extends Command {
     executor = 'namemc';
     category = 'util';
     display_name = 'Minecarft Username History';

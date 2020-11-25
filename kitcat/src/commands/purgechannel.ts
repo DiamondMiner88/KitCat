@@ -1,8 +1,8 @@
 import Discord, { TextChannel } from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import { userBypass } from '../util/utils';
 
-export class PurgeChannel extends Command {
+export default class PurgeChannel extends Command {
     executor = 'purgechannel';
     category = 'moderation';
     display_name = `🗑️ Purge Channel`;

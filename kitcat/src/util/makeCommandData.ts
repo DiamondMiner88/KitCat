@@ -1,9 +1,9 @@
+/* eslint-disable no-console */
 console.log('It will say "Connected to data.db!" This is normal.');
 
 import fs from 'fs';
-import { categories, ICategory, Command } from '../commands/CommandBase';
-import { commands, registerCommands } from '../commands';
-registerCommands();
+import { categories, ICategory, Command } from '../commands';
+import { commands } from '../bot';
 
 type DataCategory = ICategory & { commands: string[] }; // ICategory type + a 'command' field thats a string array
 type DataCommand = Pick<

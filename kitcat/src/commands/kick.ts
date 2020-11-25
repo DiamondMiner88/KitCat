@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
-import { userBypass } from '../util/utils';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
+import { NOOP, userBypass } from '../util/utils';
 
-export class Kick extends Command {
+export default class Kick extends Command {
     executor = 'kick';
     category = 'moderation';
     display_name = '🦵 Kick';
@@ -50,8 +50,8 @@ export class Kick extends Command {
             .addField('Time', message.createdAt)
             .addField('Reason', reason);
 
-        message.channel.send(logMsg).catch(() => undefined);
-        t.send(uGotKicked).catch(() => undefined);
+        message.channel.send(logMsg).catch(NOOP);
+        t.send(uGotKicked).catch(NOOP);
 
         t.ban({
             reason,

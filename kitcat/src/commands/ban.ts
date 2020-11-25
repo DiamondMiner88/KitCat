@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
-import { userBypass } from '../util/utils';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
+import { NOOP, userBypass } from '../util/utils';
 
-export class Ban extends Command {
+export default class Ban extends Command {
     executor = 'ban';
     category = 'moderation';
     display_name = '⛔ Ban';
@@ -50,8 +50,8 @@ export class Ban extends Command {
             .addField('Time', message.createdAt)
             .addField('Reason', reason);
 
-        message.channel.send(logMsg).catch(() => undefined);
-        t.send(uGotBanned).catch(() => undefined);
+        message.channel.send(logMsg).catch(NOOP);
+        t.send(uGotBanned).catch(NOOP);
 
         t.ban({
             reason,

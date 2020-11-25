@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import dateformat from 'dateformat';
 
-export class ServerInfo extends Command {
+export default class ServerInfo extends Command {
     executor = 'serverinfo';
     category = 'util';
     display_name = 'Server Info';

@@ -1,10 +1,10 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 import { db } from '../db';
 import { userBypass } from '../util/utils';
 
-export class Warn extends Command {
+export default class Warn extends Command {
     executor = 'warn';
     category = 'moderation';
     display_name = `⚠️ Warn`;

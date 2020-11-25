@@ -1,8 +1,8 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import { getTopPost } from '../util/reddit';
 
-export class Meme extends Command {
+export default class Meme extends Command {
     executor = 'meme';
     category = 'fun';
     display_name = '😂 Memes';

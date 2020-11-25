@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 import { userBypass } from '../util/utils';
 import { inspect } from 'util';
 
-export class Eval extends Command {
+export default class Eval extends Command {
     executor = 'eval';
     category = 'util';
     display_name = 'Eval';

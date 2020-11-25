@@ -1,8 +1,8 @@
 import Discord, { TextChannel } from 'discord.js';
-import { Command } from './CommandBase';
-import { userBypass } from '../util/utils';
+import { Command } from '../commands';
+import { NOOP, userBypass } from '../util/utils';
 
-export class Purge extends Command {
+export default class Purge extends Command {
     executor = 'purge';
     category = 'moderation';
     display_name = '🗑️ Purge';
@@ -30,7 +30,7 @@ export class Purge extends Command {
                         .then((msg) => {
                             msg.delete({
                                 timeout: 2000,
-                            }).catch(() => undefined);
+                            }).catch(NOOP);
                         });
                 })
                 .catch((err: any) => message.channel.send(err.message));

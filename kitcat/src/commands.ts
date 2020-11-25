@@ -1,62 +1,73 @@
-import { Collection } from 'discord.js';
+import { Message } from 'discord.js';
+import { Logger, getLogger } from 'log4js';
+import { IGuildSettings } from './settings';
 
-// Must be first command import or it becomes some sort of dependency loop
-import { Command } from './commands/CommandBase';
+export class Command {
+    executor: string;
+    aliases: string[];
+    category: string;
+    display_name: string;
+    description?: string;
+    usage?: string;
+    guildOnly?: boolean = true;
+    unlisted?: boolean = false;
+    nsfw?: boolean = false;
+    LOGGER: Logger;
 
-import { Ban } from './commands/ban';
-import { CustomImg } from './commands/custom-img';
-import { DashBoard } from './commands/dashboard';
-import { EightBall } from './commands/8ball';
-import { Eval } from './commands/eval';
-import { Help } from './commands/help';
-import { Hug } from './commands/hug';
-import { Joke } from './commands/joke';
-import { Kick } from './commands/kick';
-import { Meme } from './commands/meme';
-import { NameMC } from './commands/namemc';
-import { Pet } from './commands/pet';
-import { Avatar } from './commands/avatar';
-import { Ping } from './commands/ping';
-import { Purge } from './commands/purge';
-import { PurgeChannel } from './commands/purgechannel';
-import { Roles } from './commands/roles';
-import { ServerInfo } from './commands/serverinfo';
-import { Status } from './commands/status';
-import { Subreddit } from './commands/subreddit';
-import { TTS } from './commands/tts';
-import { TwoThousandFortyEight } from './commands/2048';
-import { Warn } from './commands/warn';
-import { Wolfram } from './commands/wolfram';
-import { TicTacToe } from './commands/tictactoe';
+    constructor() {
+        this.LOGGER = getLogger(`command-${this.executor}`);
+    }
 
-export const commands: Collection<string, Command> = new Collection();
+    getUsage(settings: IGuildSettings): string {
+        return `\`${settings.prefix}${this.executor}${this.usage != null ? ' ' + this.usage : ''}\``;
+    }
 
-export function registerCommands(): void {
-    const cmdsToRegister: Command[] = [
-        new Ban(),
-        new CustomImg(),
-        new DashBoard(),
-        new EightBall(),
-        new Eval(),
-        new Help(),
-        new Hug(),
-        new Joke(),
-        new Kick(),
-        new Meme(),
-        new NameMC(),
-        new Pet(),
-        new Avatar(),
-        new Ping(),
-        new Purge(),
-        new PurgeChannel(),
-        new Roles(),
-        new ServerInfo(),
-        new Status(),
-        new Subreddit(),
-        new TTS(),
-        new TwoThousandFortyEight(),
-        new Warn(),
-        new Wolfram(),
-    ];
-    cmdsToRegister.forEach((command) => commands.set(command.executor, command));
+    getCommandHelp(settings: IGuildSettings): [string, string] {
+        return [
+            this.display_name != null ? this.display_name : this.executor,
+            (this.description != null ? this.description + '\n' : '') + this.getUsage(settings),
+        ];
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    run(message: Message, args: string[], settings: IGuildSettings): void {
+        message.channel
+            .send('This command has not been implemented yet! Coming soon to a shard near you! :P')
+            .catch((e) => this.LOGGER.error(e));
+    }
 }
+
+type ICategories = 'moderation' | 'fun' | 'util' | 'games' | 'kitcat';
+export type ICategory = {
+    name: ICategories;
+    display_name: string;
+    description: string;
+};
+
+export const categories: ICategory[] = [
+    {
+        name: 'moderation',
+        display_name: '🚫 Moderation',
+        description: 'Commands to help keep your server in shape!',
+    },
+    {
+        name: 'fun',
+        display_name: '😄 Fun',
+        description: 'Random, stupid and fun commands!',
+    },
+    {
+        name: 'util',
+        display_name: '🛠️ Utils',
+        description: '',
+    },
+    {
+        name: 'games',
+        display_name: '🎲 Games',
+        description: '',
+    },
+    {
+        name: 'kitcat',
+        display_name: 'Commands related to me!',
+        description: '',
+    },
+];

@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 import fetch from 'node-fetch';
 
-export class Pet extends Command {
+export default class Pet extends Command {
     executor = 'pet';
     category = 'fun';
     display_name = '🌭 Pet';

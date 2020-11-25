@@ -1,6 +1,6 @@
 import { Message, MessageCollector, MessageEmbed, Snowflake, TextChannel } from 'discord.js';
-import { IGuildSettings } from '../cache';
-import { Command } from './CommandBase';
+import { IGuildSettings } from '../settings';
+import { Command } from '../commands';
 import { createCanvas, loadImage } from 'canvas';
 import path from 'path';
 
@@ -17,7 +17,7 @@ type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 
 const games: Record<Snowflake, Game> = {};
 
-export class TwoThousandFortyEight extends Command {
+export default class TwoThousandFortyEight extends Command {
     executor = '2048';
     category = 'games';
     display_name = ':1234: 2048';

@@ -2,6 +2,12 @@ import better_sqlite3 from 'better-sqlite3';
 
 export const db = better_sqlite3('../config/data.db');
 
+//#region Updates to execute on start
+const UPDATES: string[][] = [];
+
+UPDATES.forEach((a) => db.prepare(a.shift()).run(...a));
+//#endregion
+
 const users_tbl = `
 CREATE TABLE IF NOT EXISTS "users" (
   "guild" INTEGER NOT NULL,
@@ -18,19 +24,20 @@ CREATE TABLE IF NOT EXISTS "settings" (
   "prefix" TEXT NOT NULL DEFAULT 'k!',
   "dmTextEnabled" INTEGER NOT NULL DEFAULT 0,
   "dmText" TEXT NOT NULL DEFAULT '',
-  "audit_channel" TEXT NOT NULL DEFAULT '',
+  "log_channel" TEXT NOT NULL DEFAULT '',
   PRIMARY KEY("guild")
 );`;
 db.prepare(settings_tbl).run();
 
-const selfroles_tbl = `
-CREATE TABLE IF NOT EXISTS "selfroles" (
-	"message" TEXT NOT NULL UNIQUE,
+const reaction_roles = `
+CREATE TABLE IF NOT EXISTS "reaction_roles" (
+  "message" TEXT NOT NULL UNIQUE,
+  "channel" TEXT NOT NULL,
   "guild" TEXT NOT NULL,
-	"roles" TEXT NOT NULL,
-	PRIMARY KEY("message")
+  "roles" TEXT NOT NULL,
+  PRIMARY KEY("message")
 );`;
-db.prepare(selfroles_tbl).run();
+db.prepare(reaction_roles).run();
 
 export const toggleableCmds: Record<string, 0 | 1> = {
     ban: 1,

@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
-import { Command } from './CommandBase';
+import { Command } from '../commands';
 
 // const {}
 
-export class TicTacToe extends Command {
+export default class TicTacToe extends Command {
     executor = 'tictactoe';
     category = 'games';
     display_name = 'Tic Tac Toe';
