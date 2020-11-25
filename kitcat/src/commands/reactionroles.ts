@@ -190,7 +190,7 @@ export default class Roles extends Command {
     }
 }
 
-export async function onMessageReactionAdd(reaction: MessageReaction, user: User): Promise<any> {
+export async function onMessageReactionAdd(reaction: MessageReaction, user: User | PartialUser): Promise<any> {
     try {
         await reaction.fetch();
     } catch (error) {
@@ -203,20 +203,23 @@ export async function onMessageReactionAdd(reaction: MessageReaction, user: User
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    const member = reaction.message.guild.member(user);
+    const member = reaction.message.guild.member(user as User);
     if (!member) return;
 
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) {
-        member.roles.add(msgSelfRoles[reaction.emoji.name]).catch((r) => {
-            member.send(r).catch(NOOP);
-        });
-    } else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        member.roles.add(msgSelfRoles[reaction.emoji.id]).catch((r) => {
-            member.send(r).catch(NOOP);
-        });
+    let emojiToAdd: string;
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
+        emojiToAdd = msgSelfRoles[reaction.emoji.name];
+    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
+        emojiToAdd = msgSelfRoles[reaction.emoji.id];
+
+    if (!emojiToAdd) return reaction.remove().catch(NOOP);
+
+    member.roles.add(emojiToAdd).catch((r) => {
+        member.send(r).catch(NOOP);
+    });
 }
 
-export async function onMessageReactionRemove(reaction: MessageReaction, user: User): Promise<any> {
+export async function onMessageReactionRemove(reaction: MessageReaction, user: User | PartialUser): Promise<any> {
     try {
         await reaction.fetch();
     } catch (error) {
@@ -229,17 +232,20 @@ export async function onMessageReactionRemove(reaction: MessageReaction, user: U
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    const member = reaction.message.guild.member(user);
+    const member = reaction.message.guild.member(user as User);
     if (!member) return;
 
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) {
-        member.roles.remove(msgSelfRoles[reaction.emoji.name]).catch((r) => {
-            member.send(r).catch(NOOP);
-        });
-    } else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        member.roles.remove(msgSelfRoles[reaction.emoji.id]).catch((r) => {
-            member.send(r).catch(NOOP);
-        });
+    let emojiToAdd: string;
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
+        emojiToAdd = msgSelfRoles[reaction.emoji.name];
+    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
+        emojiToAdd = msgSelfRoles[reaction.emoji.id];
+
+    if (!emojiToAdd) return reaction.remove().catch(NOOP);
+
+    member.roles.remove(emojiToAdd).catch((r) => {
+        member.send(r).catch(NOOP);
+    });
 }
 
 export function onMessageDelete(message: Message | PartialMessage): any {
