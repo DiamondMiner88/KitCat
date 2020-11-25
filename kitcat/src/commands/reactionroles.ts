@@ -137,11 +137,13 @@ export default class Roles extends Command {
                                     m.channel
                                         .send('I reacted to your original message, now you can edit it to your liking.')
                                         .then((m) => m.delete({ timeout: 5000 }).catch(NOOP));
+                                    clearInterval(last_timeout_id);
                                 })
                                 .catch((e: any) => m.author.send(e).catch(NOOP));
                         }
                         case '4':
                             collector.stop();
+                            clearInterval(last_timeout_id);
                             return m.channel.bulkDelete(clamp(msgs_sent_amount, 0, 100));
                         default:
                             return message.channel.send('That is not one of the options!');
@@ -188,7 +190,7 @@ export default class Roles extends Command {
     }
 }
 
-export async function onMessageReactionAdd(reaction: MessageReaction, user: PartialUser | User): Promise<any> {
+export async function onMessageReactionAdd(reaction: MessageReaction, user: User): Promise<any> {
     try {
         await reaction.fetch();
     } catch (error) {
@@ -201,17 +203,20 @@ export async function onMessageReactionAdd(reaction: MessageReaction, user: Part
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
-        reaction.message.member.roles.add(msgSelfRoles[reaction.emoji.name]).catch((r) => {
-            reaction.message.author.send(r).catch(NOOP);
+    const member = reaction.message.guild.member(user);
+    if (!member) return;
+
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) {
+        member.roles.add(msgSelfRoles[reaction.emoji.name]).catch((r) => {
+            member.send(r).catch(NOOP);
         });
-    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        reaction.message.member.roles.add(msgSelfRoles[reaction.emoji.id]).catch((r) => {
-            reaction.message.author.send(r).catch(NOOP);
+    } else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
+        member.roles.add(msgSelfRoles[reaction.emoji.id]).catch((r) => {
+            member.send(r).catch(NOOP);
         });
 }
 
-export async function onMessageReactionRemove(reaction: MessageReaction, user: PartialUser | User): Promise<any> {
+export async function onMessageReactionRemove(reaction: MessageReaction, user: User): Promise<any> {
     try {
         await reaction.fetch();
     } catch (error) {
@@ -224,13 +229,16 @@ export async function onMessageReactionRemove(reaction: MessageReaction, user: P
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
-        reaction.message.member.roles.remove(msgSelfRoles[reaction.emoji.name]).catch((r) => {
-            reaction.message.author.send(r).catch(NOOP);
+    const member = reaction.message.guild.member(user);
+    if (!member) return;
+
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) {
+        member.roles.remove(msgSelfRoles[reaction.emoji.name]).catch((r) => {
+            member.send(r).catch(NOOP);
         });
-    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        reaction.message.member.roles.remove(msgSelfRoles[reaction.emoji.id]).catch((r) => {
-            reaction.message.author.send(r).catch(NOOP);
+    } else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
+        member.roles.remove(msgSelfRoles[reaction.emoji.id]).catch((r) => {
+            member.send(r).catch(NOOP);
         });
 }
 

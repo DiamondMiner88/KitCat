@@ -19,7 +19,7 @@ dotenvconfig({
     path: path.join(__dirname, '../config'),
 });
 
-import Discord from 'discord.js';
+import Discord, { User } from 'discord.js';
 import { toggleableCmds, db } from './db';
 import { getGuildSettings, guildSettingsCache, IGuildSettings } from './settings';
 import { startAPI } from './api/express';
@@ -48,8 +48,8 @@ cleanup(() => {
     log4js.shutdown();
 });
 
-bot.on('messageReactionAdd', reactionroles.onMessageReactionAdd);
-bot.on('messageReactionRemove', reactionroles.onMessageReactionRemove);
+bot.on('messageReactionAdd', (reaction, user) => reactionroles.onMessageReactionAdd(reaction, user as User));
+bot.on('messageReactionRemove', (reaction, user) => reactionroles.onMessageReactionRemove(reaction, user as User));
 
 bot.on('ready', () => {
     LOGGER.debug('Bot is ready');
