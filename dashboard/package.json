@@ -1,26 +1,26 @@
 {
-  "name": "kitcat-react",
+  "name": "dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://kitcat-bot.github.io/KitCat",
   "dependencies": {
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
-    "@types/jest": "^26.0.15",
     "@types/node": "^14.14.10",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/node-fetch": "^2.5.7",
+    "@types/react": "^16.9.53",
+    "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.6",
     "node-fetch": "^2.6.1",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
-    "react-cookie": "^4.0.3",
     "react-cookie-consent": "^6.1.0",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.1",
-    "typescript": "^4.1.2",
-    "universal-cookie": "^4.0.4"
+    "react-scripts": "4.0.1",
+    "typescript": "^4.0.3",
+    "universal-cookie": "^4.0.4",
+    "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,7 +29,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [

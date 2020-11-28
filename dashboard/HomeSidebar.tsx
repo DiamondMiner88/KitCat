@@ -1,64 +1,53 @@
-import React from "react";
+import React from 'react';
 
 // Material-UI
-import { makeStyles } from "@material-ui/core/styles";
-import {
-    Drawer,
-    Link,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Toolbar
-} from "@material-ui/core";
-import {
-    Storage as StorageIcon,
-    Warning as WarningIcon
-} from "@material-ui/icons/";
+import { makeStyles } from '@material-ui/core/styles';
+import { Drawer, Link, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@material-ui/core';
+import { Storage as StorageIcon, Warning as WarningIcon } from '@material-ui/icons/';
 
 // Other
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex"
+        display: 'flex',
     },
     drawer: {
         width: 300,
-        flexShrink: 0
+        flexShrink: 0,
     },
     drawerPaper: {
-        width: 300
+        width: 300,
     },
     drawerContainer: {
-        overflow: "auto"
+        overflow: 'auto',
     },
     toolbar: theme.mixins.toolbar,
     link: {
-        textDecoration: "none"
-    }
+        textDecoration: 'none',
+    },
 }));
 
-export default function Sidebar(props) {
+export default function Sidebar(props: any) {
     const classes = useStyles();
     return (
-        <div position="fixed" className={classes.root}>
+        <div className={classes.root}>
             <Drawer
                 className={classes.drawer}
                 variant="permanent"
                 classes={{
-                    paper: classes.drawerPaper
+                    paper: classes.drawerPaper,
                 }}
             >
                 <Toolbar />
                 <div className={classes.drawerContainer}>
-                    {new Cookies().get("access-token") && (
+                    {new Cookies().get('access-token') && (
                         <List>
                             <ListItem
                                 button
                                 key="guilds"
                                 component={Link}
-                                href={process.env.PUBLIC_URL + "#/guilds"}
+                                href={process.env.PUBLIC_URL + '#/guilds'}
                                 className={classes.link}
                             >
                                 <ListItemIcon>
@@ -73,7 +62,7 @@ export default function Sidebar(props) {
                             button
                             key="status"
                             component={Link}
-                            href={process.env.PUBLIC_URL + "#/status"}
+                            href={process.env.PUBLIC_URL + '#/status'}
                             className={classes.link}
                         >
                             <ListItemIcon>

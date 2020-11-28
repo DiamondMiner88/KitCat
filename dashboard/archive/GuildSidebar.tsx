@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
 // Material-UI
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import {
     Avatar,
     Divider,
@@ -12,50 +12,50 @@ import {
     ListItemIcon,
     ListItemText,
     ListSubheader,
-    Toolbar
-} from "@material-ui/core";
+    Toolbar,
+} from '@material-ui/core';
 import {
     EmojiPeople as WavingPersonIcon,
     Home as HomeIcon,
     MeetingRoom as OpenDoorIcon,
     ToggleOff as ToggleOffIcon,
     SmsFailed as SmsFailedIcon,
-    Settings as SettingsIcon
-} from "@material-ui/icons";
+    Settings as SettingsIcon,
+} from '@material-ui/icons';
 
 // Other
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex"
+        display: 'flex',
     },
     drawer: {
         width: 300,
-        flexShrink: 0
+        flexShrink: 0,
     },
     drawerPaper: {
-        width: 300
+        width: 300,
     },
     drawerContainer: {
-        overflow: "auto"
+        overflow: 'auto',
     },
     toolbar: theme.mixins.toolbar,
     link: {
-        textDecoration: "none"
-    }
+        textDecoration: 'none',
+    },
 }));
 
-export default function GuildSidebar(props) {
+export default function GuildSidebar(props: any) {
     const classes = useStyles();
 
     return (
-        <div position="fixed" className={classes.root}>
+        <div className={classes.root}>
             <Drawer
                 className={classes.drawer}
                 variant="permanent"
                 classes={{
-                    paper: classes.drawerPaper
+                    paper: classes.drawerPaper,
                 }}
             >
                 <Toolbar />
@@ -65,7 +65,7 @@ export default function GuildSidebar(props) {
                             button
                             key="home_page"
                             component={Link}
-                            href={process.env.PUBLIC_URL + "#/"}
+                            href={process.env.PUBLIC_URL + '#/'}
                             className={classes.link}
                         >
                             <ListItemIcon>
@@ -84,7 +84,7 @@ export default function GuildSidebar(props) {
                             component={Link}
                             className={classes.link}
                             onClick={() => {
-                                props.onTabChange("disable_commands");
+                                props.onTabChange('disable_commands');
                             }}
                         >
                             <ListItemIcon>
@@ -101,7 +101,7 @@ export default function GuildSidebar(props) {
                             component={Link}
                             className={classes.link}
                             onClick={() => {
-                                props.onTabChange("welcomer");
+                                props.onTabChange('welcomer');
                             }}
                         >
                             <ListItemIcon>
@@ -118,7 +118,7 @@ export default function GuildSidebar(props) {
                             component={Link}
                             className={classes.link}
                             onClick={() => {
-                                props.onTabChange("leaver");
+                                props.onTabChange('leaver');
                             }}
                         >
                             <ListItemIcon>
@@ -135,7 +135,7 @@ export default function GuildSidebar(props) {
                             component={Link}
                             className={classes.link}
                             onClick={() => {
-                                props.onTabChange("dmOnJoin");
+                                props.onTabChange('dmOnJoin');
                             }}
                         >
                             <ListItemIcon>
@@ -152,7 +152,7 @@ export default function GuildSidebar(props) {
                             component={Link}
                             className={classes.link}
                             onClick={() => {
-                                props.onTabChange("other");
+                                props.onTabChange('other');
                             }}
                         >
                             <ListItemIcon>
@@ -170,31 +170,26 @@ export default function GuildSidebar(props) {
 }
 
 function GetRecentServers() {
-    let recentServers = new Cookies().get("recent-servers");
+    let recentServers = new Cookies().get('recent-servers');
 
     return recentServers ? (
         <div>
             <Divider />
             <ListSubheader>Recent Servers</ListSubheader>
-            {recentServers.map(item => {
+            {recentServers.map((item: any) => {
                 return (
                     <List>
                         <ListItem
                             button
                             key={item.id}
                             component={Link}
-                            style={{ textDecoration: "none" }}
+                            style={{ textDecoration: 'none' }}
                             onClick={() => {
-                                window.location =
-                                    process.env.PUBLIC_URL +
-                                    `#/guild/${item.id}`;
+                                // window.location = process.env.PUBLIC_URL + `#/guild/${item.id}`;
                             }}
                         >
                             <ListItemIcon>
-                                <Avatar
-                                    alt={item.name}
-                                    src={item.iconURL}
-                                ></Avatar>
+                                <Avatar alt={item.name} src={item.iconURL}></Avatar>
                             </ListItemIcon>
                             <ListItemText primary={item.name} />
                         </ListItem>

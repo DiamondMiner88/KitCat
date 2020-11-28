@@ -5,18 +5,17 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 
 // Components
-import { Navbar, CookieConsent } from '../components';
+import { NavBar } from '../components';
 
-export default function NotFound(props) {
-  const history = useHistory();
-  return (
-    <div>
-      <CookieConsent />
-      <Navbar location={props.location} />
-      <div className="container">
-        <h1>404 - Not Found</h1>
-        <Button onClick={() => history.goBack()}>Go Back</Button>
-      </div>
-    </div>
-  );
+export default function NotFound(props: any) {
+    const history = useHistory();
+    return (
+        <div>
+            <NavBar location={props.location} />
+            <div className="container">
+                <h1>This page doesn't exist!</h1>
+                <Button onClick={() => history.goBack()}>Go Back</Button>
+            </div>
+        </div>
+    );
 }

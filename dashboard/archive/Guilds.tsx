@@ -16,7 +16,6 @@ import { Navbar, HomeSidebar, CookieConsent } from '../components';
 
 // Other
 import Cookies from 'universal-cookie';
-import { ReactIsInDevelomentMode } from '../functions';
 
 const useStyles = makeStyles((theme) => ({
   root: {

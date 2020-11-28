@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from 'react';
 
 // Material-UI
-import { makeStyles } from "@material-ui/core/styles";
-import { KeyboardArrowDown as KeyboardArrowDownIcon } from "@material-ui/icons";
-import { Skeleton } from "@material-ui/lab";
+import { makeStyles } from '@material-ui/core/styles';
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import {
     AppBar,
     Avatar,
@@ -17,32 +17,33 @@ import {
     Paper,
     Popper,
     MenuItem,
-    MenuList
-} from "@material-ui/core";
+    MenuList,
+} from '@material-ui/core';
 
 // Other
-import Cookies from "universal-cookie";
-import fetch from "node-fetch";
+import Cookies from 'universal-cookie';
+import fetch from 'node-fetch';
+import { getUser, REDIRECT_URL } from '../data/api';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex"
+        display: 'flex',
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
     },
     spacer: {
-        flex: "1 1 auto"
+        flex: '1 1 auto',
     },
     elements: {
-        paddingRight: theme.spacing(3)
-    }
+        paddingRight: theme.spacing(3),
+    },
 }));
 
-export default function Navbar(props) {
+export default function Navbar(props: any) {
     const classes = useStyles();
-    const [hasToken, setHasToken] = React.useState(false);
-    const [user, setUser] = React.useState();
+    const [user, setUser] = useState(null);
+    getUser();
 
     //User drop down
     const [userDropdownRef, setUserDropdownRef] = React.useState(null);
@@ -60,43 +61,31 @@ export default function Navbar(props) {
                         <Grow
                             {...TransitionProps}
                             style={{
-                                transformOrigin:
-                                    placement === "bottom"
-                                        ? "center top"
-                                        : "center bottom"
+                                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
                             }}
                         >
                             <Paper>
-                                <ClickAwayListener
-                                    onClickAway={() => setUserDropdownRef(null)}
-                                >
+                                <ClickAwayListener onClickAway={() => setUserDropdownRef(null)}>
                                     <MenuList
                                         autoFocusItem={Boolean(userDropdownRef)}
                                         id="menu-list-grow"
-                                        onKeyDown={event => {
-                                            if (event.key === "Tab") {
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Tab') {
                                                 event.preventDefault();
                                                 setUserDropdownRef(null);
                                             }
                                         }}
                                     >
                                         <MenuItem
-                                            onClick={event => {
+                                            onClick={(event) => {
                                                 setUserDropdownRef(null);
                                                 // Remove all cookies
                                                 const exp = new Date().toUTCString();
-                                                document.cookie
-                                                    .split(";")
-                                                    .forEach(c => {
-                                                        document.cookie = c
-                                                            .replace(/^ +/, "")
-                                                            .replace(
-                                                                /=.*/,
-                                                                "=;expires=" +
-                                                                    exp +
-                                                                    ";path=/"
-                                                            );
-                                                    });
+                                                document.cookie.split(';').forEach((c) => {
+                                                    document.cookie = c
+                                                        .replace(/^ +/, '')
+                                                        .replace(/=.*/, '=;expires=' + exp + ';path=/');
+                                                });
                                                 document.location.reload();
                                             }}
                                         >
@@ -112,25 +101,6 @@ export default function Navbar(props) {
         );
     };
 
-    React.useEffect(() => {
-        const cookies = new Cookies();
-        if (cookies.get("access-token") !== undefined) {
-            setHasToken(true);
-            fetch("https://discord.com/api/users/@me", {
-                headers: {
-                    authorization: `Bearer ${cookies.get("access-token")}`
-                }
-            })
-                .then(res => res.json())
-                .then(json => {
-                    if (json.message)
-                        window.location = process.env.PUBLIC_URL + "#/";
-                    else setUser(json);
-                })
-                .catch(console.error);
-        }
-    }, []);
-
     return (
         <div className={classes.root}>
             <AppBar position="fixed" className={classes.appBar}>
@@ -144,10 +114,7 @@ export default function Navbar(props) {
                     </Link>
 
                     {hasToken && (
-                        <Link
-                            color="inherit"
-                            href={process.env.PUBLIC_URL + "#/guilds"}
-                        >
+                        <Link color="inherit" href={process.env.PUBLIC_URL + '#/guilds'}>
                             Guilds
                         </Link>
                     )}
@@ -163,27 +130,14 @@ export default function Navbar(props) {
                             <Box mr={6} />
                         </div>
                     ) : null}
-                    {/* If we have user info, display username, else if have the token but no user info yet, display a skeleton otherwise display login */}
                     {user ? (
                         <Typography variant="subtitle2">
                             <b>{user.username}</b>#{user.discriminator}
                         </Typography>
                     ) : !user && hasToken ? (
-                        <Skeleton
-                            variant="rect"
-                            width={150}
-                            height={16}
-                            animation="wave"
-                        />
+                        <Skeleton variant="rect" width={150} height={16} animation="wave" />
                     ) : (
-                        <Link
-                            color="inherit"
-                            href={`https://discord.com/api/oauth2/authorize?client_id=${
-                                process.env.REACT_APP_CLIENT_ID
-                            }&redirect_uri=${encodeURIComponent(
-                                process.env.REACT_APP_DISCORD_REDIRECT_URL
-                            )}&response_type=code&scope=guilds%20identify`}
-                        >
+                        <Link color="inherit" href={REDIRECT_URL}>
                             Login with Discord
                         </Link>
                     )}
@@ -192,14 +146,12 @@ export default function Navbar(props) {
                         <IconButton
                             aria-label="drop down menu"
                             color="inherit"
-                            onClick={event =>
-                                setUserDropdownRef(event.currentTarget)
-                            }
+                            // onClick={(event) => setUserDropdownRef(event.currentTarget)}
                         >
                             <KeyboardArrowDownIcon />
                         </IconButton>
                     )}
-                    {userDropdown()}
+                    {/* {userDropdown()} */}
                 </Toolbar>
             </AppBar>
         </div>
