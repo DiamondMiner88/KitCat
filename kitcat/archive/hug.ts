@@ -20,9 +20,9 @@ const PEOPLE_HUG = [
 ];
 
 export default class Hug extends Command {
-    executor = 'hug';
+    trigger = 'hug';
     category = 'fun';
-    display_name = '🤗 Hug';
+    name = '🤗 Hug';
     description = 'Hug someone!';
     usage = '{Mention}';
     guildOnly = false;

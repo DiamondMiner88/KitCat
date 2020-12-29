@@ -17,42 +17,9 @@ export function clamp(num: number, min: number, max: number): number {
  * @param id User id
  * @returns True if user has permission
  */
-export function userBypass(id: string): boolean {
-    const bypassAll = ['295190422244950017' /* DiamondMiner88 */, '407320720662855692' /* PixelDough */];
+export function devPerms(id: string): boolean {
+    const bypassAll = [SNOWFLAKES.Diamond, SNOWFLAKES.PixelDough];
     return bypassAll.includes(id);
-}
-
-const discordmarkdown: [RegExp, string, string][] = [
-    [/\*/g, '\\*', 'asterisk'],
-    [/\(/g, '\\(', 'parentheses'],
-    [/\)/g, '\\)', 'parentheses'],
-    [/\[/g, '\\[', 'square bracket'],
-    [/\]/g, '\\]', 'square bracket'],
-    [/</g, '\\<', 'angle bracket'],
-    [/>/g, '\\>', 'angle bracket'],
-    [/_/g, '\\_', 'underscore'],
-];
-
-/**
- * Escape discord markdown
- * @param str String you want to escape
- * @returns Escaped string
- */
-export function escapeMarkdown(str: string): string {
-    discordmarkdown.forEach((replacement) => (str = str.replace(replacement[0], replacement[1])));
-    return str;
-}
-
-/**
- * Split a string into chunks by length
- * @param str String you want to split
- * @param length Length of each split
- * @returns Array of the split string
- */
-export function splitInChunks(str: string, length: number): string[] {
-    const chunks = [];
-    for (let i = 0; i < str.length; i += length) chunks.push(str.substring(i, i + 3));
-    return chunks;
 }
 
 /**
@@ -63,3 +30,17 @@ export function splitInChunks(str: string, length: number): string[] {
 export function NOOP(...params: any): undefined {
     return undefined;
 }
+
+/**
+ * Snowflakes that are used internally
+ */
+export const SNOWFLAKES = {
+    // servers
+    bot_testing: '676284863967526928',
+    pcms_server: '752212085672247296',
+    studying_with_students: '778396457023176725',
+
+    // users
+    Diamond: '295190422244950017',
+    PixelDough: '407320720662855692',
+};

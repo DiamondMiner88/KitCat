@@ -1,7 +1,8 @@
-import Discord, { Guild, Message, MessageEmbed, Snowflake, TextChannel, VoiceChannel } from 'discord.js';
+import { Guild, Message, MessageEmbed, Snowflake, TextChannel, VoiceChannel } from 'discord.js';
 import { IGuildSettings } from '../settings';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 import { bot } from '../bot';
+import { GuildMessage } from '../types';
 
 const queue: Record<
     Snowflake,
@@ -15,33 +16,30 @@ const queue: Record<
 const playing: Record<Snowflake, boolean> = {};
 
 export default class TTS extends Command {
-    executor = 'tts';
-    category = 'util';
-    display_name = `🤖 Text-To-Speech`;
+    trigger = 'tts';
+    category = Categories.UTIL;
+    name = `🤖 Text-To-Speech`;
     description = `Joins your VC and says what you want it to say!`;
     usage = '{Text}';
     guildOnly = true;
     unlisted = false;
     nsfw = false;
 
-    async run(message: Message, args: string[], settings: IGuildSettings): Promise<any> {
+    async invoke(message: GuildMessage, args: string[], settings: IGuildSettings): Promise<any> {
         if (args.length === 0) {
-            const collector = message.channel.createMessageCollector(
-                (m: Message) => m.author.id === message.author.id && m.channel.id === message.channel.id,
-                { time: 5 * 60 * 1000 }
-            );
-            collector.on('collect', (m: Message) => {
-                if (m.content.startsWith(`${settings.prefix}stop`)) collector.stop();
-                else addToQueue(m);
+            const collector = message.channel.createMessageCollector((m: Message) => m.author.id === message.author.id && m.channel.id === message.channel.id, {
+                time: 5 * 60 * 1000,
+            });
+            collector.on('collect', (m: GuildMessage) => {
+                // record collector so you can stop it with a slash command
+                if (m.channel.id !== message.channel.id) return;
+                if (m.content.startsWith(`/stop`)) return collector.stop();
+                addToQueue(m);
             });
             collector.on('end', () => {
-                message.channel.send(
-                    `${message.author} I'm no longer listening to your messages. Run the command again for me to continue.`
-                );
+                message.channel.send(`${message.author} I'm no longer listening to your messages. Run the command again for me to continue.`);
             });
-            message.channel.send(
-                `${message.author}, I'm listening to speak any messages you send here!\nSay \`${settings.prefix}stop\` for me to stop!`
-            );
+            message.channel.send(`${message.author}, I'm listening to speak any messages you send here!\nSay \`${settings.prefix}stop\` for me to stop!`);
         } else {
             message.content = args.join(' ');
             addToQueue(message);
@@ -49,7 +47,7 @@ export default class TTS extends Command {
     }
 }
 
-function addToQueue(message: Discord.Message) {
+function addToQueue(message: GuildMessage): any {
     const channel = message.member.voice.channel;
     if (!channel) return message.channel.send('You are not in a voice channel!');
 
@@ -88,7 +86,7 @@ async function play(guildid: Snowflake) {
             .addField('Text', `${toPlay.text.substring(0, 50)}`)
             .setFooter('Deleting all queue entries for that VC');
         authorChannel?.send(embed);
-        queue[guildid] = queue[guildid].filter((e) => e.channel !== toPlay.channel);
+        queue[guildid] = queue[guildid].filter(e => e.channel !== toPlay.channel);
         play(guildid);
         return;
     }

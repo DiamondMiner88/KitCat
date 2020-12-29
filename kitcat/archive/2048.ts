@@ -18,9 +18,9 @@ type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
 const games: Record<Snowflake, Game> = {};
 
 export default class TwoThousandFortyEight extends Command {
-    executor = '2048';
+    trigger = '2048';
     category = 'games';
-    display_name = ':1234: 2048';
+    name = ':1234: 2048';
     description = 'Play 2048 in Discord';
     usage = 'help';
     guildOnly = true;

@@ -1,28 +1,27 @@
 import Discord from 'discord.js';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 import dateformat from 'dateformat';
+import { GuildMessage } from '../types';
 
 export default class ServerInfo extends Command {
-    executor = 'serverinfo';
-    category = 'util';
-    display_name = 'Server Info';
+    trigger = 'serverinfo';
+    category = Categories.UTIL;
+    name = 'Server Info';
     description = `Gives statu on this server.`;
     usage = '';
     guildOnly = true;
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message): Promise<any> {
-        const guild = await message.guild.fetch();
+    async invoke(message: GuildMessage): Promise<any> {
         const timecreated = dateformat(message.guild.createdAt, 'UTC:yyyy/mm/dd HH:MM:ss "GMT"');
 
-        return message.channel.send(
-            new Discord.MessageEmbed()
-                .setTitle(`__${message.guild.name}__`)
-                .setColor(0xf9f5ea)
-                .setThumbnail(message.guild.iconURL())
-                .addField(`Approximate Members:`, guild.approximateMemberCount, true)
-                .addField(`Created:`, timecreated, true)
-        );
+        const embed = new Discord.MessageEmbed()
+            .setTitle(`__${message.guild.name}__`)
+            .setColor(0xf9f5ea)
+            .addField(`Member count:`, message.guild.memberCount, true)
+            .addField(`Created:`, timecreated, true);
+        if (message.guild.iconURL()) embed.setThumbnail(message.guild.iconURL()!);
+        return message.channel.send(embed);
     }
 }

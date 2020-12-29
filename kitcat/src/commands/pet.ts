@@ -1,19 +1,19 @@
 import Discord from 'discord.js';
 import { IGuildSettings } from '../settings';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 import fetch from 'node-fetch';
 
 export default class Pet extends Command {
-    executor = 'pet';
-    category = 'fun';
-    display_name = '🌭 Pet';
+    trigger = 'pet';
+    category = Categories.FUN;
+    name = '🌭 Pet';
     description = `Get a photo/gif of kitties, dogs or other cute pets!`;
     usage = '{animal name | help}';
     guildOnly = false;
     unlisted = false;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
+    async invoke(message: Discord.Message, args: string[], settings: IGuildSettings): Promise<any> {
         const { prefix } = settings;
         if (args.length === 0) return message.channel.send(`What pet do you want? \`${prefix}pet {animal}\``);
         const subcommand = args.shift();
@@ -29,9 +29,7 @@ export default class Pet extends Command {
             }
             case 'cat':
             case 'kitty': {
-                return message.channel.send(
-                    new Discord.MessageEmbed().setTitle(`Here's a cat for you!`).setImage('https://cataas.com/cat')
-                );
+                return message.channel.send(new Discord.MessageEmbed().setTitle(`Here's a cat for you!`).setImage('https://cataas.com/cat'));
             }
             case 'dog': {
                 const res = await fetch('https://dog.ceo/api/breeds/image/random');
@@ -40,12 +38,7 @@ export default class Pet extends Command {
                     this.LOGGER.error(json);
                     return message.channel.send('An error occured with the dog api we used! This error was reported!');
                 }
-                return message.channel.send(
-                    new Discord.MessageEmbed()
-                        .setColor(0xf9f5ea)
-                        .setTitle(`Here's A doggo For You!`)
-                        .setImage(json.message)
-                );
+                return message.channel.send(new Discord.MessageEmbed().setColor(0xf9f5ea).setTitle(`Here's A doggo For You!`).setImage(json.message));
             }
         }
     }

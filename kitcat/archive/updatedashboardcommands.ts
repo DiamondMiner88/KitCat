@@ -1,11 +1,9 @@
 /* eslint-disable no-console */
-console.log('It will say "Connected to data.db!" This is normal.');
-
 import fs from 'fs';
-import { categories, ICategory, Command } from '../commands';
+import { CategoriesData, CategoriesData, Command } from '../commands';
 import { commands } from '../bot';
 
-type DataCategory = ICategory & { commands: string[] }; // ICategory type + a 'command' field thats a string array
+type DataCategory = CategoriesData & { commands: string[] }; // ICategory type + a 'command' field thats a string array
 type DataCommand = Pick<
     Command,
     'executor' | 'category' | 'display_name' | 'description' | 'usage' | 'guildOnly' | 'nsfw'
@@ -19,7 +17,7 @@ const data: {
     categories: [],
 };
 
-categories.forEach((category: ICategory) => {
+CategoriesData.forEach((category: CategoriesData) => {
     // Create a var transforming the ICategory type to a DataCategory type
     const dataCat: DataCategory = { ...category, commands: [] };
 
@@ -31,11 +29,12 @@ commands.forEach((command) => {
 
     // Push command name into the [category].commands
     const catI = data.categories.findIndex((category) => category.name === command.category);
-    if (catI) data.categories[catI].commands.push(command.executor);
+    if (catI) data.categories[catI].commands.push(command.trigger);
 
     data.commands.push(command);
 });
 
-console.log(data);
-fs.writeFileSync('./commands.json', JSON.stringify(data), { encoding: 'utf-8' });
-console.log('Wrote to /build/util/commands.json');
+fs.writeFileSync('../../../dashboard/data/commandData.tsx', `module.exports = ${JSON.stringify(data)}`, {
+    encoding: 'utf-8',
+});
+console.log('Finished.');

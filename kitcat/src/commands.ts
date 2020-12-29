@@ -1,73 +1,50 @@
 import { Message } from 'discord.js';
-import { Logger, getLogger } from 'log4js';
 import { IGuildSettings } from './settings';
+import { Logger, getLogger } from 'log4js';
 
-export class Command {
-    executor: string;
-    aliases: string[];
-    category: string;
-    display_name: string;
-    description?: string;
-    usage?: string;
-    guildOnly?: boolean = true;
-    unlisted?: boolean = false;
-    nsfw?: boolean = false;
-    LOGGER: Logger;
+export abstract class Command {
+    abstract readonly trigger: string;
+    abstract readonly category: Categories;
+    abstract readonly name: string;
+    abstract readonly description: string;
+    abstract readonly usage?: string;
+    abstract readonly guildOnly: boolean = true;
+    abstract readonly unlisted: boolean = false;
+    abstract readonly nsfw?: boolean = false;
+    readonly LOGGER: Logger = (() => getLogger(`command-${this.trigger}`))();
 
-    constructor() {
-        this.LOGGER = getLogger(`command-${this.executor}`);
+    get formattedUsage(): string {
+        return `\`/${this.trigger}${this.usage != null ? ' ' + this.usage : ''}\``;
     }
 
-    getUsage(settings: IGuildSettings): string {
-        return `\`${settings.prefix}${this.executor}${this.usage != null ? ' ' + this.usage : ''}\``;
-    }
-
-    getCommandHelp(settings: IGuildSettings): [string, string] {
-        return [
-            this.display_name != null ? this.display_name : this.executor,
-            (this.description != null ? this.description + '\n' : '') + this.getUsage(settings),
-        ];
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    run(message: Message, args: string[], settings: IGuildSettings): void {
-        message.channel
-            .send('This command has not been implemented yet! Coming soon to a shard near you! :P')
-            .catch((e) => this.LOGGER.error(e));
-    }
+    abstract invoke(message: Message, args: string[], settings: IGuildSettings): Promise<any>;
 }
 
-type ICategories = 'moderation' | 'fun' | 'util' | 'games' | 'kitcat';
-export type ICategory = {
-    name: ICategories;
-    display_name: string;
-    description: string;
-};
+export enum Categories {
+    MODERATION,
+    FUN,
+    UTIL,
+    KITCAT,
+}
 
-export const categories: ICategory[] = [
+export const CategoriesData: {
+    name: string;
+    description: string;
+}[] = [
     {
-        name: 'moderation',
-        display_name: '🚫 Moderation',
+        name: '🚫 Moderation',
         description: 'Commands to help keep your server in shape!',
     },
     {
-        name: 'fun',
-        display_name: '😄 Fun',
+        name: '😄 Fun',
         description: 'Random, stupid and fun commands!',
     },
     {
-        name: 'util',
-        display_name: '🛠️ Utils',
-        description: '',
+        name: '🛠️ Utils',
+        description: 'Utility commands that may or may not be helpful!',
     },
     {
-        name: 'games',
-        display_name: '🎲 Games',
-        description: '',
-    },
-    {
-        name: 'kitcat',
-        display_name: 'Commands related to me!',
-        description: '',
+        name: '<kitcat emoji> KitCat',
+        description: 'Commands related to me!',
     },
 ];

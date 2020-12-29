@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 
 const eightball_config = {
     replies: [
@@ -27,25 +27,22 @@ const eightball_config = {
 };
 
 export default class EightBall extends Command {
-    executor = '8ball';
-    category = 'fun';
-    display_name = '🎱 8Ball';
+    trigger = '8ball';
+    category = Categories.FUN;
+    name = '🎱 8Ball';
     description = 'Ask the 8ball a question, and it will give you an answer.';
     usage = '{question}';
     guildOnly = false;
     unlisted = false;
     nsfw = false;
 
-    run(message: Discord.Message, args: string[]): any {
+    invoke(message: Discord.Message, args: string[]): any {
         if (args.length === 0) message.channel.send(`You didn't ask a question! ;(`);
         else {
             const embed = new Discord.MessageEmbed()
                 .setColor(0xf9f5ea)
                 .setTitle('8Ball')
-                .addField(
-                    '> ' + args.join(' '),
-                    eightball_config.replies[Math.floor(Math.random() * eightball_config.replies.length)]
-                );
+                .addField('> ' + args.join(' '), eightball_config.replies[Math.floor(Math.random() * eightball_config.replies.length)]);
             message.channel.send(embed);
         }
     }

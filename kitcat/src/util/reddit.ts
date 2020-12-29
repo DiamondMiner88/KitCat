@@ -2,15 +2,13 @@ import Discord, { Collection } from 'discord.js';
 import snoowrap, { Submission } from 'snoowrap';
 import fetch from 'node-fetch';
 
-const reddit = process.env.REDDIT_CLIENT_ID
-    ? new snoowrap({
-          userAgent: 'meme_gatherer',
-          clientId: process.env.REDDIT_CLIENT_ID,
-          clientSecret: process.env.REDDIT_CLIENT_SECRET,
-          username: process.env.REDDIT_USERNAME,
-          password: process.env.REDDIT_PASSWORD,
-      })
-    : undefined;
+const reddit = new snoowrap({
+    userAgent: 'meme_gatherer',
+    clientId: process.env.REDDIT_CLIENT_ID,
+    clientSecret: process.env.REDDIT_CLIENT_SECRET,
+    username: process.env.REDDIT_USERNAME,
+    password: process.env.REDDIT_PASSWORD,
+});
 
 const guild_id_list: Collection<Discord.Snowflake, string[]> = new Collection();
 const dm_id_list: Collection<Discord.Snowflake, string[]> = new Collection();
@@ -28,12 +26,9 @@ export async function getTopPost(message: Discord.Message, subreddit_name: strin
     if (message.channel.type !== 'dm') {
         const res = await fetch(`https://api.reddit.com/r/${subreddit_name}/about`);
         const resJSON = await res.json();
-        if (resJSON.data.over18 && !message.channel.nsfw)
-            return message.channel.send(
-                'The subreddit you chose is 18+. Run this command in a NSFW channel to get the posts.'
-            );
+        if (resJSON.data.over18 && !message.channel.nsfw) return message.channel.send('The subreddit you chose is 18+. Run this command in a NSFW channel to get the posts.');
         else {
-            const list: string[] = guild_id_list.get(message.guild.id) || [];
+            const list: string[] = guild_id_list.get(message.guild!.id) || [];
 
             const subreddit = reddit.getSubreddit(subreddit_name);
             const topPosts = await subreddit.getTop({
@@ -41,10 +36,10 @@ export async function getTopPost(message: Discord.Message, subreddit_name: strin
                 after: list[list.length - 1],
             });
 
-            let postToUse: Submission;
+            let postToUse: Submission | undefined;
 
-            topPosts.forEach((post) => {
-                if (!list.some((id) => id === post.id)) {
+            topPosts.forEach(post => {
+                if (!list.some(id => id === post.id)) {
                     postToUse = post;
                 }
             });
@@ -53,12 +48,9 @@ export async function getTopPost(message: Discord.Message, subreddit_name: strin
 
             list.push(postToUse.id);
 
-            guild_id_list.set(message.guild.id, list);
+            guild_id_list.set(message.guild!.id, list);
 
-            if (postToUse.over_18 && !message.channel.nsfw)
-                return message.channel.send(
-                    `Post was enexpectedly NSFW. Execute this command again to get another post!`
-                );
+            if (postToUse.over_18 && !message.channel.nsfw) return message.channel.send(`Post was enexpectedly NSFW. Execute this command again to get another post!`);
 
             sendPost(message, postToUse);
         }
@@ -71,10 +63,10 @@ export async function getTopPost(message: Discord.Message, subreddit_name: strin
             after: list[list.length - 1],
         });
 
-        let postToUse: Submission;
+        let postToUse: Submission | undefined;
 
-        topPosts.forEach((post) => {
-            if (!list.some((id) => id === post.id)) {
+        topPosts.forEach(post => {
+            if (!list.some(id => id === post.id)) {
                 postToUse = post;
             }
         });

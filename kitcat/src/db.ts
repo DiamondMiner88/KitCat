@@ -2,12 +2,6 @@ import better_sqlite3 from 'better-sqlite3';
 
 export const db = better_sqlite3('../config/data.db');
 
-//#region Updates to execute on start
-const UPDATES: string[][] = [];
-
-UPDATES.forEach((a) => db.prepare(a.shift()).run(...a));
-//#endregion
-
 const users_tbl = `
 CREATE TABLE IF NOT EXISTS "users" (
   "guild" INTEGER NOT NULL,
@@ -53,8 +47,5 @@ export const toggleableCmds: Record<string, 0 | 1> = {
 };
 
 export function addDefaultGuildSettings(guildid: string): void {
-    db.prepare('INSERT OR IGNORE INTO settings (guild, commands) VALUES(?, ?)').run(
-        guildid,
-        JSON.stringify(toggleableCmds)
-    );
+    db.prepare('INSERT OR IGNORE INTO settings (guild, commands) VALUES(?, ?)').run(guildid, JSON.stringify(toggleableCmds));
 }

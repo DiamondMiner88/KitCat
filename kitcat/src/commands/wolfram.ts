@@ -1,9 +1,10 @@
 import Discord, { Collection } from 'discord.js';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 
 //#region WolframAlphaAPI
 import https from 'https';
 import querystring from 'querystring';
+import { SNOWFLAKES } from '../util/utils';
 
 const baseApiUrl = 'https://api.wolframalpha.com/';
 const createApiParamsRejectMsg = 'method only receives string or object';
@@ -100,7 +101,7 @@ function fetchResults(params: any) {
     const { url, output } = params;
     return new Promise((resolve, reject) => {
         https
-            .get(url, (res) => {
+            .get(url, res => {
                 const statusCode = res.statusCode;
                 const contentType = res.headers['content-type'];
                 if (output === 'image' && statusCode === 200) {
@@ -109,14 +110,14 @@ function fetchResults(params: any) {
                     res.setEncoding('utf8');
                 }
                 let data = '';
-                res.on('data', (chunk) => {
+                res.on('data', chunk => {
                     data += chunk;
                 });
                 res.on('end', () => {
                     resolve({ data, output, statusCode, contentType });
                 });
             })
-            .on('error', (e) => {
+            .on('error', e => {
                 reject(e);
             });
     });
@@ -282,10 +283,8 @@ class WolframAlphaAPI {
      * // TypeError: method only receives string or object
      * waApi.getFull().then(console.log, console.error);
      */
-    getFull(input: any, params?: Collection<string, string>) {
-        const baseUrl = `${baseApiUrl}v2/query?appid=${this.appid}${params.map(
-            (val, key) => `&${key}=${encodeURIComponent(val)}`
-        )}`;
+    getFull(input: any, params: Collection<string, string> = new Collection()) {
+        const baseUrl = `${baseApiUrl}v2/query?appid=${this.appid}${params.map((val, key) => `&${key}=${encodeURIComponent(val)}`)}`;
         // This promise works just like createApiParams, except with a bit more processing
         return new Promise((resolve, reject) => {
             switch (typeof input) {
@@ -322,16 +321,18 @@ class WolframAlphaAPI {
 const api = new WolframAlphaAPI('3K5593-UJEWH5VHRJ');
 
 export default class Wolfram extends Command {
-    executor = 'wolfram';
-    category = 'util';
-    display_name = `Bot's Ping`;
+    trigger = 'wolfram';
+    category = Categories.UTIL;
+    name = `Wolfram Alpha`;
     description = `Ask a mathematical or analytical question you want answered.`;
     usage = '{query}';
     guildOnly = false;
     unlisted = true;
     nsfw = false;
 
-    async run(message: Discord.Message, args: string[]): Promise<any> {
+    async invoke(message: Discord.Message, args: string[]): Promise<any> {
+        if (message.channel.id !== SNOWFLAKES.studying_with_students || message.channel.id !== SNOWFLAKES.bot_testing) return;
+        if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.formattedUsage);
         const query = args.join(' ');
 
         api.getFull(
@@ -343,18 +344,10 @@ export default class Wolfram extends Command {
         )
             .then((result: any) => {
                 const content = result.pods
-                    ?.map((pod: any) =>
-                        pod.subpods?.map(
-                            (subpod: any) =>
-                                (subpod.img.title || subpod.img.alt || subpod.title) +
-                                ': ' +
-                                pod.subpods[0].img.src +
-                                '\n'
-                        )
-                    )
+                    ?.map((pod: any) => pod.subpods?.map((subpod: any) => (subpod.img.title || subpod.img.alt || subpod.title) + ': ' + pod.subpods[0].img.src + '\n'))
                     .join('\n');
-                message.channel.send(content).catch((e) => message.channel.send(e));
+                message.channel.send(content).catch(e => message.channel.send(e));
             })
-            .catch((e) => this.LOGGER.error(e));
+            .catch(e => this.LOGGER.error(e));
     }
 }

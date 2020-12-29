@@ -15,7 +15,8 @@ export type IGuildSettings = {
 
 export function getGuildSettings(guild: Guild): IGuildSettings {
     const { id } = guild;
-    if (guildSettingsCache.has(id)) return guildSettingsCache.get(id);
+    const cached: any = guildSettingsCache.get(id);
+    if (cached) return cached;
     addDefaultGuildSettings(id);
     const row = db.prepare('SELECT * FROM settings WHERE guild = ?').get(id);
     row.commands = JSON.parse(row.commands);

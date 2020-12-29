@@ -14,9 +14,9 @@ import {
     Guild,
     PartialMessage,
 } from 'discord.js';
-import { Command } from '../commands';
+import { Command, Categories } from '../commands';
 import { UNICODE_EMOJI_REGEX, CUSTOM_EMOJI_REGEX, clamp, NOOP } from '../util/utils';
-import { userBypass } from '../util/utils';
+import { devPerms } from '../util/utils';
 import { db } from '../db';
 import NodeCache from 'node-cache';
 
@@ -26,10 +26,11 @@ export type IGuildSelfRoles = Record<string, Record<string, string>>;
 
 export function getGuildReactionRoles(guild: Guild): IGuildSelfRoles {
     const { id } = guild;
-    if (guildSelfRolesCache.has(id)) return guildSelfRolesCache.get(id);
+    const cached: any = guildSelfRolesCache.get(id);
+    if (cached) return cached;
     const rows = db.prepare('SELECT message, roles FROM "reaction_roles" WHERE guild = ?').all(id);
     const selfRoles: IGuildSelfRoles = {};
-    rows.forEach((row) => (selfRoles[row.message] = JSON.parse(row.roles)));
+    rows.forEach(row => (selfRoles[row.message] = JSON.parse(row.roles)));
     guildSelfRolesCache.set(id, selfRoles, guild.memberCount > 10000 ? 60 * 60 * 4 : 60 * 60);
     return selfRoles;
 }
@@ -37,26 +38,25 @@ export function getGuildReactionRoles(guild: Guild): IGuildSelfRoles {
 export function addReactionRolesToDB(message: Message, roles: Record<string, Snowflake>): void {
     db.prepare('INSERT OR IGNORE INTO "reaction_roles" (message, guild, roles, channel) VALUES (?, ?, ?, ?)').run(
         message.id,
-        message.guild.id,
+        message.guild!.id,
         JSON.stringify(roles),
         message.channel.id
     );
-    guildSelfRolesCache.del(message.guild.id);
+    guildSelfRolesCache.del(message.guild!.id);
 }
 
 export default class Roles extends Command {
-    executor = 'reactionroles';
-    category = 'moderation';
-    display_name = 'Reaction Roles';
+    trigger = 'reactionroles';
+    category = Categories.MODERATION;
+    name = 'Reaction Roles';
     description = `Make a message that when reacted to, assigns you a role.`;
     usage = '';
     guildOnly = true;
     unlisted = false;
     nsfw = false;
 
-    run(message: Message): any {
-        if (!message.member.hasPermission('MANAGE_ROLES') && !userBypass(message.author.id))
-            return message.channel.send(`You don't have the permission to manage roles.`);
+    invoke(message: Message): any {
+        if (!message.member?.hasPermission('MANAGE_ROLES') && !devPerms(message.author.id)) return message.channel.send(`You don't have the permission to do that!`);
 
         enum Actions {
             SELECT_ACTION = 0,
@@ -67,7 +67,7 @@ export default class Roles extends Command {
 
         let msgs_sent_amount = 0;
         let current_action: Actions = Actions.SELECT_ACTION;
-        let selected_emoji: string = null;
+        let selected_emoji: string | null = null;
         let last_timeout_id: NodeJS.Timeout;
         const pairs: Record<string, Snowflake> = {};
 
@@ -80,9 +80,7 @@ export default class Roles extends Command {
                 .addField('3) Done', 'Finishes this up and deletes the messages.')
                 .addField('4) Cancel', 'Cancels this and deletes the messages.');
 
-            const out = new Collection(Object.entries(pairs))
-                .map((role, emoji) => `${message.guild.emojis.cache.get(emoji) || emoji} -> <@&${role}>`)
-                .join('\n');
+            const out = new Collection(Object.entries(pairs)).map((role, emoji) => `${message.guild?.emojis.cache.get(emoji) || emoji} -> <@&${role}>`).join('\n');
             e.addField('Current added roles', out.length > 0 ? out : '*None yet*');
             if (content) message.channel.send(content, e);
             else message.channel.send(e);
@@ -101,9 +99,7 @@ export default class Roles extends Command {
         const newTimeout = () => {
             clearInterval(last_timeout_id);
             last_timeout_id = setTimeout(() => {
-                message.channel.send(
-                    `${message.author}, it has been 10 minutes since you last sent something so I have automatically canceled.`
-                );
+                message.channel.send(`${message.author}, it has been 10 minutes since you last sent something so I have automatically canceled.`);
                 collector.stop();
             }, 10 * 60 * 1000);
         };
@@ -130,13 +126,11 @@ export default class Roles extends Command {
                             return m.channel
                                 .bulkDelete(clamp(msgs_sent_amount, 0, 100))
                                 .then(() => {
-                                    let error: DiscordAPIError;
-                                    for (const emoji in pairs) message.react(emoji).catch((e) => (error = e));
-                                    if (error) message.channel.send(error.message);
+                                    let error: DiscordAPIError | null = null;
+                                    for (const emoji in pairs) message.react(emoji).catch(e => (error = e));
+                                    if (error) message.channel.send(error!.message);
                                     addReactionRolesToDB(message, pairs);
-                                    m.channel
-                                        .send('I reacted to your original message, now you can edit it to your liking.')
-                                        .then((m) => m.delete({ timeout: 5000 }).catch(NOOP));
+                                    m.channel.send('I reacted to your original message, now you can edit it to your liking.').then(m => m.delete({ timeout: 5000 }).catch(NOOP));
                                     clearInterval(last_timeout_id);
                                 })
                                 .catch((e: any) => m.author.send(e).catch(NOOP));
@@ -156,22 +150,18 @@ export default class Roles extends Command {
                     return message.channel.send('Now give me a role! Format: { Mention | RoleID | Role Name }');
                 }
                 case Actions.ADD_SELECT_ROLE: {
-                    let r: Role;
+                    let r: Role | undefined;
                     try {
-                        r = await (m.mentions.roles.first() ||
-                            message.guild.roles.cache.find((r) => r.name === m.content || r.id === m.content));
-                        if (!r) return message.channel.send(`Couldn't find a role by \`${m.content}\``);
+                        r = await (m.mentions.roles.first() || message.guild?.roles.cache.find(r => r.name === m.content || r.id === m.content));
                     } catch (error) {
                         return message.channel.send(`Couldn't find a role by \`${m.content}\``);
                     }
+                    if (!r) return message.channel.send(`Couldn't find a role by \`${m.content}\``);
                     if (r.managed) return message.channel.send(`You can't add auto-managed bot roles to users!`);
-                    if (r.id === message.guild.id)
-                        return message.channel.send(`You can't assign \`@everyone\` to users, they already have it!`);
-                    if (message.guild.me.roles.highest.position < r.position)
-                        return message.channel.send(
-                            `I can't assign the role ${r.name} because it is higher in the role heiarchy than me.`
-                        );
-                    pairs[selected_emoji] = r.id;
+                    if (r.id === message.guild?.id) return message.channel.send(`You can't assign \`@everyone\` to users, they already have it!`);
+                    if (message.guild!.me!.roles.highest.position < r.position)
+                        return message.channel.send(`I can't assign the role ${r.name} because it is higher in the role heiarchy than me.`);
+                    pairs[selected_emoji!] = r.id;
                     current_action = Actions.SELECT_ACTION;
                     return update(`Success! Added role \`${r.name}\``);
                 }
@@ -199,22 +189,20 @@ export async function onMessageReactionAdd(reaction: MessageReaction, user: User
 
     if (reaction.message.channel.type !== 'text' || user.bot) return;
 
-    const guildSelfRoles = getGuildReactionRoles(reaction.message.guild);
+    const guildSelfRoles = getGuildReactionRoles(reaction.message.guild!);
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    const member = reaction.message.guild.member(user as User);
+    const member = await reaction.message.guild!.members.fetch(user as User);
     if (!member) return;
 
-    let emojiToAdd: string;
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
-        emojiToAdd = msgSelfRoles[reaction.emoji.name];
-    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        emojiToAdd = msgSelfRoles[reaction.emoji.id];
+    let emojiToAdd: string | undefined;
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) emojiToAdd = msgSelfRoles[reaction.emoji.name];
+    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id]) emojiToAdd = msgSelfRoles[reaction.emoji.id];
 
     if (!emojiToAdd) return reaction.remove().catch(NOOP);
 
-    member.roles.add(emojiToAdd).catch((r) => {
+    member.roles.add(emojiToAdd).catch(r => {
         member.send(r).catch(NOOP);
     });
 }
@@ -228,30 +216,28 @@ export async function onMessageReactionRemove(reaction: MessageReaction, user: U
 
     if (reaction.message.channel.type !== 'text' || user.bot) return;
 
-    const guildSelfRoles = getGuildReactionRoles(reaction.message.guild);
+    const guildSelfRoles = getGuildReactionRoles(reaction.message.guild!);
     if (guildSelfRoles === {} || !guildSelfRoles[reaction.message.id]) return;
     const msgSelfRoles = guildSelfRoles[reaction.message.id];
 
-    const member = reaction.message.guild.member(user as User);
+    const member = await reaction.message.guild!.members.fetch(user as User);
     if (!member) return;
 
-    let emojiToAdd: string;
-    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name])
-        emojiToAdd = msgSelfRoles[reaction.emoji.name];
-    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id])
-        emojiToAdd = msgSelfRoles[reaction.emoji.id];
+    let emojiToAdd: string | undefined;
+    if (reaction.emoji instanceof ReactionEmoji && msgSelfRoles[reaction.emoji.name]) emojiToAdd = msgSelfRoles[reaction.emoji.name];
+    else if (reaction.emoji instanceof GuildEmoji && msgSelfRoles[reaction.emoji.id]) emojiToAdd = msgSelfRoles[reaction.emoji.id];
 
     if (!emojiToAdd) return reaction.remove().catch(NOOP);
 
-    member.roles.remove(emojiToAdd).catch((r) => {
+    member.roles.remove(emojiToAdd).catch(r => {
         member.send(r).catch(NOOP);
     });
 }
 
 export function onMessageDelete(message: Message | PartialMessage): any {
-    const guildSelfRoles = getGuildReactionRoles(message.guild);
+    const guildSelfRoles = getGuildReactionRoles(message.guild!);
     if (guildSelfRoles[message.id]) {
         db.prepare('DELETE FROM reaction_roles WHERE message = ?').run(message.id);
-        guildSelfRolesCache.del(message.guild.id);
+        guildSelfRolesCache.del(message.guild!.id);
     }
 }

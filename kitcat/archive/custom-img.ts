@@ -3,9 +3,9 @@ import { IGuildSettings } from '../settings';
 import { Command } from '../commands';
 
 export default class CustomImg extends Command {
-    executor = 'custom-img';
+    trigger = 'custom-img';
     category = 'fun';
-    display_name = '📷 Photo Commands';
+    name = '📷 Photo Commands';
     description = 'Image commands to make kool custom photos.';
     usage = 'help';
     guildOnly = false;
@@ -16,7 +16,7 @@ export default class CustomImg extends Command {
         const prefix = settings ? settings.prefix : 'k!';
         if (args.length === 0)
             return message.channel.send(
-                `You didn't provide any image command to run! Do \`${prefix}${this.executor} help\` for a list!`
+                `You didn't provide any image command to run! Do \`${prefix}${this.trigger} help\` for a list!`
             );
         const subcommand = args.shift();
         switch (subcommand) {
@@ -27,7 +27,7 @@ export default class CustomImg extends Command {
                         .setColor(0xf9f5ea)
                         .addField(
                             'Minecraft Achievement',
-                            `Make custom Minecraft achievement.\n\`${prefix}${this.executor} minecraft {achievement}\``
+                            `Make custom Minecraft achievement.\n\`${prefix}${this.trigger} minecraft {achievement}\``
                         )
                 );
             case 'mc':

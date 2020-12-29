@@ -1,7 +1,7 @@
 import { configure, getLogger } from 'log4js';
 import format from 'dateformat';
 
-export function initLogger() {
+export function initLogger(): void {
     const startTime = format(new Date(), 'yyyy-mm-dd.HH-MM-ss');
 
     configure({

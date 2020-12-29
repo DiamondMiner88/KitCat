@@ -3,9 +3,9 @@ import { Command } from '../commands';
 import fetch from 'node-fetch';
 
 export default class Joke extends Command {
-    executor = 'joke';
+    trigger = 'joke';
     category = 'fun';
-    display_name = '😂 Joke';
+    name = '😂 Joke';
     description = `Get a (probably bad) joke.`;
     usage = '';
     guildOnly = false;

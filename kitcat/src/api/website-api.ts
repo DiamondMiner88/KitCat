@@ -140,8 +140,8 @@ api.post('/servers/:guild', async (request, response) => {
                 break;
             case 'channels':
                 resdata.data.channels = guild.channels.cache
-                    .filter((channel) => channel.type !== 'category')
-                    .map((channel) => {
+                    .filter(channel => channel.type !== 'category')
+                    .map(channel => {
                         return {
                             id: channel.id,
                             name: channel.name,
@@ -287,62 +287,65 @@ api.post('/servers/:guild/save', async (request, response) => {
     });
 });
 
-api.post('/severs', async (request, response) => {
-    if (!request.body['access-token'])
-        return response.json({
-            code: 1,
-            message: 'Invalid request!',
-        });
+api.post(
+    '/servers',
+    async (request, response): Promise<any> => {
+        if (!request.body['access-token'])
+            return response.json({
+                code: 1,
+                message: 'Invalid request!',
+            });
 
-    let discordRes;
-    try {
-        discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
-            headers: {
-                authorization: `Bearer ${request.body['access-token']}`,
+        let discordRes;
+        try {
+            discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+                headers: {
+                    authorization: `Bearer ${request.body['access-token']}`,
+                },
+            });
+            discordRes = await discordRes.json();
+        } catch (error) {
+            LOGGER.error('Error sending request to discord.com to verify access token/get guilds.');
+            LOGGER.error(error.message);
+            return response.json({
+                status: 3,
+                message: 'Error authorizing.',
+                error,
+            });
+        }
+
+        if (discordRes.message)
+            return response.json({
+                status: 2,
+                message: discordRes.message === '401: Unauthorized' ? 'Invalid access token!' : discordRes.message,
+                error: discordRes.message,
+            });
+
+        const guilds: {
+            id: string;
+            name: string;
+            nameAcronym: string;
+            iconURL: string | null;
+            isAdmin: boolean;
+        }[] = [];
+
+        for (const guild of discordRes) {
+            const fguild = bot.guilds.cache.get(guild.id);
+            if (!fguild) continue;
+            guilds.push({
+                id: guild.id,
+                name: guild.name,
+                nameAcronym: fguild.nameAcronym,
+                iconURL: fguild.iconURL({ size: 256, dynamic: true, format: 'png' }),
+                isAdmin: (guild.permissions & 0x8) === 0x8, // Check if the user has the 'ADMINISTRATOR' permission
+            });
+        }
+
+        response.json({
+            status: 0,
+            data: {
+                guilds: guilds,
             },
         });
-        discordRes = await discordRes.json();
-    } catch (error) {
-        LOGGER.error('Error sending request to discord.com to verify access token/get guilds.');
-        LOGGER.error(error.message);
-        return response.json({
-            status: 3,
-            message: 'Error authorizing.',
-            error,
-        });
     }
-
-    if (discordRes.message)
-        return response.json({
-            status: 2,
-            message: discordRes.message === '401: Unauthorized' ? 'Invalid access token!' : discordRes.message,
-            error: discordRes.message,
-        });
-
-    const guilds: {
-        id: string;
-        name: string;
-        nameAcronym: string;
-        iconURL: string;
-        isAdmin: boolean;
-    }[] = [];
-
-    for (const guild of discordRes) {
-        const fguild = bot.guilds.cache.get(guild.id);
-        if (!fguild) continue;
-        guilds.push({
-            id: guild.id,
-            name: guild.name,
-            nameAcronym: fguild.nameAcronym,
-            iconURL: fguild.iconURL({ size: 256, dynamic: true, format: 'png' }),
-            isAdmin: (guild.permissions & 0x8) === 0x8, // Check if the user has the 'ADMINISTRATOR' permission
-        });
-    }
-
-    response.json({
-        status: 0,
-        data: {
-            guilds: guilds,
-        },
-    });
-});
+);
