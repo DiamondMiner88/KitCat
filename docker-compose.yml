@@ -1,0 +1,137 @@
+version: '3.9'
+services:
+  postgres:
+    build: ./docker/postgresql
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: 'kitcat'
+      POSTGRES_PASSWORD: 'admin'
+      POSTGRES_DB: 'kitcat'
+    expose:
+      - '5432'
+    ports:
+      - '127.0.0.1:5432:5432'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kitcat']
+      interval: 30s
+      timeout: 5s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  postgres-backups:
+    image: prodrigestivill/postgres-backup-local
+    restart: unless-stopped
+    user: postgres:postgres
+    volumes:
+      - postgres-backups:/backups
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=kitcat
+      - POSTGRES_USER=kitcat
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=7
+      - HEALTHCHECK_PORT=8080
+
+  postgres-exporter:
+    image: wrouesnel/postgres_exporter:latest
+    environment:
+      DATA_SOURCE_NAME: 'postgresql://kitcat:admin@postgres:5432/kitcat?sslmode=disable'
+    expose:
+      - '9187'
+    restart: unless-stopped
+
+  # redis:
+  #   image: redis:6-alpine
+  #   labels:
+  #     com.diamondminer88.kitcat.description: 'Redis'
+  #   expose:
+  #     - '6379'
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis-data:/data
+  #   ports:
+  #     - '127.0.0.1:6379:6379'
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'redis-cli ping']
+  #     interval: 30s
+  #     timeout: 5s
+
+  # redis-exporter:
+  #   image: oliver006/redis_exporter:alpine
+  #   environment:
+  #     REDIS_ADDR: 'redis://redis:6379'
+  #   expose:
+  #     - '9121'
+  #   restart: unless-stopped
+
+  prometheus:
+    build: ./docker/prometheus
+    expose:
+      - '9090'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- localhost:9090/-/healthy']
+      interval: 30s
+      timeout: 5s
+
+  grafana:
+    build: ./docker/grafana
+    environment:
+      GF_DEFAULT_INSTANCE_NAME: 'kitcat'
+      GF_SECURITY_ADMIN_USER: 'admin'
+      GF_SECURITY_ADMIN_PASSWORD: 'admin'
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_ANALYTICS_REPORTING_ENABLED: 'false'
+      GF_INSTALL_PLUGINS: 'flant-statusmap-panel,grafana-piechart-panel'
+    expose:
+      - '3000'
+    ports:
+      - '127.0.0.1:3000:3000'
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  bot:
+    build: ./packages/bot
+    env_file:
+      - kitcat.env
+    restart: 'unless-stopped'
+    depends_on:
+      - 'postgres'
+
+volumes:
+  postgres-data:
+    name: 'postgres-data'
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './data/postgres-data'
+  redis-data:
+    name: 'redis-data'
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './data/redis-data'
+  grafana-data:
+    name: 'grafana-data'
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './data/grafana-data'
+  postgres-backups:
+    name: 'postgres-backups'
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './data/postgres-backups'

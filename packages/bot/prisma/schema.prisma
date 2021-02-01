@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Change `postgres` to `localhost` when using locally, otherwise when deploying to a docker contaner make sure to use `postgres`
+  url      = "postgresql://kitcat:admin@postgres:5432/kitcat?sslmode=disable"
+}
+
+model GuildSettings {
+  id             String   @id
+  lastUpdated    DateTime @updatedAt
+  joinMessage    String?
+  logChannel     String?
+  snipingEnabled Boolean  @default(false)
+}
+
+model ModerationCases {
+  userId       String @id
+  guildId      String
+  warns        Int    @default(0)
+  restrictions Int    @default(0)
+  kicks        Int    @default(0)
+  bans         Int    @default(0)
+}
+
+// ReactionRoleSet
+model RRSet {
+  messageId String @id
+  channelId String
+  guildId   String
+  json      Json
+}

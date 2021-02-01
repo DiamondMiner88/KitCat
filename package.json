@@ -1,0 +1,14 @@
+{
+  "name": "kitcat",
+  "version": "1.0.0",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
+  "scripts": {
+    "start": "docker-compose build && docker-compose up --detach"
+  },
+  "workspaces": [
+    "src/kitcat",
+    "src/dashboard"
+  ],
+  "dependencies": {}
+}
