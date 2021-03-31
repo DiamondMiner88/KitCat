@@ -1,15 +1,10 @@
 {
+  "extends": "@tsconfig/node14/tsconfig.json",
   "compilerOptions": {
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "module": "commonjs",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "outDir": "build",
+    "outDir": "dist",
     "removeComments": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "target": "es2020"
   },
   "include": ["src"]
 }

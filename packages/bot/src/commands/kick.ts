@@ -1,11 +1,11 @@
 import Discord, { Permissions } from 'discord.js';
 import { Command, Categories } from '../commands';
-import { NOOP, devPerms, hasPermission } from '../util/utils';
+import { NOOP, hasPermission } from '../utils';
 
-export default class Kick extends Command {
+export default class extends Command {
   trigger = 'kick';
   category = Categories.MODERATION;
-  name = 'Ban';
+  name = 'Kick';
   description = `Used to kick members.`;
   usage = '{ Mention | UserID } [reason]';
   guildOnly = true;

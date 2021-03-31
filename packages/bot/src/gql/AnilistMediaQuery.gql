@@ -1,0 +1,41 @@
+query($query: String!, $type: MediaType, $format: MediaFormat) {
+  Media(search: $query, type: $type, format: $format) {
+    status
+    siteUrl
+    title {
+      english
+      romaji
+      native
+    }
+    format
+    description(asHtml: false)
+    coverImage {
+      large
+      color
+    }
+    averageScore
+    meanScore
+    isAdult
+    externalLinks {
+      url
+      site
+    }
+    rankings {
+      rank
+      type
+      year
+      season
+      allTime
+    }
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+  }
+}

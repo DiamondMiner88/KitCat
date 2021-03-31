@@ -1,6 +1,4 @@
 import { Message } from 'discord.js';
-import { inspect } from 'util';
-import { logger } from './util/logging';
 
 export abstract class Command {
   abstract readonly trigger: string;
@@ -12,11 +10,8 @@ export abstract class Command {
   abstract readonly unlisted: boolean = false;
   abstract readonly nsfw?: boolean = false;
 
-  readonly log = (level: string, message: string) =>
-    logger.log(level, `[${this.trigger}] %s`, typeof message === 'string' ? message : inspect(message, { depth: Infinity, colors: true }));
-
   get formattedUsage(): string {
-    return `\`/${this.trigger}${this.usage != null ? ' ' + this.usage : ''}\``;
+    return `\`k!${this.trigger}${this.usage != null ? ' ' + this.usage : ''}\``;
   }
 
   abstract invoke(message: Message, args: string[]): Promise<any>;

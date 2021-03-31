@@ -1,6 +1,15 @@
-# Configuration files
-.env.*.local
-.env.local
+# IntelliJ
+.idea/
+*.iml
 
+# Nodejs
 node_modules
+
+# Config
+*.env
+
+# Runtime data
 /data/
+dist
+target
+

@@ -1,34 +1,66 @@
-generator client {
-  provider = "prisma-client-js"
-}
+// generator client {
+//   provider = "prisma-client-js"
+// }
 
 datasource db {
   provider = "postgresql"
-  // Change `postgres` to `localhost` when using locally, otherwise when deploying to a docker contaner make sure to use `postgres`
-  url      = "postgresql://kitcat:admin@postgres:5432/kitcat?sslmode=disable"
+  url      = "postgresql://kitcat:admin@localhost:5432/kitcat?sslmode=disable"
 }
 
 model GuildSettings {
-  id             String   @id
-  lastUpdated    DateTime @updatedAt
-  joinMessage    String?
-  logChannel     String?
-  snipingEnabled Boolean  @default(false)
+  id            String   @id
+  joinMessage   String?
+  logChannel    String?
+  reportChannel String?
+  autoRoles     String[]
 }
 
-model ModerationCases {
-  userId       String @id
-  guildId      String
-  warns        Int    @default(0)
-  restrictions Int    @default(0)
-  kicks        Int    @default(0)
-  bans         Int    @default(0)
+enum ModerationCaseType {
+  WARN
+  MUTE
+  KICK
+  SOFTBAN
+  BAN
 }
 
-// ReactionRoleSet
+model ModerationCase {
+  user      String
+  guild     String
+  type      ModerationCaseType
+  reason    String
+  endsAt    BigInt?
+  createdAt BigInt
+
+  @@id([user, guild])
+}
+
 model RRSet {
-  messageId String @id
-  channelId String
-  guildId   String
-  json      Json
+  message        String @id
+  channel        String
+  guild          String
+  json           Json
+  author         String
+  createdAt      BigInt
+  lastModifiedAt BigInt
+  lastModifiedBy String
+}
+
+model Reminders {
+  id      Int    @id @default(autoincrement())
+  channel String
+  guild   String
+  time    BigInt
+  creator String
+  text    String
+}
+
+model CustomCommands {
+  commandId      String @id // Slash command id
+  commandName    String // Slash command name
+  guild          String // Origin guild id
+  content        String
+  author         String // Original creator id
+  createdAt      BigInt
+  lastModifier   String // User id of person that last modified it
+  lastModifiedAt BigInt
 }

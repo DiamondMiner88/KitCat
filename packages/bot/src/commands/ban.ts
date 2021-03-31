@@ -1,8 +1,8 @@
 import Discord, { Permissions } from 'discord.js';
 import { Command, Categories } from '../commands';
-import { NOOP, hasPermission } from '../util/utils';
+import { NOOP, hasPermission } from '../utils';
 
-export default class Ban extends Command {
+export default class extends Command {
   trigger = 'ban';
   category = Categories.MODERATION;
   name = '⛔ Ban';

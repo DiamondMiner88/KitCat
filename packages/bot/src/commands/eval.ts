@@ -1,9 +1,9 @@
 import Discord from 'discord.js';
 import { Command, Categories } from '../commands';
-import { devPerms } from '../util/utils';
+import { devPerms } from '../utils';
 import { inspect } from 'util';
 
-export default class Eval extends Command {
+export default class extends Command {
   trigger = 'eval';
   category = Categories.UTIL;
   name = 'Eval';
@@ -22,7 +22,7 @@ export default class Eval extends Command {
     };
 
     try {
-      let evaled = await eval(args.join(' '));
+      let evaled = await eval("Discord = require('discord.js');\n" + args.join(' '));
       if (typeof evaled !== 'string') evaled = inspect(evaled);
       message.channel.send(clean(evaled), { code: 'xl', split: true });
     } catch (error) {

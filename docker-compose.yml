@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U kitcat']
-      interval: 30s
+      interval: 60s
       timeout: 5s
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -25,8 +25,6 @@ services:
     user: postgres:postgres
     volumes:
       - postgres-backups:/backups
-    links:
-      - postgres
     depends_on:
       - postgres
     environment:
@@ -37,6 +35,8 @@ services:
       - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
       - SCHEDULE=@daily
       - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=0
+      - BACKUP_KEEP_MONTHS=0
       - HEALTHCHECK_PORT=8080
 
   postgres-exporter:
@@ -88,10 +88,10 @@ services:
       GF_SECURITY_ADMIN_USER: 'admin'
       GF_SECURITY_ADMIN_PASSWORD: 'admin'
       GF_AUTH_ANONYMOUS_ENABLED: 'true'
-      GF_ANALYTICS_REPORTING_ENABLED: 'false'
-      GF_INSTALL_PLUGINS: 'flant-statusmap-panel,grafana-piechart-panel'
     expose:
       - '3000'
+    depends_on:
+      - prometheus
     ports:
       - '127.0.0.1:3000:3000'
     restart: unless-stopped
@@ -102,6 +102,12 @@ services:
     build: ./packages/bot
     env_file:
       - kitcat.env
+    enviroment:
+      - PGUSER=kitcat
+      - PGPASSWORD=admin
+      - PGDATABASE=kitcat
+      - PGHOST=localhost
+      - PGPORT=5432
     restart: 'unless-stopped'
     depends_on:
       - 'postgres'

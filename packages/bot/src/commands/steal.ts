@@ -1,12 +1,12 @@
 import Discord, { Permissions } from 'discord.js';
 import { Command, Categories } from '../commands';
 
-export default class Steal extends Command {
+export default class extends Command {
   trigger = 'steal';
   category = Categories.UTIL;
   name = `Steal`;
   description = `Steal emojis from another server :)`;
-  usage = '{list emojis}';
+  usage = '{Emojis | Emoji IDs | URL}';
   guildOnly = true;
   unlisted = false;
   nsfw = false;
