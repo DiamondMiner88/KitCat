@@ -21,7 +21,7 @@ export enum Categories {
   MODERATION,
   FUN,
   UTIL,
-  KITCAT,
+  KITCAT
 }
 
 export const CategoriesData: {
@@ -30,18 +30,18 @@ export const CategoriesData: {
 }[] = [
   {
     name: '🚫 Moderation',
-    description: 'Commands to help keep your server in shape!',
+    description: 'Commands to help keep your server in shape!'
   },
   {
     name: '😄 Fun',
-    description: 'Random, stupid and fun commands!',
+    description: 'Random, stupid and fun commands!'
   },
   {
     name: '🛠️ Utils',
-    description: 'Utility commands that may or may not be helpful!',
+    description: 'Utility commands that may or may not be helpful!'
   },
   {
     name: 'KitCat',
-    description: 'Commands related to me!',
-  },
+    description: 'Commands related to me!'
+  }
 ];

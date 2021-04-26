@@ -1,5 +1,5 @@
-import { Collection, CommandInteraction, MessageEmbed } from 'discord.js';
-import { Module, ModuleCategory } from '../modules';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { Module, ModuleCategory, OptionString } from '../modules';
 import { logger } from '../logging';
 import { msToUI } from '../utils';
 import dateFormat from 'dateformat';
@@ -19,13 +19,12 @@ export default class extends Module {
       required: true,
       default: undefined,
       choices: undefined,
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
-    const name = options.get('package');
-    let pkg: any = fetch('https://registry.npmjs.org/' + name).then(res => res.json());
+  async invoke(interaction: CommandInteraction, { package: { value } }: { package: OptionString }): Promise<any> {
+    let pkg: any = fetch('https://registry.npmjs.org/' + value).then(res => res.json());
     try {
       pkg = await pkg;
     } catch (e) {
@@ -34,7 +33,7 @@ export default class extends Module {
     }
     if (pkg.error) return interaction.reply(pkg.error);
 
-    let totalDLs = await fetch(`https://api.npmjs.org/downloads/point/1000-01-01:3000-01-01/${name}`)
+    const totalDLs = await fetch(`https://api.npmjs.org/downloads/point/1000-01-01:3000-01-01/${value}`)
       .then(r => r.json())
       .then(r => r.downloads)
       .catch(() => undefined);
@@ -50,16 +49,25 @@ export default class extends Module {
       .setDescription(pkg.description)
       .addField('❯ Latest Version', pkg['dist-tags'].latest, true)
       .addField('❯ Total Downloads', totalDLs ? totalDLs : 'Unknown', true);
-    if (pkg.author?.name) embed.addField('❯ Author', pkg.author.url ? `[${pkg.author.name}](${pkg.author.url})` : pkg.author.name, true);
+    if (pkg.author?.name)
+      embed.addField('❯ Author', pkg.author.url ? `[${pkg.author.name}](${pkg.author.url})` : pkg.author.name, true);
     embed
-      .addField('❯ Created', `${dateFormat(created, formatString)}\n(${msToUI(Date.now() + timezoneOffset - created)} Ago)`, true)
-      .addField('❯ Last Modified', `${dateFormat(modified, formatString)}\n(${msToUI(Date.now() + timezoneOffset - modified)}) Ago`, true)
+      .addField(
+        '❯ Created',
+        `${dateFormat(created, formatString)}\n(${msToUI(Date.now() + timezoneOffset - created)} Ago)`,
+        true
+      )
+      .addField(
+        '❯ Last Modified',
+        `${dateFormat(modified, formatString)}\n(${msToUI(Date.now() + timezoneOffset - modified)}) Ago`,
+        true
+      )
       .addField(
         '❯ Links',
-        `• [Homepage](${pkg.homepage})\n${pkg.repository?.url ? `• [Repository](${pkg.repository.url.replace('git+', '')})` : ''}\n${
-          pkg.bugs?.url ? `• [Issues](${pkg.bugs.url})` : ''
-        }`,
-        true,
+        `• [Homepage](${pkg.homepage})\n${
+          pkg.repository?.url ? `• [Repository](${pkg.repository.url.replace('git+', '')})` : ''
+        }\n${pkg.bugs?.url ? `• [Issues](${pkg.bugs.url})` : ''}`,
+        true
       )
       .addField('❯ Maintainers', '• ' + pkg.maintainers.map((m: any) => m.name).join('\n• '), true);
     interaction.reply(embed);

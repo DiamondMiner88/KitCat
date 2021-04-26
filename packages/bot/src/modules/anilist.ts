@@ -1,5 +1,5 @@
-import { Collection, CommandInteraction, MessageEmbed } from 'discord.js';
-import { Module, ModuleCategory } from '../modules';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { Module, ModuleCategory, OptionString } from '../modules';
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
 
@@ -17,7 +17,7 @@ export default class extends Module {
       required: true,
       default: undefined,
       choices: undefined,
-      options: undefined,
+      options: undefined
     },
     {
       type: 'STRING',
@@ -27,52 +27,52 @@ export default class extends Module {
       default: undefined,
       choices: [
         {
-          name: 'Any anime',
-          value: 'ANIME',
+          name: 'Anime (Any)',
+          value: 'ANIME'
         },
         {
           name: 'Manga',
-          value: 'MANGA',
+          value: 'MANGA'
         },
         {
           name: 'TV',
-          value: 'TV',
+          value: 'TV'
         },
         {
           name: 'TV Short',
-          value: 'TV_SHORT',
+          value: 'TV_SHORT'
         },
         {
           name: 'Movie',
-          value: 'MOVIE',
+          value: 'MOVIE'
         },
         {
           name: 'Special',
-          value: 'SPECIAL',
+          value: 'SPECIAL'
         },
         {
           name: 'OVA (Original video animation)',
-          value: 'OVA',
+          value: 'OVA'
         },
         {
           name: 'ONA (Original Net Animation)',
-          value: 'ONA',
+          value: 'ONA'
         },
         {
           name: 'Music Video',
-          value: 'MUSIC',
+          value: 'MUSIC'
         },
         {
           name: 'Light Novel',
-          value: 'NOVEL',
+          value: 'NOVEL'
         },
         {
           name: 'One shot',
-          value: 'ONE_SHOT',
-        },
+          value: 'ONE_SHOT'
+        }
       ],
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
   aniListStatuses: Record<string, string> = {
@@ -80,7 +80,7 @@ export default class extends Module {
     RELEASING: 'Releasing',
     NOT_YET_RELEASED: 'Not yet released',
     CANCELLED: 'Cancelled',
-    HIATUS: 'Hiatus',
+    HIATUS: 'Hiatus'
   };
 
   aniListFormats: Record<string, string> = {
@@ -93,35 +93,43 @@ export default class extends Module {
     MUSIC: 'Music Video',
     MANGA: 'Manga',
     NOVEL: 'Novel',
-    ONE_SHOT: 'One Shot',
+    ONE_SHOT: 'One Shot'
   };
 
   queryTemplate = readFileSync(__dirname + '/../gql/AnilistMediaQuery.gql', 'utf-8');
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
-    const query_type = options.get('type');
-    let result = await fetch('https://graphql.anilist.co', {
+  async invoke(
+    interaction: CommandInteraction,
+    { query: queryParam, type: typeParam }: { query: OptionString; type: OptionString }
+  ): Promise<any> {
+    const { value: query } = queryParam ?? {};
+    const { value: type } = typeParam ?? {};
+    const result = await fetch('https://graphql.anilist.co', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Content-Type': 'application/json'
+        // Accept: 'application/json',
       },
       body: JSON.stringify({
         query: this.queryTemplate,
         variables: {
-          query: options.get('query'),
-          type: query_type === 'MANGA' || query_type === 'ANIME' ? query_type : undefined,
-          format: query_type !== 'MANGA' && query_type !== 'ANIME' ? query_type : undefined,
-        },
-      }),
+          query: query,
+          type: type === 'MANGA' || type === 'ANIME' ? type : undefined,
+          format: type !== 'MANGA' && type !== 'ANIME' ? type : undefined
+        }
+      })
     })
       .then(r => r.json())
       .catch(e => e.message);
 
     if (typeof result === 'string' || result.errors || result.error) {
-      if (result.errors[0]?.status === 404) return interaction.reply(`No results returned matching your query (${options.get('query')}).`);
+      if (result.errors[0]?.status === 404)
+        return interaction.reply(`No results returned matching your query (${query}).`);
 
-      const msg = typeof result === 'string' ? result : result.error.errors.map((error: any) => `\`${error.message}\``).join(', ');
+      const msg =
+        typeof result === 'string'
+          ? result
+          : result.error.errors.map((error: any) => `\`${error.message}\``).join(', ');
       return interaction.reply(`An error(s) occured: ${msg}`);
     }
 
@@ -129,7 +137,7 @@ export default class extends Module {
       isAdult,
       startDate,
       endDate,
-      rankings,
+      // rankings,
       externalLinks,
       title: { english, romaji, native },
       meanScore,
@@ -138,12 +146,15 @@ export default class extends Module {
       status,
       siteUrl,
       coverImage: { large: coverImage, color },
-      description: rawDescription,
+      description: rawDescription
     } = result.data.Media;
 
     const title = romaji ?? english ?? native;
 
-    if (isAdult) return interaction.reply(`The media returned (${title}) is adult. Please run this command in an nsfw channel to see more info`);
+    if (isAdult)
+      return interaction.reply(
+        `The media returned (${title}) is adult. Please run this command in an nsfw channel to see more info.`
+      );
 
     let description = rawDescription.split('\n')[0].slice(0, 500);
     if (description.length === 500) description += '...';
@@ -158,16 +169,24 @@ export default class extends Module {
 
       .addField(
         '❯ Status',
-        `• ${this.aniListStatuses[status]}\n• Start Date: ${startDate.year ?? '?'}-${startDate.month ?? '?'}-${startDate.day ?? '?'}\n• End Date: ${
-          endDate.year ?? '?'
-        }-${endDate.month ?? '?'}-${endDate.day ?? '?'}`,
-        true,
+        `• ${this.aniListStatuses[status]}\n• Start Date: ${startDate.year ?? '?'}-${startDate.month ?? '?'}-${
+          startDate.day ?? '?'
+        }\n• End Date: ${endDate.year ?? '?'}-${endDate.month ?? '?'}-${endDate.day ?? '?'}`,
+        true
       );
 
     if (externalLinks.length > 0)
-      embed.addField('❯ External Links', '• ' + externalLinks.map((l: any) => `[${l.site}](${l.url})`).join('\n• '), true);
+      embed.addField(
+        '❯ External Links',
+        '• ' + externalLinks.map((l: any) => `[${l.site}](${l.url})`).join('\n• '),
+        true
+      );
     // TODO: Use the rankings property, not just score
-    embed.addField('❯ Rankings', `• Average Score: ${averageScore ?? 'Unknown'}\n• Mean Score ${meanScore ?? 'Unknown'}`, true);
+    embed.addField(
+      '❯ Rankings',
+      `• Average Score: ${averageScore ?? 'Unknown'}\n• Mean Score ${meanScore ?? 'Unknown'}`,
+      true
+    );
 
     interaction.reply(embed);
   }

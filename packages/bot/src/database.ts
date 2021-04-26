@@ -17,19 +17,19 @@ database.on('end', () => {
 
 //#region Database types
 type GuildSettings = {
-  id: String;
-  joinMessage?: String;
-  logChannel?: String;
-  reportChannel?: String;
-  autoRoles?: String[];
-  createdAt: String;
+  id: string;
+  joinMessage?: string;
+  logChannel?: string;
+  reportChannel?: string;
+  autoRoles?: string[];
+  createdAt: string;
 };
 //#endregion
 
 export const cachedSettings = new NodeCache();
 export async function getGuildSettings(id: string, memberCount?: number): Promise<GuildSettings> {
   // Check if it exists in cache
-  let settings = cachedSettings.get<GuildSettings>(id);
+  const settings = cachedSettings.get<GuildSettings>(id);
   if (settings) return settings;
 
   // Since its not cached, fetch it from the db.
@@ -49,6 +49,7 @@ export async function getGuildSettings(id: string, memberCount?: number): Promis
   const results = await database.query(query, [id]);
 
   // Cache the record and return it
-  if (memberCount) cachedSettings.set(id, results.rows[0], clamp((memberCount / 5) * 60, 300 /* 5 mins */, 7200 /* 2 hours */));
+  if (memberCount)
+    cachedSettings.set(id, results.rows[0], clamp((memberCount / 5) * 60, 300 /* 5 mins */, 7200 /* 2 hours */));
   return results.rows[0];
 }

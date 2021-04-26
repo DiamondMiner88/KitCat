@@ -29,11 +29,14 @@ export default class extends Command {
       .setTitle('❯ New Report')
       .setAuthor(`${t.user.tag} (${t.id})`, t.user.displayAvatarURL({ dynamic: true }))
       .setDescription(args.join(' '))
-      .setFooter(`Filed by ${message.author.tag} (${message.author.id})`, message.author.displayAvatarURL({ dynamic: true }));
+      .setFooter(
+        `Filed by ${message.author.tag} (${message.author.id})`,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
     const channel = message.guild.channels.cache.get('766051990178365451') as TextChannel;
     channel
       ?.send(embed)
-      .then(async m => (await message.reply('Success!')) && message.delete())
+      .then(async () => (await message.reply('Success!')) && message.delete())
       .catch(() => message.reply('Could not file report!') && message.delete());
   }
 }

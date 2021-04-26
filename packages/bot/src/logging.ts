@@ -17,9 +17,9 @@ export class Logger {
   constructor(public module: string) {}
 
   log(message: string, level: LoggerLevel, trace = false): void {
-    const str = chalk`{gray [${dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss.l')}]} {${level.color} [${level.name}]} {cyanBright [${
-      this.module
-    }]} - ${message}`;
+    const str = chalk`{gray [${dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss.l')}]} {${level.color} [${
+      level.name
+    }]} {cyanBright [${this.module}]} - ${message}`;
 
     if (trace) console.trace(str);
     else if (level.level == LoggerLevel.ERROR.level) {
@@ -36,10 +36,10 @@ export class Logger {
     } else console.log(str);
   }
 
-  error = (message: string, trace?: boolean) => this.log(message, LoggerLevel.ERROR, trace);
-  warning = (message: string, trace?: boolean) => this.log(message, LoggerLevel.WARNING, trace);
-  info = (message: string, trace?: boolean) => this.log(message, LoggerLevel.INFO, trace);
-  debug = (message: string, trace?: boolean) => this.log(message, LoggerLevel.DEBUG, trace);
+  error = (message: string, trace?: boolean): void => this.log(message, LoggerLevel.ERROR, trace);
+  warning = (message: string, trace?: boolean): void => this.log(message, LoggerLevel.WARNING, trace);
+  info = (message: string, trace?: boolean): void => this.log(message, LoggerLevel.INFO, trace);
+  debug = (message: string, trace?: boolean): void => this.log(message, LoggerLevel.DEBUG, trace);
 }
 
 export const logger = new Logger('default');

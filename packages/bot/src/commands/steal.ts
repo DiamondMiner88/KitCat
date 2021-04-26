@@ -24,21 +24,32 @@ export default class extends Command {
     try {
       const notif = await message.channel.send(`Cloning emojis, please wait...`);
       for (const emoji of emojis) {
-        prevTimout = setInterval(() => notif.edit('It looks like I got ratelimited while trying to create emojis! This may take an hour.'), 10000);
+        prevTimout = setInterval(
+          () => notif.edit('It looks like I got ratelimited while trying to create emojis! This may take an hour.'),
+          10000
+        );
         newEmojis.push(
-          await message.guild!.emojis.create(`https://cdn.discordapp.com/emojis/${emoji[3]}.${emoji[1] ? 'gif' : 'png'}`, emoji[2], {
-            reason: `Requested to be cloned by user ${message.author.tag}`,
-          }),
+          await message.guild!.emojis.create(
+            `https://cdn.discordapp.com/emojis/${emoji[3]}.${emoji[1] ? 'gif' : 'png'}`,
+            emoji[2],
+            {
+              reason: `Requested to be cloned by user ${message.author.tag}`
+            }
+          )
         );
         clearInterval(prevTimout);
       }
-      await message.channel.send(`Successfully cloned all emojis: ${newEmojis.map(e => e.toString()).join(' ')}`, { split: true });
+      await message.channel.send(`Successfully cloned all emojis: ${newEmojis.map(e => e.toString()).join(' ')}`, {
+        split: true
+      });
     } catch (error) {
       clearInterval(prevTimout!);
       if (error.message === 'Maximum number of emojis reached (50)')
         return message.channel.send(
-          `I reached the max number of emojis for this server! Heres are the ones I managed to clone: ${newEmojis.map(e => e.toString()).join(' ')}`,
-          { split: true },
+          `I reached the max number of emojis for this server! Heres are the ones I managed to clone: ${newEmojis
+            .map(e => e.toString())
+            .join(' ')}`,
+          { split: true }
         );
 
       message.channel.send(`An error occured: ${error}`);

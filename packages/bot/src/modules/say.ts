@@ -1,5 +1,5 @@
-import { Collection, CommandInteraction } from 'discord.js';
-import { Module, ModuleCategory } from '../modules';
+import { CommandInteraction } from 'discord.js';
+import { Module, ModuleCategory, OptionString } from '../modules';
 
 export default class extends Module {
   name = 'say';
@@ -15,11 +15,11 @@ export default class extends Module {
       required: true,
       default: undefined,
       choices: undefined,
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
-    interaction.reply(options.get('text'), { allowedMentions: { parse: [] } });
+  async invoke(interaction: CommandInteraction, { text: { value } }: { text: OptionString }): Promise<any> {
+    interaction.reply(value, { allowedMentions: { parse: [] } });
   }
 }

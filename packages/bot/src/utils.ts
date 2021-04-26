@@ -45,7 +45,7 @@ export const SNOWFLAKES = {
   PixelDough: '407320720662855692',
 
   // Channels
-  notifications: '816173167654469673',
+  notifications: '816173167654469673'
 };
 
 /**
@@ -58,11 +58,16 @@ export const SNOWFLAKES = {
  * @param {boolean} [options.checkOwner=true] Whether to allow being the guild's owner to override
  * @returns {boolean}
  */
-export function hasPermission(member?: GuildMember, permission?: PermissionResolvable, { checkAdmin = true, checkOwner = true } = {}) {
-  if (checkOwner && member?.id === member?.guild.ownerID) return true;
-  if (devPerms(member?.id)) return true;
+export function hasPermission(
+  member?: GuildMember,
+  permission?: PermissionResolvable,
+  { checkAdmin = true, checkOwner = true } = {}
+): boolean {
+  if (!member) return false;
+  if (checkOwner && member.id === member.guild.ownerID) return true;
+  if (devPerms(member.id)) return true;
   if (!permission) return false;
-  return member?.permissions.has(permission, checkAdmin);
+  return member.permissions.has(permission, checkAdmin);
 }
 
 export const emojis = {
@@ -86,9 +91,9 @@ export const emojis = {
     hypesquad_events: '<:hypeqquad_events:816740657770004481>',
     nitro: '<:nitro:816740658232557568>',
     partner: '<:partner:816740658328502352>',
-    verified_developer: '<:verified_developer:816740658223382568>',
+    verified_developer: '<:verified_developer:816740658223382568>'
   },
-  server_boost: '<:server_boost:824825909697445909>',
+  server_boost: '<:server_boost:824825909697445909>'
 };
 
 export function msToUI(ms: number): string {
@@ -139,5 +144,10 @@ export const READABLE_PERMISSIONS: Record<string, string> = {
   MANAGE_ROLES: 'Manage Roles',
   MANAGE_WEBHOOKS: 'Manage Webhooks',
   MANAGE_EMOJIS: 'Manage Emojis',
-  // TODO: add "Use Slash Commands" permission
+  USE_APPLICATION_COMMANDS: 'Use Slash Commands'
 };
+
+/**
+ * Used for formatting timestamps to display
+ */
+export const dateFormatStr = 'yyyy-mm-dd HH:MM:ss';

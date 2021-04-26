@@ -1,10 +1,19 @@
-import { ApplicationCommand, ApplicationCommandOptions, Collection, CommandInteraction, PermissionResolvable } from 'discord.js';
+import {
+  ApplicationCommand,
+  ApplicationCommandOption,
+  CommandInteraction,
+  GuildChannel,
+  GuildMember,
+  PermissionResolvable,
+  Role,
+  User
+} from 'discord.js';
 
 export abstract class Module {
   abstract readonly name: string;
   abstract readonly description: string;
   abstract readonly category: ModuleCategory;
-  abstract readonly options: ApplicationCommandOptions[];
+  abstract readonly options: ApplicationCommandOption[];
   /**
    * Whether this command works only in servers
    */
@@ -35,7 +44,7 @@ export abstract class Module {
    */
   command?: ApplicationCommand;
 
-  abstract invoke(interaction: CommandInteraction, options: Collection<string, any>): Promise<any>;
+  abstract invoke(interaction: CommandInteraction, options: Record<string, any>): Promise<any>;
 }
 
 export class ModuleCategory {
@@ -48,4 +57,39 @@ export class ModuleCategory {
   private constructor(public name: string, public description: string) {
     ModuleCategory.all.push(this);
   }
+}
+
+export interface BaseOption {
+  name: string;
+}
+
+export interface OptionString extends BaseOption {
+  type: 'STRING';
+  value: string;
+}
+
+export interface OptionInteger extends BaseOption {
+  type: 'INTEGER';
+  value: number;
+}
+
+export interface OptionBool extends BaseOption {
+  type: 'BOOLEAN';
+  value: boolean;
+}
+
+export interface OptionUser extends BaseOption {
+  type: 'USER';
+  user: User;
+  member?: GuildMember;
+}
+
+export interface OptionChannel extends BaseOption {
+  type: 'CHANNEL';
+  channel: GuildChannel;
+}
+
+export interface OptionRole extends BaseOption {
+  type: 'ROLE';
+  value: Role;
 }

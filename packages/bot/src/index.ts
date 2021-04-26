@@ -1,30 +1,26 @@
+import { Collection, Permissions, TextChannel, User } from 'discord.js';
 import { logger } from './logging';
+import { database, getGuildSettings } from './database';
 import { KClient } from './base';
 import { NOOP } from './utils';
-import { database, getGuildSettings } from './database';
-// import * as reactionroles from './commands/rr';
 import './database';
 import './wshandler';
-import { Collection, MessageEmbed, Permissions, TextChannel, User } from 'discord.js';
 
-export const prefix = 'k!'; // TODO: remove all text based commands
 export let invite = '';
 export const client = new KClient({
   partials: ['REACTION', 'MESSAGE'],
   intents: [
-    // https://discord.com/developers/docs/topics/gateway#list-of-intents
     'GUILDS',
     'GUILD_MEMBERS',
     'GUILD_MESSAGE_REACTIONS',
-    'DIRECT_MESSAGE_REACTIONS',
-    // preserve if needed later
+    'DIRECT_MESSAGE_REACTIONS'
     // 'GUILD_MESSAGES',
     // 'DIRECT_MESSAGES',
   ],
-  messageCacheMaxSize: 10,
+  messageCacheMaxSize: 10
 });
 
-export async function exit() {
+export async function exit(): Promise<void> {
   client.destroy();
   await database.end();
   logger.debug('Gracefully exiting.');
@@ -43,9 +39,12 @@ client.once('ready', async () => {
   };
   update();
   setInterval(update, 60 * 60 * 1000);
-  invite = `https://discord.com/oauth2/authorize?client_id=${client.user!.id}&scope=bot%20applications.commands&permissions=8`;
-  // client.emit('guildCreate', client.guilds.cache.get('676284863967526928')!);
-  // interaction.guild?.roles.cache.forEach(r => r.setPermissions(r.permissions.remove('CREATE_INSTANT_INVITE')).catch(() => {}));
+
+  invite = `https://discord.com/oauth2/authorize?client_id=${
+    client.user!.id
+  }&scope=bot%20applications.commands&permissions=8`;
+
+  // client.emit('guildCreate', client.guilds.cache.get('676284863967526928')!); // test guildCreate command
 });
 
 client.on('guildMemberAdd', async member => {
@@ -55,9 +54,16 @@ client.on('guildMemberAdd', async member => {
 
 client.on('guildCreate', async guild => {
   const logs = await guild.fetchAuditLogs({ limit: 3, type: 'BOT_ADD' }).catch(() => undefined);
-  const dm = await logs?.entries.find(entry => (entry.target as User).id === client.user?.id)?.executor.createDM();
-  const textchannels = guild.channels.cache.filter(channel => channel.type === 'text') as Collection<string, TextChannel>;
-  const channels = [dm, textchannels.find(channel => channel.name.toLowerCase().includes('general')), textchannels.first()];
+  const dm = await logs?.entries.find(entry => (entry.target as User).id === client.user?.id)?.executor?.createDM();
+  const textchannels = guild.channels.cache.filter(channel => channel.type === 'text') as Collection<
+    string,
+    TextChannel
+  >;
+  const channels = [
+    dm,
+    textchannels.find(channel => channel.name.toLowerCase().includes('general')),
+    textchannels.first()
+  ];
 
   const text = `Thanks for adding me to your server${dm ? `, ${dm.recipient}` : ''}!
   ${
@@ -74,35 +80,16 @@ If your server members cannot use slash commands, then you must enable the *Use 
   for (const channel of channels) {
     if (!channel) continue;
     try {
+      // TODO: 5 second pause between attempts
       await channel.send(text, { allowedMentions: { parse: ['users'] } });
       break;
-    } catch (error) {}
+    } catch (error) {
+      // If I cannot send this to the channel, then continue trying the next
+    }
   }
 });
 
-// client.on('message', async message => {
-//   try {
-//     await message.fetch();
-//     if (message.author.bot) return;
-//   } catch (error) {
-//     return;
-//   }
-
-//   if (!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return;
-//   const args = message.content.slice(prefix.length).trim().split(/ +/g);
-//   const commandName = args.shift()!.toLowerCase();
-
-//   const command = client.commands.find(c => c.trigger === commandName);
-//   if (!command) return;
-
-//   if (command.guildOnly && message.channel.type === 'dm') return message.reply('You can only use this in servers!');
-//   if (message.channel.type !== 'dm' && command.nsfw === true && !message.channel.nsfw)
-//     return message.reply(`You can only use this command in nsfw channels!`);
-
-//   return command.invoke(message, args);
-// });
-
 client.login().catch(e => {
-  logger.error(`Login failed, Exiting: ${e.message}`);
+  logger.error(`Login failed. ${e.message}`);
   exit();
 });

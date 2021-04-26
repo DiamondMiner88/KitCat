@@ -1,5 +1,5 @@
-import { Collection, CommandInteraction, MessageEmbed } from 'discord.js';
-import { Module, ModuleCategory } from '../modules';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { Module, ModuleCategory, OptionInteger } from '../modules';
 import { API } from 'nhentai';
 import { msToUI } from '../utils';
 import dateFormat from 'dateformat';
@@ -21,12 +21,12 @@ export default class extends Module {
       required: true,
       default: undefined,
       choices: undefined,
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
-    const doujin = await api.fetchDoujin(options.get('id')).catch(() => undefined);
+  async invoke(interaction: CommandInteraction, { id: { value } }: { id: OptionInteger }): Promise<any> {
+    const doujin = await api.fetchDoujin(value).catch(() => undefined);
 
     if (!doujin) return interaction.reply(`Your query returned no results.`);
 
@@ -46,14 +46,16 @@ export default class extends Module {
         '❯ Info',
         `${doujin.tags.artists.length > 0 ? artists : ''}\n• Scanlator: ${doujin.scanlator || 'None'}\n• Length: ${
           doujin.length
-        } Pages\n• Favorites: ${doujin.favorites}\n• Uploaded: ${dateFormat(doujin.uploadDate.getTime() + timezoneOffset, formatString)} (${msToUI(
-          sinceUploaded,
-        )} Ago)`,
-        true,
+        } Pages\n• Favorites: ${doujin.favorites}\n• Uploaded: ${dateFormat(
+          doujin.uploadDate.getTime() + timezoneOffset,
+          formatString
+        )} (${msToUI(sinceUploaded)} Ago)`,
+        true
       );
     // TODO: Display groups/other tags
 
-    if (doujin.tags.tags.length > 0) embed.addField('❯ Tags', '• ' + doujin.tags.tags.map(t => `${t.name} (${t.count})`).join('\n• '), true);
+    if (doujin.tags.tags.length > 0)
+      embed.addField('❯ Tags', '• ' + doujin.tags.tags.map(t => `${t.name} (${t.count})`).join('\n• '), true);
 
     interaction.reply(embed);
   }

@@ -18,7 +18,7 @@ export default class extends Module {
       required: false,
       default: undefined,
       choices: undefined,
-      options: undefined,
+      options: undefined
     },
     {
       type: 'STRING',
@@ -27,11 +27,11 @@ export default class extends Module {
       required: false,
       default: undefined,
       choices: undefined,
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
+  async invoke(interaction: CommandInteraction, options: Collection<string, any>): Promise<any> {
     const existingEmoji: string = options.get('emoji');
     const url = options.get('url');
 
@@ -39,6 +39,7 @@ export default class extends Module {
       const res = existingEmoji.match(/\d{17,20}/);
       console.log(res);
     } else if (url) {
+      // TODO: create emoji from url
     } else interaction.reply('No paramaters provided!');
   }
 }

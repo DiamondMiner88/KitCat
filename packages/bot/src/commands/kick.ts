@@ -13,7 +13,8 @@ export default class extends Command {
   nsfw = false;
 
   async invoke(message: Discord.Message, args: string[]): Promise<any> {
-    if (!hasPermission(message.member!, Permissions.FLAGS.KICK_MEMBERS)) return message.channel.send(`You cannot kick people!`);
+    if (!hasPermission(message.member!, Permissions.FLAGS.KICK_MEMBERS))
+      return message.channel.send(`You cannot kick people!`);
 
     if (args.length === 0) return message.channel.send('Invalid arguments!\n' + this.formattedUsage);
 
@@ -27,9 +28,13 @@ export default class extends Command {
 
     args.shift();
 
-    if (!t.bannable) return message.channel.send(`I don't have the permission to kick that user! Check my permissions, or my role in the hierarchy.`);
+    if (!t.bannable)
+      return message.channel.send(
+        `I don't have the permission to kick that user! Check my permissions, or my role in the hierarchy.`
+      );
 
-    const reason = `Banned by ${message.author.tag} with ` + (args.length > 0 ? `reason "${args.join(' ')}".` : 'no reason.');
+    const reason =
+      `Banned by ${message.author.tag} with ` + (args.length > 0 ? `reason "${args.join(' ')}".` : 'no reason.');
 
     const logMsg = new Discord.MessageEmbed()
       .setTitle(`*${t.user.username} got yeeted out the window*`)
@@ -49,7 +54,7 @@ export default class extends Command {
     await t.send(uGotBanned).catch(NOOP);
 
     t.ban({
-      reason,
+      reason
     }).catch(err => message.channel.send(`Couldn't kick the user: ${err.message}`));
   }
 }

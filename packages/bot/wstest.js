@@ -9,8 +9,7 @@ client.on('open', () => {
     JSON.stringify({
       t: 'CHANNELS',
       g: '676284863967526928',
-      id: `${Math.random()}`,
+      id: `${Math.random()}`
     })
   );
 });
- 

@@ -1,0 +1,4 @@
+{
+  "npm.packageManager": "pnpm",
+  "npm.validate.enable": false // npm extension doesn't detect modules installed by pnpm
+}

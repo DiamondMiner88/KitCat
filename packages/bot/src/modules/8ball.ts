@@ -1,5 +1,5 @@
-import { Collection, CommandInteraction } from 'discord.js';
-import { Module, ModuleCategory } from '../modules';
+import { CommandInteraction } from 'discord.js';
+import { Module, ModuleCategory, OptionString } from '../modules';
 
 export default class extends Module {
   name = '8ball';
@@ -14,8 +14,8 @@ export default class extends Module {
       required: true,
       default: undefined,
       choices: undefined,
-      options: undefined,
-    },
+      options: undefined
+    }
   ];
 
   eightballReplies = [
@@ -30,10 +30,10 @@ export default class extends Module {
     'My sources say no.',
     'Outlook not so good.',
     'x to doubt',
-    'https://i.redd.it/qh7mgkucu2y21.jpg',
+    'https://i.redd.it/qh7mgkucu2y21.jpg'
   ];
 
-  async invoke(interaction: CommandInteraction, options: Collection<string, any>) {
-    interaction.reply(`> ${options.get('question')}\n` + this.eightballReplies[Math.floor(Math.random() * this.eightballReplies.length)]);
+  async invoke(interaction: CommandInteraction, { question: { value } }: { question: OptionString }): Promise<any> {
+    interaction.reply(`> ${value}\n` + this.eightballReplies[Math.floor(Math.random() * this.eightballReplies.length)]);
   }
 }

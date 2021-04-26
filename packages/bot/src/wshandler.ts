@@ -19,7 +19,12 @@ async function handleMessage(socket: ws, data: ws.Data) {
 
   switch (json.t) {
     case 'STATUS':
-      return send(socket, { id: json.id, uptime: client.uptime, cpu: process.cpuUsage().system, memory: process.memoryUsage().rss });
+      return send(socket, {
+        id: json.id,
+        uptime: client.uptime,
+        cpu: process.cpuUsage().system,
+        memory: process.memoryUsage().rss
+      });
 
     case 'CHANNELS': {
       const guild = client.guilds.cache.get(json.g);
@@ -34,9 +39,9 @@ async function handleMessage(socket: ws, data: ws.Data) {
             id: overwrite.id,
             type_: overwrite.type,
             allow: overwrite.allow.bitfield,
-            deny: overwrite.deny.bitfield,
-          })),
-        })),
+            deny: overwrite.deny.bitfield
+          }))
+        }))
       });
     }
 
@@ -52,8 +57,8 @@ async function handleMessage(socket: ws, data: ws.Data) {
             name: role.name,
             perms: role.permissions.bitfield,
             pos: role.rawPosition,
-            color: role.hexColor,
-          })),
+            color: role.hexColor
+          }))
       });
     }
   }

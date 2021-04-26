@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "rm -rf ./dist && pnpx tsc && cp -r ./src/gql ./dist/gql && cd dist && node index.js"
+    "build": "rm -rf ./dist && pnpx tsc && cp -r ./src/gql ./dist/gql",
+    "dev": "pnpm build && cd dist && clear && node index.js",
+    "prettier": "prettier --write \"{!(node_modules),!(dist)/**/}*.{ts,js,json}\"",
+    "lint": "pnpx eslint ./src/**/*.ts --fix"
   },
   "author": {
     "name": "Diamond",
@@ -12,28 +15,32 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "bufferutil": "^4.0.3",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "dateformat": "^4.5.1",
-    "discord.js": "github:devsnek/discord.js#8dbd695f19e98734532e774171be9e813c236a94",
+    "discord.js": "github:vaporox/discord.js#feat-interactions",
     "glob": "^7.1.6",
     "ms": "^2.1.3",
-    "nhentai": "^2.1.0",
+    "nhentai": "^2.1.1",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",
-    "pg": "^8.5.1",
+    "pg": "^8.6.0",
     "snoowrap": "^1.22.0",
     "utf-8-validate": "^5.0.4",
-    "ws": "^7.4.4"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "@types/dateformat": "^3.0.1",
     "@types/glob": "^7.1.3",
-    "@types/node": "^14.14.36",
-    "@types/node-fetch": "^2.5.8",
+    "@types/node": "^15.0.0",
+    "@types/node-fetch": "^2.5.10",
     "@types/pg": "^7.14.11",
     "@types/request": "^2.48.5",
-    "@types/ws": "^7.4.0",
-    "prisma": "^2.19.0",
-    "typescript": "^4.2.3"
+    "@types/ws": "^7.4.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prisma": "^2.21.2",
+    "typescript": "^4.2.4"
   }
 }
