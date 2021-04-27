@@ -1,1 +1,0 @@
-(c) Copyright 2020 DiamondMiner88, all rights reserved.

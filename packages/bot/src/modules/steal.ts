@@ -15,7 +15,7 @@ export default class extends Module {
     {
       type: 'STRING',
       name: 'name',
-      description: "Create from url. **Will compress image if it's bigger than 256kb**",
+      description: 'Name for the new emoji.',
       required: true,
       choices: undefined,
       options: undefined
@@ -31,7 +31,7 @@ export default class extends Module {
     {
       type: 'STRING',
       name: 'url',
-      description: 'Create from url. Will downscale to 128x128 if too big.',
+      description: 'Create from url. Will downscale to 256x256 PNG if too big.',
       required: false,
       choices: undefined,
       options: undefined
