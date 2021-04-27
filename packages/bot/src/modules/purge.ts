@@ -1,10 +1,10 @@
-import { CommandInteraction, Permissions, TextChannel } from 'discord.js';
-import { Module, ModuleCategory, OptionInteger } from '../modules';
-import { clamp } from '../utils';
+import { CommandInteraction, MessageEmbed, Permissions, TextChannel } from 'discord.js';
+import { Module, ModuleCategory, OptionInteger, OptionString } from '../modules';
+import { clamp, sendToLogChannel } from '../utils';
 
 export default class extends Module {
   name = 'purge';
-  description = 'Purge messages from this channel. Max is 100 and messages older than 14 days will be skipped.';
+  description = 'Purge up to 100 messages from this channel. Messages older than 14 days will be skipped.';
   category = ModuleCategory.MODERATION;
   guildOnly = true;
   advancedPermissions = true;
@@ -19,14 +19,36 @@ export default class extends Module {
       default: undefined,
       choices: undefined,
       options: undefined
+    },
+    {
+      type: 'STRING',
+      name: 'reason',
+      description: 'Reason for purging the messages.',
+      required: false,
+      default: undefined,
+      choices: undefined,
+      options: undefined
     }
   ];
 
-  async invoke(interaction: CommandInteraction, { amount: { value } }: { amount: OptionInteger }): Promise<any> {
+  async invoke(
+    interaction: CommandInteraction,
+    { amount: { value }, reason }: { amount: OptionInteger; reason?: OptionString }
+  ): Promise<any> {
     const amount = clamp(value, 1, 100);
+    const logEmbed = new MessageEmbed()
+      .setAuthor(
+        `${interaction.user.tag} (${interaction.user.id})`,
+        interaction.user.displayAvatarURL({ format: 'png', size: 64, dynamic: true })
+      )
+      .addField(
+        '❯ Details',
+        `• Action: Purge` + `\n• Amount: ${amount}` + `\n• Reason: ${reason ? `\`${reason.value}\`` : 'None specified'}`
+      );
+
     (interaction.channel as TextChannel).bulkDelete(amount, true).then(
       messages => {
-        // TODO: log to logChannel
+        sendToLogChannel(interaction.guild!, logEmbed);
         interaction.client.setTimeout(
           () => interaction.reply(`Deleted ${messages.size} messages.`, { ephemeral: true }),
           2000
