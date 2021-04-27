@@ -27,7 +27,7 @@ export default class extends Module {
       default: undefined,
       choices: [
         {
-          name: 'Anime (Any)',
+          name: 'Anime (Any format)',
           value: 'ANIME'
         },
         {

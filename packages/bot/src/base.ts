@@ -35,7 +35,11 @@ export class KClient extends Client {
       this.modules
         .filter(module => !scs.find(sc => sc.name === module.name) && !module.unlisted)
         .forEach(module => {
-          this.application!.commands.create(module).catch(e =>
+          this.application!.commands.create({
+            name: module.name,
+            description: module.description,
+            options: module.options
+          }).catch(e =>
             logger.error(`Failed to create global slash command ${module.name} because of error ${e.message}`)
           );
         });
@@ -47,7 +51,7 @@ export class KClient extends Client {
           // TODO: fix edits
           if (module.name !== '') return;
           if (module.description !== sc.description || module.options !== sc.options) {
-            logger.debug('Edited global slash command');
+            logger.debug(`Edited global slash command ${module.name}`);
             // @ts-expect-error wait for types to be fixed
             sc.edit({ description: module.description, options: module.options }).catch(e => {
               logger.error(`Could not edit global slash command ${module.name} because of: ${e.message}`);
