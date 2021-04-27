@@ -24,6 +24,7 @@
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
+    "sharp": "^0.28.1",
     "snoowrap": "^1.22.0",
     "utf-8-validate": "^5.0.4",
     "ws": "^7.4.5"
@@ -35,6 +36,7 @@
     "@types/node-fetch": "^2.5.10",
     "@types/pg": "^7.14.11",
     "@types/request": "^2.48.5",
+    "@types/sharp": "^0.28.0",
     "@types/ws": "^7.4.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
