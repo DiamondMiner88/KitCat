@@ -182,3 +182,9 @@ export async function sendToLogChannel(
 
   return (channel as TextChannel).send(content, options).catch(e => e);
 }
+
+/**
+ * Pause execution for a certain amount of milliseconds
+ * @param ms Milliseconds
+ */
+export const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));

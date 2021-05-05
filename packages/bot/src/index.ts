@@ -2,7 +2,7 @@ import { Collection, Permissions, TextChannel, User } from 'discord.js';
 import { logger } from './logging';
 import { database, getGuildSettings } from './database';
 import { KClient } from './base';
-import { NOOP } from './utils';
+import { NOOP, sleep } from './utils';
 import './database';
 import './wshandler';
 
@@ -80,7 +80,7 @@ If your server members cannot use slash commands, then you must enable the *Use 
   for (const channel of channels) {
     if (!channel) continue;
     try {
-      // TODO: 5 second pause between attempts
+      await sleep(5000);
       await channel.send(text, { allowedMentions: { parse: ['users'] } });
       break;
     } catch (error) {
