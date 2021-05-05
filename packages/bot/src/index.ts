@@ -17,7 +17,7 @@ export const client = new KClient({
     // 'GUILD_MESSAGES',
     // 'DIRECT_MESSAGES',
   ],
-  messageCacheMaxSize: 10
+  messageCacheMaxSize: 0
 });
 
 export async function exit(): Promise<void> {
