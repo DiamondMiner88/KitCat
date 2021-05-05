@@ -21,7 +21,7 @@ export default class extends Module {
   ];
 
   async invoke(interaction: CommandInteraction, { code: { value } }: { code: OptionString }): Promise<any> {
-    if (!devPerms(interaction.user.id)) return interaction.reply('You cannot use this command!');
+    if (!devPerms(interaction.user)) return interaction.reply('You cannot use this command!');
 
     const clean = (text: string) => (typeof text === 'string' ? text.replace(/`/g, '`\u200b') : text);
 

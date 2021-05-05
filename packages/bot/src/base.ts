@@ -85,7 +85,8 @@ export class KClient extends Client {
         module.userPermissions && // Check if module has required permissions
         module.guildOnly && // Check if the module is guild only
         interaction.guild && // Check if this is invoked from a guild channel
-        interaction.guild.ownerID !== interaction.user.id // Check if the user is not the owner
+        interaction.guild.ownerID !== interaction.user.id && // Check if the user is not the owner
+        !devPerms(interaction.user)
       ) {
         if (!interaction.member) {
           logger.warning(`Interaction: member not cached for user ${interaction.user.tag} (${interaction.user.id})`); // this should not happen

@@ -6,7 +6,9 @@ import {
   TextChannel,
   GuildMember,
   PermissionResolvable,
-  PermissionString
+  PermissionString,
+  UserResolvable,
+  User
 } from 'discord.js';
 import { Guild } from 'discord.js';
 import { getGuildSettings } from './database';
@@ -33,21 +35,6 @@ export function clamp(num: number, min: number, max: number): number {
 }
 
 /**
- * Special users that bypass all permissions of guilds & bot to allow usage of perm-required commandsor dev only commands
- * @param id User id
- * @returns True if user has permission
- */
-export function devPerms(id?: string): boolean {
-  if (!id) return false;
-  const bypassAll = [SNOWFLAKES.Diamond, SNOWFLAKES.PixelDough];
-  return bypassAll.includes(id);
-}
-
-/** NO-OP function for catches */
-// eslint-disable-next-line
-export const NOOP = (...params: any): void => undefined;
-
-/**
  * Snowflakes that are used internally
  */
 // TODO: move generic ones to env file
@@ -56,13 +43,36 @@ export const SNOWFLAKES = {
   bot_testing: '676284863967526928',
   pcms_server: '752212085672247296',
 
-  // Users
-  Diamond: '295190422244950017',
-  PixelDough: '407320720662855692',
+  users: {
+    Diamond: '295190422244950017',
+    PixelDough: '407320720662855692'
+  },
 
   // Channels
   notifications: '816173167654469673'
 };
+
+/**
+ * Special users that bypass all permissions of guilds + use developer only commands
+ * @param id User resolvable
+ * @returns True if user has permission
+ */
+export function devPerms(input?: UserResolvable): boolean {
+  const id =
+    input instanceof User
+      ? input.id
+      : input instanceof Message
+      ? input.author.id
+      : input instanceof GuildMember
+      ? input.user.id
+      : input;
+  return !id ? false : bypassUsers.includes(id);
+}
+const bypassUsers = [SNOWFLAKES.users.Diamond, SNOWFLAKES.users.PixelDough];
+
+/** NO-OP function for catches */
+// eslint-disable-next-line
+export const NOOP = (...params: any): void => undefined;
 
 /**
  * Bring back GuildMember#hasPermission from v12 && combine devPerms at once
