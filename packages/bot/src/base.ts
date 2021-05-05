@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Permissions, TextChannel } from 'discord.js';
+import { Client, ClientOptions, GuildMember, Permissions, TextChannel } from 'discord.js';
 import glob from 'glob';
 import { logger } from './logging';
 import { Module } from './modules';
@@ -65,47 +65,60 @@ export class KClient extends Client {
       });
     });
 
-    this.on('interaction', (interaction): any => {
+    this.on('interaction', async interaction => {
       if (!interaction.isCommand()) return;
       const module = this.modules.find(module => interaction.commandID === module.command?.id);
       if (!module) return;
 
-      if (!interaction.channel || !interaction.user) {
-        logger.error('base -> nsfw check; unknown why channel or user is null'); // if this never fires then thank god
-        return interaction.reply('This triggered a rare error! Please try again later.', { ephemeral: true });
-      }
+      if (!interaction.channel) return; // invalid api docs & typings
+
+      // Guild check
+      if (module.guildOnly && !interaction.guild)
+        return interaction.reply('This module can only be used in servers!', { ephemeral: true });
 
       if (module.nsfw && interaction.channel.type !== 'dm' && !(interaction.channel as TextChannel).nsfw)
-        return interaction.reply('This command can only be run in nsfw channels!', { ephemeral: true });
+        // NSFW check
+        return interaction.reply('This module can only be run in nsfw channels!', { ephemeral: true });
 
+      // Permission checks
       if (
-        module.userPermissions &&
-        !interaction.member?.permissionsIn(interaction.channel!).has(module.userPermissions) &&
-        !devPerms(interaction.user?.id)
+        module.userPermissions && // Check if module has required permissions
+        module.guildOnly && // Check if the module is guild only
+        interaction.guild && // Check if this is invoked from a guild channel
+        interaction.guild.ownerID !== interaction.user.id // Check if the user is not the owner
       ) {
-        const missing = interaction.member?.permissionsIn(interaction.channel!).missing(module.userPermissions);
-        if (missing)
+        if (!interaction.member) {
+          logger.warning(`Interaction: member not cached for user ${interaction.user.tag} (${interaction.user.id})`); // this should not happen
+          return interaction.reply('Could not find your permissions, please try again later.', { ephemeral: true });
+        }
+
+        const missing = (interaction.member as GuildMember)
+          .permissionsIn(interaction.channel)
+          .missing(module.userPermissions);
+        if (missing.length > 0)
           return interaction.reply(
-            `You are missing the following permission${missing.length > 0 ? 's' : ''}: ${missing
-              ?.map((perm: any) => READABLE_PERMISSIONS[perm])
+            `You are missing permission${missing.length > 0 ? 's' : ''}: ${missing
+              .map(perm => READABLE_PERMISSIONS[perm])
               .join(', ')}`,
             { ephemeral: true }
           );
-        else return interaction.reply('You are not allowed to execute that command!', { ephemeral: true });
       }
 
+      // Check bot permissions
       if (module.advancedPermissions && !interaction.guild?.me?.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
         return interaction.reply(
-          'This command requires additional permissions that I do not have. Administrator is needed.'
+          'This module requires additional permissions that I do not have. Administrator is needed.'
         );
 
+      // Check if connected to db
       if (module.requiresDb && !this.dbEnabled)
         return interaction.reply('A database error occurred, please try again later.', { ephemeral: true });
 
+      // Handle interaction
       const options: Record<string, any> = {};
       if (interaction.options) for (const option of interaction.options) options[option.name] = option;
       module.invoke(interaction, options).catch(e => {
-        logger.error(inspect(e, { depth: null }));
+        logger.error(inspect(e, { depth: 3 }));
         interaction.reply('An error occurred, please try again later.', { ephemeral: true });
       });
     });

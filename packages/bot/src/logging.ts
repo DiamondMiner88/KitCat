@@ -17,9 +17,8 @@ export class Logger {
   constructor(public module: string) {}
 
   log(message: string, level: LoggerLevel, trace = false): void {
-    const str = chalk`{gray [${dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss.l')}]} {${level.color} [${
-      level.name
-    }]} {cyanBright [${this.module}]} - ${message}`;
+    // prettier-ignore
+    const str = chalk`{gray [${dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss.l')}]} {${level.color} [${level.name}]} {cyanBright [${this.module}]} - ${message}`;
 
     if (trace) console.trace(str);
     else if (level.level == LoggerLevel.ERROR.level) {

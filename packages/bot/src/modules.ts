@@ -13,37 +13,32 @@ export abstract class Module {
   abstract readonly name: string;
   abstract readonly description: string;
   abstract readonly category: ModuleCategory;
+
+  /** Slash command options */
   abstract readonly options: ApplicationCommandOption[];
-  /**
-   * Whether this command works only in servers
-   */
+
+  /** If this command works only in servers */
   abstract readonly guildOnly: boolean;
-  /**
-   * Whether this command needs access to the database
-   */
+
+  /** If this command needs access to the database */
   readonly requiresDb: boolean = false;
-  /**
-   * Whether this command requires it to run in only nsfw channels
-   */
+
+  /** If this command requires it to run in only nsfw channels */
   readonly nsfw: boolean = false;
-  /**
-   * Prevents the command from being used, and removes the command from registered slashies if it exists already
-   */
+
+  /** Prevents the command from being used, and removes the command if it exists already */
   readonly unlisted: boolean = false;
-  /**
-   * Array of permissions / single permission the user needs in order to use the command
-   */
+
+  /** Array of permissions the user needs to use the command */
   readonly userPermissions?: PermissionResolvable;
-  /**
-   * Whether the client needs more permissions other than MANAGE_MESSAGES in the server
-   */
+
+  /** Whether the bot needs more permissions other than MANAGE_MESSAGES in the server */
   readonly advancedPermissions?: boolean;
 
-  /**
-   * Set at runtime when fetching slashies
-   */
+  /** Cached instance of the slash command */
   command?: ApplicationCommand;
 
+  /** To be implemented by modules. Used to trigger it. */
   abstract invoke(interaction: CommandInteraction, options: Record<string, any>): Promise<any>;
 }
 
@@ -59,6 +54,7 @@ export class ModuleCategory {
   }
 }
 
+// TODO: find a better way for slashies option types
 export interface BaseOption {
   name: string;
 }
