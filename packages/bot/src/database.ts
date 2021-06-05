@@ -3,6 +3,7 @@ import { logger } from './logging';
 import { clamp } from './utils';
 import { client } from '.';
 import { Client } from 'pg';
+import { Snowflake } from 'discord.js';
 
 export const database = new Client();
 database
@@ -17,11 +18,11 @@ database.on('end', () => {
 
 //#region Database types
 type GuildSettings = {
-  id: string;
+  id: Snowflake;
   joinMessage?: string;
-  logChannel?: string;
-  reportChannel?: string;
-  autoRoles?: string[];
+  logChannel?: Snowflake;
+  reportChannel?: Snowflake;
+  autoRoles?: Snowflake[];
   createdAt: string;
 };
 //#endregion

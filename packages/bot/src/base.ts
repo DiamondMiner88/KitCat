@@ -1,4 +1,4 @@
-import { Client, ClientOptions, GuildMember, Permissions, TextChannel } from 'discord.js';
+import { Client, ClientOptions, CommandInteractionOption, GuildMember, Permissions, TextChannel } from 'discord.js';
 import glob from 'glob';
 import { logger } from './logging';
 import { Module } from './modules';
@@ -98,6 +98,7 @@ export class KClient extends Client {
           .missing(module.userPermissions);
         if (missing.length > 0)
           return interaction.reply(
+            // TODO: always empty
             `You are missing permission${missing.length > 0 ? 's' : ''}: ${missing
               .map(perm => READABLE_PERMISSIONS[perm])
               .join(', ')}`,
@@ -116,8 +117,10 @@ export class KClient extends Client {
         return interaction.reply('A database error occurred, please try again later.', { ephemeral: true });
 
       // Handle interaction
-      const options: Record<string, any> = {};
-      if (interaction.options) for (const option of interaction.options) options[option.name] = option;
+      const options: Record<string, CommandInteractionOption> = {};
+      // TODO: verify option[0] is the name
+      if (interaction.options)
+        for (const option of interaction.options) console.log(option), (options[option[0]] = option[1]);
       module.invoke(interaction, options).catch(e => {
         logger.error(inspect(e, { depth: 3 }));
         interaction.reply('An error occurred, please try again later.', { ephemeral: true });

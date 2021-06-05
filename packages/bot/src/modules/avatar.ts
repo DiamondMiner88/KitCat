@@ -1,4 +1,4 @@
-import { Collection, CommandInteraction, MessageEmbed } from 'discord.js';
+import { Collection, CommandInteraction, MessageEmbed, Snowflake } from 'discord.js';
 import { Module, ModuleCategory, OptionString, OptionUser } from '../modules';
 
 export default class extends Module {
@@ -45,11 +45,13 @@ export default class extends Module {
     let user =
       userParam?.user || idParam?.value || splitTag
         ? userParam?.user ??
-          (idParam ? await interaction.client.users.fetch(idParam.value).catch(() => undefined) : undefined) ??
+          (idParam
+            ? await interaction.client.users.fetch(idParam.value as Snowflake).catch(() => undefined)
+            : undefined) ??
           (splitTag
             ? await interaction.guild?.members.fetch({ query: splitTag[0], limit: 10 }).catch(() => undefined)
             : undefined)
-        : interaction.member?.user;
+        : interaction.user;
 
     if (user instanceof Collection)
       user = user.find(m => m.user.discriminator === splitTag![1])?.user ?? user.first()?.user;

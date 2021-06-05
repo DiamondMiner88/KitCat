@@ -48,6 +48,7 @@ export default class extends Module {
     if (interaction.guild)
       embed.addField('❯ Guild', `• Shard ID: ${interaction.guild.shard.id}` + `\n• Joined: ${joinedAt}`);
 
-    interaction.editReply({ content: null, embeds: [embed] });
+    // ZWS until I can pass in null again
+    interaction.editReply({ content: '\u200b', embeds: [embed] });
   }
 }

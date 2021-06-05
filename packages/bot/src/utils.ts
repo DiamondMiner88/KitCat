@@ -1,5 +1,4 @@
 import {
-  APIMessageContentResolvable,
   Message,
   MessageAdditions,
   MessageOptions,
@@ -8,7 +7,8 @@ import {
   PermissionResolvable,
   PermissionString,
   UserResolvable,
-  User
+  User,
+  Snowflake
 } from 'discord.js';
 import { Guild } from 'discord.js';
 import { getGuildSettings } from './database';
@@ -40,16 +40,16 @@ export function clamp(num: number, min: number, max: number): number {
 // TODO: move generic ones to env file
 export const SNOWFLAKES = {
   // Servers
-  bot_testing: '676284863967526928',
-  pcms_server: '752212085672247296',
+  bot_testing: '676284863967526928' as Snowflake,
+  pcms_server: '752212085672247296' as Snowflake,
 
   users: {
-    Diamond: '295190422244950017',
-    PixelDough: '407320720662855692'
+    Diamond: '295190422244950017' as Snowflake,
+    PixelDough: '407320720662855692' as Snowflake
   },
 
   // Channels
-  notifications: '816173167654469673'
+  notifications: '816173167654469673' as Snowflake
 };
 
 /**
@@ -196,22 +196,20 @@ export const dateFormatStr = 'yyyy-mm-dd HH:MM:ss';
 /**
  * Log a message to a guild's Log Channel
  * @param guild The guild this message is for
- * @param content Resolvable message content
- * @param options Optional message options
+ * @param content Message content
  * @returns The sent message
  */
 export async function sendToLogChannel(
   guild: Guild,
-  content: APIMessageContentResolvable | MessageAdditions,
-  options: MessageOptions = {}
-): Promise<Message | Error | undefined> {
+  content: string | (MessageOptions & { split?: false }) | MessageAdditions
+): Promise<Message | Message[] | Error | undefined> {
   const settings = await getGuildSettings(guild.id, guild.memberCount);
   if (!settings.logChannel) return; // No logChannel set, ignore
 
   const channel = await guild.channels.resolve(settings.logChannel);
   if (!channel || channel.type !== 'text') return; // logChannel no longer exists or it is not a TextChannel, ignore
 
-  return (channel as TextChannel).send(content, options).catch(e => e);
+  return (channel as TextChannel).send(content);
 }
 
 /**
