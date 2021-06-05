@@ -1,8 +1,9 @@
 import dateFormat from 'dateformat';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { MessageEmbed, version as DJSversion } from 'discord.js';
 import { Module, ModuleCategory } from '../modules';
 import { dateFormatStr, msToUI } from '../utils';
 import { freemem } from 'os';
+import { KCommandInteraction } from '../base';
 
 export default class extends Module {
   name = 'ping';
@@ -11,14 +12,14 @@ export default class extends Module {
   guildOnly = false;
   options = [];
 
-  async invoke(interaction: CommandInteraction): Promise<any> {
+  async invoke(interaction: KCommandInteraction): Promise<any> {
     const start = Date.now();
     await interaction.reply(`no.`);
     const elapsed = Date.now() - start;
 
     const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
-    const user = interaction.client.user!;
+    const user = interaction.client.user;
 
     const createdAt = `\`${dateFormat(user.createdTimestamp, dateFormatStr)} (UTC)\` (${msToUI(
       Date.now() - timezoneOffset - user.createdTimestamp
@@ -40,13 +41,14 @@ export default class extends Module {
           `\n• Owner: [Github](https://github.com/DiamondMiner88)`
       );
 
-    const joinedTimestamp = interaction.guild!.me!.joinedTimestamp!;
-    const joinedAt =
-      `\`${dateFormat(joinedTimestamp, dateFormatStr)} (UTC)\`` +
-      ` (${msToUI(Date.now() - timezoneOffset - joinedTimestamp)} Ago)`;
+    if (interaction.guild) {
+      const joinedTimestamp = interaction.guild.me!.joinedTimestamp!;
+      const joinedAt =
+        `\`${dateFormat(joinedTimestamp, dateFormatStr)} (UTC)\`` +
+        ` (${msToUI(Date.now() - timezoneOffset - joinedTimestamp)} Ago)`;
 
-    if (interaction.guild)
       embed.addField('❯ Guild', `• Shard ID: ${interaction.guild.shard.id}` + `\n• Joined: ${joinedAt}`);
+    }
 
     // ZWS until I can pass in null again
     interaction.editReply({ content: '\u200b', embeds: [embed] });

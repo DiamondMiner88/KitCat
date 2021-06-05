@@ -30,19 +30,20 @@ export async function exit(): Promise<void> {
 process.on('SIGTERM', exit);
 
 client.once('ready', async () => {
-  logger.info(`Logged in as ${client.user!.tag} (${client.user!.id}) | Watching ${client.guilds.cache.size} servers`);
+  logger.info(`Logged in as ${client.user.tag} (${client.user.id}) | Watching ${client.guilds.cache.size} servers`);
 
   const update = () => {
-    client.user!.setActivity(`${client.guilds.cache.size} servers`, { type: 'WATCHING' });
+    client.user.setActivity(`${client.guilds.cache.size} servers`, { type: 'WATCHING' });
     client.emojis.cache.sweep(() => true);
     client.users.cache.sweep(() => true);
   };
   update();
   setInterval(update, 60 * 60 * 1000);
 
-  invite = `https://discord.com/oauth2/authorize?client_id=${
-    client.user!.id
-  }&scope=bot%20applications.commands&permissions=8`;
+  invite =
+    'https://discord.com/oauth2/authorize?client_id=' +
+    client.user.id +
+    '&scope=bot%20applications.commands&permissions=8';
 
   // client.emit('guildCreate', client.guilds.cache.get('676284863967526928')!); // test guildCreate command
 });

@@ -1,7 +1,8 @@
-import { CommandInteraction, DiscordAPIError, Permissions } from 'discord.js';
+import { DiscordAPIError, Permissions } from 'discord.js';
 import { Module, ModuleCategory, OptionRole, OptionString } from '../modules';
 import sharp from 'sharp';
 import fetch, { FetchError } from 'node-fetch';
+import { GuildCommandInteraction } from '../base';
 
 export default class extends Module {
   name = 'steal';
@@ -47,7 +48,7 @@ export default class extends Module {
   ];
 
   async invoke(
-    interaction: CommandInteraction,
+    interaction: GuildCommandInteraction,
     {
       emoji: emojiStr,
       url,
@@ -67,8 +68,8 @@ export default class extends Module {
       if (!id) return interaction.reply('Invalid emoji id.', { ephemeral: true });
       // Create emoji
       const url = `https://cdn.discordapp.com/emojis/${id}.png?v=1`;
-      const emoji = await interaction
-        .guild!.emojis.create(url, name, {
+      const emoji = await interaction.guild.emojis
+        .create(url, name, {
           reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`
         })
         .catch((e: DiscordAPIError) => e);
@@ -95,8 +96,8 @@ export default class extends Module {
     else return interaction.editReply('No paramaters provided!');
 
     // Create emoji
-    const emoji = await interaction
-      .guild!.emojis.create(attachment, name, {
+    const emoji = await interaction.guild.emojis
+      .create(attachment, name, {
         reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`,
         roles: role ? [role.value] : undefined
       })

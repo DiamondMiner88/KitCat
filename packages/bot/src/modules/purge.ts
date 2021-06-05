@@ -1,4 +1,5 @@
-import { CommandInteraction, MessageEmbed, Permissions, TextChannel } from 'discord.js';
+import { MessageEmbed, Permissions, TextChannel } from 'discord.js';
+import { GuildCommandInteraction } from '../base';
 import { Module, ModuleCategory, OptionInteger, OptionString } from '../modules';
 import { clamp, sendToLogChannel } from '../utils';
 
@@ -32,7 +33,7 @@ export default class extends Module {
   ];
 
   async invoke(
-    interaction: CommandInteraction,
+    interaction: GuildCommandInteraction,
     { amount: { value }, reason }: { amount: OptionInteger; reason?: OptionString }
   ): Promise<any> {
     const amount = clamp(value, 1, 100);
@@ -48,7 +49,7 @@ export default class extends Module {
 
     (interaction.channel as TextChannel).bulkDelete(amount, true).then(
       messages => {
-        sendToLogChannel(interaction.guild!, logEmbed);
+        sendToLogChannel(interaction.guild, logEmbed);
         interaction.client.setTimeout(
           () => interaction.reply(`Deleted ${messages.size} messages.`, { ephemeral: true }),
           2000

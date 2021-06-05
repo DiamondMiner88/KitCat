@@ -1,4 +1,15 @@
-import { Client, ClientOptions, CommandInteractionOption, GuildMember, Permissions, TextChannel } from 'discord.js';
+import {
+  Client,
+  ClientApplication,
+  ClientOptions,
+  ClientUser,
+  CommandInteraction,
+  CommandInteractionOption,
+  Guild,
+  GuildMember,
+  Permissions,
+  TextChannel
+} from 'discord.js';
 import glob from 'glob';
 import { logger } from './logging';
 import { Module } from './modules';
@@ -8,6 +19,10 @@ import { devPerms, READABLE_PERMISSIONS } from './utils';
 export class KClient extends Client {
   dbEnabled = false;
   modules: Module[] = [];
+  //@ts-expect-error Type override
+  user: ClientUser;
+  //@ts-expect-error Type override
+  application: ClientApplication;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -30,12 +45,12 @@ export class KClient extends Client {
         });
       });
 
-      const scs = await this.application!.commands.fetch();
+      const scs = await this.application.commands.fetch();
 
       this.modules
         .filter(module => !scs.find(sc => sc.name === module.name) && !module.unlisted)
         .forEach(module => {
-          this.application!.commands.create({
+          this.application.commands.create({
             name: module.name,
             description: module.description,
             options: module.options
@@ -120,11 +135,19 @@ export class KClient extends Client {
       const options: Record<string, CommandInteractionOption> = {};
       // TODO: verify option[0] is the name
       if (interaction.options)
-        for (const option of interaction.options) console.log(option), (options[option[0]] = option[1]);
+        for (const option of interaction.options) options[option[0]] = option[1];
       module.invoke(interaction, options).catch(e => {
         logger.error(inspect(e, { depth: 3 }));
         interaction.reply('An error occurred, please try again later.', { ephemeral: true });
       });
     });
   }
+}
+
+export interface KCommandInteraction extends CommandInteraction {
+  client: KClient
+}
+
+export interface GuildCommandInteraction extends KCommandInteraction {
+  guild: Guild
 }
