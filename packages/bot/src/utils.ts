@@ -124,7 +124,8 @@ export const emojis = {
     partner: '<:partner:816740658328502352>',
     verified_developer: '<:verified_developer:816740658223382568>'
   },
-  server_boost: '<:server_boost:824825909697445909>'
+  server_boost: '<:server_boost:824825909697445909>',
+  omegalul: '<:OMEGAlul:850881238540746762>'
 };
 
 /**
@@ -217,3 +218,20 @@ export async function sendToLogChannel(
  * @param ms Milliseconds
  */
 export const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * Wraps the content in 2 backticks
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const code = (...content: any[]): string => `\`${content.join(' ')}\``
+
+/**
+ * Generates a list resembling this format:
+ * |---------------------|
+ * | • Name: `Content`   |
+ * | • Name2: `Content2` |
+ * |---------------------|
+ * @param lines List of [name, content, should not make it code] tuples
+ */
+export const makeResponse = (lines: [string, any, boolean?][]): string =>
+  lines.map(l => `• ${l[0]}: ${l[2] ? l[1] : code(l[1])}`).join('\n')

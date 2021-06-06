@@ -1,7 +1,7 @@
 import dateFormat from 'dateformat';
 import { MessageEmbed, version as DJSversion } from 'discord.js';
 import { Module, ModuleCategory } from '../modules';
-import { dateFormatStr, emojis, msToUI } from '../utils';
+import { code, dateFormatStr, emojis, msToUI, makeResponse } from '../utils';
 import { freemem, loadavg } from 'os';
 import { KCommandInteraction } from '../base';
 
@@ -32,27 +32,50 @@ export default class extends Module {
       .setTitle('Stats')
       .addField(
         '❯ Info',
-        `• Owner: [Github](${process.env.npm_package_author_url})` +
-          `\n• Support server: [Invite](https://www.youtube.com/watch?v=dQw4w9WgXcQ)` +
-          `\n• Discord.js: \`${DJSversion}\`` +
-          `\n• Node.js: \`${process.version}\``
+        makeResponse([
+          ['Owner', `[Github](${process.env.npm_package_author_url})`, true],
+          ['Support', `[Invite](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`, true],
+          ['Discord.js', DJSversion],
+          ['Node.js', process.version]
+        ])
       )
-      .addField('❯ Ping', `• Heatbeat: \`${interaction.client.ws.ping}ms\`` + `\n• API: \`${~~elapsed}ms\``)
+      .addField(
+        '❯ Ping',
+        makeResponse([
+          ['Heartbeat', interaction.client.ws.ping + 'ms'],
+          ['API', ~~elapsed + 'ms']
+        ])
+      )
       .addField(
         '❯ Process',
-        `\n• Memory: \`${~~(process.memoryUsage().rss / 1e6)}/${~~(freemem() / 1e6)}mb\`` +
-          `\n• Uptime: ${msToUI(process.uptime() * 1000)}` +
-          `\n• CPU: ${process.platform !== 'win32' ? '`' + loadavg().join('% ') + '`' : 'Not available.'}`
+        makeResponse([
+          ['Memory', ~~(process.memoryUsage().rss / 1e6) + '/' + ~~(freemem() / 1e6) + 'mb'],
+          ['Uptime', msToUI(process.uptime() * 1000)],
+          ['CPU', process.platform !== 'win32' ? code(loadavg().join('% ')) : 'Not available.', true]
+        ])
       )
-      .addField('❯ User', `• Username: \`${user.tag}\`` + `\n• ID: \`${user.id}\`` + `\n• Created: ${createdAt}`);
+      .addField(
+        '❯ User',
+        makeResponse([
+          ['Username', user.tag],
+          ['ID', user.id],
+          ['Created', createdAt, true]
+        ])
+      );
 
     if (interaction.guild) {
       const timestamp = (await interaction.guild.members.fetch(interaction.client.application.id))
         .joinedTimestamp as number;
       const joinedAt =
-        `\`${dateFormat(timestamp, dateFormatStr)} (UTC)\`` + ` (${msToUI(Date.now() - tzOffset - timestamp)} Ago)`;
+        code(dateFormat(timestamp, dateFormatStr), '(UTC)') + `(${msToUI(Date.now() - tzOffset - timestamp)} Ago)`;
 
-      embed.addField('❯ Server', `• Shard ID: \`${interaction.guild.shard.id}\`` + `\n• Joined: ${joinedAt}`);
+      embed.addField(
+        '❯ Server',
+        makeResponse([
+          ['Shard ID', interaction.guild.shard.id],
+          ['Joined', joinedAt, true]
+        ])
+      );
     }
 
     //@ts-expect-error Types should allow null for content
