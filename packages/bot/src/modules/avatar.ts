@@ -64,6 +64,6 @@ export default class extends Module {
       .setTitle('URL')
       .setURL(avatar)
       .setImage(avatar);
-    interaction.reply(embed);
+    interaction.reply({ embeds: [embed] });
   }
 }

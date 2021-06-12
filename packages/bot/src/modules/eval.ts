@@ -28,9 +28,13 @@ export default class extends Module {
     try {
       let evaled = await eval("const Discord=require('discord.js');" + value);
       if (typeof evaled !== 'string') evaled = inspect(evaled);
-      interaction.reply(clean(evaled).substring(0, 1990), { code: 'js', allowedMentions: { parse: [] } });
+      interaction.reply({ content: clean(evaled).substring(0, 1990), code: 'js', allowedMentions: { parse: [] } });
     } catch (error) {
-      interaction.reply(clean(error.toString()).substring(0, 1990), { code: 'js', allowedMentions: { parse: [] } });
+      interaction.reply({
+        content: clean(error.toString()).substring(0, 1990),
+        code: 'js',
+        allowedMentions: { parse: [] }
+      });
     }
   }
 }

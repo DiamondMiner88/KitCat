@@ -2,6 +2,7 @@ import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { Module, ModuleCategory, OptionString } from '../modules';
 import { readFileSync } from 'fs';
 import fetch from 'node-fetch';
+import { link, makeKVList, makeList } from '../utils';
 
 export default class extends Module {
   name = 'anilist';
@@ -107,8 +108,8 @@ export default class extends Module {
     const result = await fetch('https://graphql.anilist.co', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
-        // Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
       body: JSON.stringify({
         query: this.queryTemplate,
@@ -137,7 +138,7 @@ export default class extends Module {
       isAdult,
       startDate,
       endDate,
-      // rankings,
+      rankings,
       externalLinks,
       title: { english, romaji, native },
       meanScore,
@@ -153,11 +154,18 @@ export default class extends Module {
 
     if (isAdult)
       return interaction.reply(
-        `The media returned (${title}) is adult. Please run this command in an nsfw channel to see more info.`
+        `The title returned (${title}) is adult. Please run this command in an nsfw channel to see more info.`
       );
 
     let description = rawDescription.split('\n')[0].slice(0, 500);
     if (description.length === 500) description += '...';
+
+    const start =
+      startDate.year && startDate.month && startDate.day
+        ? `${startDate.year}-${startDate.month}-${startDate.day}`
+        : 'Unknown';
+    const end =
+      endDate.year && endDate.month && endDate.day ? `${endDate.year}-${endDate.month}-${endDate.day}` : 'Unknown';
 
     const embed = new MessageEmbed()
       .setAuthor('AniList', 'https://anilist.co/img/icons/android-chrome-512x512.png')
@@ -166,61 +174,33 @@ export default class extends Module {
       .setColor(color)
       .setImage(coverImage)
       .setDescription(description)
-
-      .addField(
-        '❯ Status',
-        `• ${this.aniListStatuses[status]}\n• Start Date: ${startDate.year ?? '?'}-${startDate.month ?? '?'}-${
-          startDate.day ?? '?'
-        }\n• End Date: ${endDate.year ?? '?'}-${endDate.month ?? '?'}-${endDate.day ?? '?'}`,
-        true
-      );
+      .addField('❯ Status', `• ${this.aniListStatuses[status]}\n• Start Date: ${start}\n• End Date: ${end}`, true);
 
     if (externalLinks.length > 0)
-      embed.addField(
-        '❯ External Links',
-        '• ' + externalLinks.map((l: any) => `[${l.site}](${l.url})`).join('\n• '),
-        true
-      );
-    // TODO: Use the rankings property, not just score
+      embed.addField('❯ External Links', makeList(...externalLinks.map((l: any) => [link(l.site, l.url)])), true);
+
+    const highestYear = Math.max(...rankings.map((r: any) => r.year));
     embed.addField(
       '❯ Rankings',
-      `• Average Score: ${averageScore ?? 'Unknown'}\n• Mean Score ${meanScore ?? 'Unknown'}`,
+      makeKVList(
+        ['Average Score', averageScore ?? 'Unknown', true, !meanScore],
+        ['Mean Score', meanScore, true, !meanScore]
+      ) +
+        '\n' +
+        makeList(
+          ...rankings
+            .filter((r: any) => r.allTime)
+            .map((r: any) => [
+              r.type === 'RATED' ? `#${r.rank} Highest Rated All-Time` : `#${r.rank} Most Popular All-Time`
+            ]),
+          ...rankings
+            .filter((r: any) => r.year === highestYear)
+            .map((r: any) => [
+              r.type === 'RATED' ? `#${r.rank} Highest Rated ${highestYear}` : `#${r.rank} Most Popular ${highestYear}`
+            ])
+        ),
       true
     );
-
-    interaction.reply(embed);
+    interaction.reply({ embeds: [embed] });
   }
 }
-
-/*
-      "rankings": [
-        {
-          "rank": 413,
-          "type": "RATED",
-          "year": null,
-          "season": null,
-          "allTime": true
-        },
-        {
-          "rank": 214,
-          "type": "POPULAR",
-          "year": null,
-          "season": null,
-          "allTime": true
-        },
-        {
-          "rank": 21,
-          "type": "RATED",
-          "year": 2018,
-          "season": null,
-          "allTime": false
-        },
-        {
-          "rank": 14,
-          "type": "POPULAR",
-          "year": 2018,
-          "season": null,
-          "allTime": false
-        }
-      ],
-*/

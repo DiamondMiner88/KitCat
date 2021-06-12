@@ -1,7 +1,6 @@
-import dateFormat from 'dateformat';
 import { Collection, CommandInteraction, MessageEmbed, Snowflake } from 'discord.js';
 import { Module, ModuleCategory, OptionString, OptionUser } from '../modules';
-import { dateFormatStr, msToUI } from '../utils';
+import { code, link, makeKVList, timestamp } from '../utils';
 
 export default class extends Module {
   name = 'user';
@@ -59,48 +58,48 @@ export default class extends Module {
       user = user.find(m => m.user.discriminator === splitTag![1])?.user ?? user.first()?.user;
     if (!user) return interaction.reply('Could not find that user!');
 
-    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-
-    const sinceCreateElapsed = Date.now() + timezoneOffset - user.createdTimestamp;
-    const createdAt = `\`${dateFormat(user.createdTimestamp, dateFormatStr)} (UTC)\` (${msToUI(
-      sinceCreateElapsed
-    )} Ago)`;
-
     // EMBED COLOR
     const embed = new MessageEmbed()
       .setThumbnail(user.displayAvatarURL({ dynamic: true, format: 'png', size: 64 }))
-      .addField(`❯ User`, `• ID: \`${user.id}\`\n• Username: \`${user.tag}\`\n• Created: ${createdAt}`);
+      .addField(
+        `❯ User`,
+        makeKVList(['ID', user.id], ['Username', user.tag], ['Created', timestamp(user.createdAt), true])
+      );
 
     if (interaction.guild) {
       const member = await interaction.guild.members.fetch(user.id).catch(() => undefined);
       if (member) {
-        embed.setColor(member.displayHexColor);
-        const joinElapsed = Date.now() + timezoneOffset - (member.joinedTimestamp ?? 0);
-        const joinedAt = member.joinedTimestamp
-          ? `\`${dateFormat(member.joinedTimestamp, dateFormatStr)} (UTC)\` (${msToUI(joinElapsed)} Ago)`
-          : 'unknown';
-        const nickname = member.nickname ? '`' + member.nickname + '`' : 'No nickname';
-        const boostingElapsed = Date.now() + timezoneOffset - (member.premiumSinceTimestamp ?? 0);
-        const boostingSince = member.premiumSinceTimestamp
-          ? `Since \`${dateFormat(member.premiumSinceTimestamp, dateFormatStr)} (UTC)\` (${msToUI(
-              boostingElapsed
-            )} Ago)`
-          : 'Not boosting';
-        const roles =
-          member.roles.cache.size > 1
-            ? member.roles.cache
-                .filter(r => r.name !== '@everyone')
-                .map(r => `\`${r.name}\``)
-                .join(', ')
-            : 'None';
-        embed.addField(
+        embed.setColor(member.displayHexColor).addField(
           `❯ Member`,
-          `• Nickname: ${nickname}\n• Roles: ${roles}\n• Joined: ${joinedAt}\n• Display [Color](https://www.color-hex.com/color/${member.displayHexColor.slice(
-            1
-          )}): \`${member.displayHexColor}\`\n• Boost: ${boostingSince}`
+          makeKVList(
+            ['Nickname', member.nickname ? code(member.nickname) : 'None'],
+            [
+              'Roles',
+              member.roles.cache.size > 1
+                ? member.roles.cache
+                    .filter(r => r.name !== '@everyone' && !r.managed)
+                    .map(r => `\`${r.name}\``)
+                    .join(', ')
+                : 'None',
+              true
+            ],
+            ['Joined', timestamp(member.joinedAt as Date), true],
+            [
+              'Color',
+              link(code(member.displayHexColor), `https://www.color-hex.com/color/${member.displayHexColor.slice(1)}`),
+              true,
+              !member.roles.color
+            ],
+            [
+              'Boosting',
+              member.premiumSinceTimestamp ? `Since ${timestamp(member.premiumSinceTimestamp)}` : 'Not boosting',
+              true,
+              !member.premiumSinceTimestamp
+            ]
+          )
         );
       }
     }
-    interaction.reply(embed);
+    interaction.reply({ embeds: [embed] });
   }
 }

@@ -1,5 +1,5 @@
 import { Collection, Permissions, TextChannel, User } from 'discord.js';
-import { logger } from './logging';
+import { defaultLogger } from './logging';
 import { database, getGuildSettings } from './database';
 import { KClient } from './base';
 import { NOOP, sleep } from './utils';
@@ -23,14 +23,16 @@ export const client = new KClient({
 export async function exit(): Promise<void> {
   client.destroy();
   await database.end();
-  logger.debug('Gracefully exiting.');
+  defaultLogger.debug('Gracefully exiting.');
   process.exit(0);
 }
 
 process.on('SIGTERM', exit);
 
 client.once('ready', async () => {
-  logger.info(`Logged in as ${client.user.tag} (${client.user.id}) | Watching ${client.guilds.cache.size} servers`);
+  defaultLogger.info(
+    `Logged in as ${client.user.tag} (${client.user.id}) | Watching ${client.guilds.cache.size} servers`
+  );
 
   const update = () => {
     client.user.setActivity(`${client.guilds.cache.size} servers`, { type: 'WATCHING' });
@@ -82,7 +84,7 @@ If your server members cannot use slash commands, then you must enable the *Use 
     if (!channel) continue;
     try {
       await sleep(5000);
-      await channel.send(text, { allowedMentions: { parse: ['users'] } });
+      await channel.send({ content: text, allowedMentions: { parse: ['users'] } });
       break;
     } catch (error) {
       // If I cannot send this to the channel, then continue trying the next
@@ -91,6 +93,6 @@ If your server members cannot use slash commands, then you must enable the *Use 
 });
 
 client.login().catch(e => {
-  logger.error(`Login failed. ${e.message}`);
+  defaultLogger.error(`Login failed. ${e.message}`);
   exit();
 });

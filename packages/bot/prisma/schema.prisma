@@ -13,6 +13,7 @@ model GuildSettings {
   logChannel    String?
   reportChannel String?
   autoRoles     String[]
+  createdAt     String
 }
 
 enum ModerationCaseType {
@@ -27,13 +28,14 @@ model ModerationCase {
   user      String
   guild     String
   type      ModerationCaseType
-  reason    String
+  reason    String?
   endsAt    BigInt?
   createdAt BigInt
 
   @@id([user, guild])
 }
 
+// TODO: redesign reaction roles to buttons
 model RRSet {
   message        String @id
   channel        String
@@ -50,16 +52,16 @@ model Reminders {
   channel String
   guild   String
   time    BigInt
-  creator String
-  text    String
+  author  String
+  content String
 }
 
 model CustomCommands {
-  commandId      String @id // Slash command id
-  commandName    String // Slash command name
-  guild          String // Origin guild id
+  id             String @id // Slash command id
+  name           String // Slash command name
+  guild          String
   content        String
-  author         String // Original creator id
+  author         String
   createdAt      BigInt
   lastModifier   String // User id of person that last modified it
   lastModifiedAt BigInt

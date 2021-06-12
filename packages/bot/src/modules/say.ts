@@ -20,6 +20,6 @@ export default class extends Module {
   ];
 
   async invoke(interaction: CommandInteraction, { text: { value } }: { text: OptionString }): Promise<any> {
-    interaction.reply(value, { allowedMentions: { parse: [] } });
+    interaction.reply({ content: value, allowedMentions: { parse: [] } });
   }
 }

@@ -1,13 +1,13 @@
 import ws from 'ws';
 import { client } from '.';
-import { logger } from './logging';
+import { defaultLogger } from './logging';
 
 const server = new ws.Server({ port: 9000 });
 
 server.on('connection', socket => {
-  logger.debug('Connected to backend!');
+  defaultLogger.debug('Connected to backend!');
 
-  socket.on('error', err => logger.error(`Backend ws error: ${err.message}`));
+  socket.on('error', err => defaultLogger.error(`Backend ws error: ${err.message}`));
   socket.on('message', data => handleMessage(socket, data));
 });
 

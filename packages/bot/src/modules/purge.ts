@@ -49,15 +49,15 @@ export default class extends Module {
 
     (interaction.channel as TextChannel).bulkDelete(amount, true).then(
       messages => {
-        sendToLogChannel(interaction.guild, logEmbed);
+        sendToLogChannel(interaction.guild, { embeds: [logEmbed] });
         interaction.client.setTimeout(
-          () => interaction.reply(`Deleted ${messages.size} messages.`, { ephemeral: true }),
+          () => interaction.reply({ content: `Deleted ${messages.size} messages.`, ephemeral: true }),
           2000
         );
       },
       error =>
         interaction.client.setTimeout(
-          () => interaction.reply(`Failed to purge because of ${error.message}`, { ephemeral: true }),
+          () => interaction.reply({ content: `Failed to purge because of ${error.message}`, ephemeral: true }),
           2000
         )
     );

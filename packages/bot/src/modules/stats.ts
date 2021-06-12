@@ -1,7 +1,7 @@
 import dateFormat from 'dateformat';
 import { MessageEmbed, version as DJSversion } from 'discord.js';
 import { Module, ModuleCategory } from '../modules';
-import { code, dateFormatStr, emojis, msToUI, makeResponse } from '../utils';
+import { code, dateFormatStr, emojis, duration, makeKVList } from '../utils';
 import { freemem, loadavg } from 'os';
 import { KCommandInteraction } from '../base';
 
@@ -24,7 +24,7 @@ export default class extends Module {
     const user = interaction.client.user;
 
     const tzOffset = new Date().getTimezoneOffset() * 60 * 1000;
-    const createdAt = `\`${dateFormat(user.createdTimestamp, dateFormatStr)} (UTC)\` (${msToUI(
+    const createdAt = `\`${dateFormat(user.createdTimestamp, dateFormatStr)} (UTC)\` (${duration(
       Date.now() - tzOffset - user.createdTimestamp
     )} Ago)`;
 
@@ -32,50 +32,31 @@ export default class extends Module {
       .setTitle('Stats')
       .addField(
         '❯ Info',
-        makeResponse([
+        makeKVList(
           ['Owner', `[Github](${process.env.npm_package_author_url})`, true],
           ['Support', `[Invite](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`, true],
           ['Discord.js', DJSversion],
           ['Node.js', process.version]
-        ])
+        )
       )
-      .addField(
-        '❯ Ping',
-        makeResponse([
-          ['Heartbeat', interaction.client.ws.ping + 'ms'],
-          ['API', ~~elapsed + 'ms']
-        ])
-      )
+      .addField('❯ Ping', makeKVList(['Heartbeat', interaction.client.ws.ping + 'ms'], ['API', ~~elapsed + 'ms']))
       .addField(
         '❯ Process',
-        makeResponse([
+        makeKVList(
           ['Memory', ~~(process.memoryUsage().rss / 1e6) + '/' + ~~(freemem() / 1e6) + 'mb'],
-          ['Uptime', msToUI(process.uptime() * 1000)],
+          ['Uptime', duration(process.uptime() * 1000), true],
           ['CPU', process.platform !== 'win32' ? code(loadavg().join('% ')) : 'Not available.', true]
-        ])
+        )
       )
-      .addField(
-        '❯ User',
-        makeResponse([
-          ['Username', user.tag],
-          ['ID', user.id],
-          ['Created', createdAt, true]
-        ])
-      );
+      .addField('❯ User', makeKVList(['Username', user.tag], ['ID', user.id], ['Created', createdAt, true]));
 
     if (interaction.guild) {
       const timestamp = (await interaction.guild.members.fetch(interaction.client.application.id))
         .joinedTimestamp as number;
       const joinedAt =
-        code(dateFormat(timestamp, dateFormatStr), '(UTC)') + `(${msToUI(Date.now() - tzOffset - timestamp)} Ago)`;
+        code(dateFormat(timestamp, dateFormatStr), '(UTC)') + `(${duration(Date.now() - tzOffset - timestamp)} Ago)`;
 
-      embed.addField(
-        '❯ Server',
-        makeResponse([
-          ['Shard ID', interaction.guild.shard.id],
-          ['Joined', joinedAt, true]
-        ])
-      );
+      embed.addField('❯ Server', makeKVList(['Shard ID', interaction.guild.shard.id], ['Joined', joinedAt, true]));
     }
 
     //@ts-expect-error Types should allow null for content

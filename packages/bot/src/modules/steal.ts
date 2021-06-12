@@ -62,10 +62,13 @@ export default class extends Module {
 
     // Create from existing emoji
     if (emojiStr) {
+      // TODO: fix
+      return interaction.reply({ content: 'This option is not supported yet!', ephemeral: true });
+
       // Get ID from input
       const [id] = emojiStr.value.match(/\d{17,20}/) ?? [];
       // If no match, return
-      if (!id) return interaction.reply('Invalid emoji id.', { ephemeral: true });
+      if (!id) return interaction.reply({ content: 'Invalid emoji id.', ephemeral: true });
       // Create emoji
       const url = `https://cdn.discordapp.com/emojis/${id}.png?v=1`;
       const emoji = await interaction.guild.emojis

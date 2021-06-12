@@ -1,14 +1,14 @@
+import dateFormat from 'dateformat';
 import {
   Message,
-  MessageAdditions,
   MessageOptions,
   TextChannel,
   GuildMember,
-  PermissionResolvable,
   PermissionString,
   UserResolvable,
   User,
-  Snowflake
+  Snowflake,
+  APIMessage
 } from 'discord.js';
 import { Guild } from 'discord.js';
 import { getGuildSettings } from './database';
@@ -49,7 +49,11 @@ export const SNOWFLAKES = {
   },
 
   // Channels
-  notifications: '816173167654469673' as Snowflake
+  channels: {
+    errors: '816173167654469673' as Snowflake,
+    warnings: '853055979972067358' as Snowflake,
+    info: '853056003293577216' as Snowflake
+  }
 };
 
 /**
@@ -73,29 +77,6 @@ const bypassUsers = [SNOWFLAKES.users.Diamond, SNOWFLAKES.users.PixelDough];
 /** NO-OP function for catches */
 // eslint-disable-next-line
 export const NOOP = (...params: any): void => undefined;
-
-/**
- * Bring back GuildMember#hasPermission from v12 && combine devPerms at once
- * Checks if any of this member's roles have a permission.
- * @param {GuildMember} member To check permissions on
- * @param {PermissionResolvable} permission Permission(s) to check for
- * @param {Object} [options] Options
- * @param {boolean} [options.checkAdmin=true] Whether to allow the administrator permission to override
- * @param {boolean} [options.checkOwner=true] Whether to allow being the guild's owner to override
- * @returns {boolean}
- */
-// TODO: remove usage of this since permissions are already handled
-export function hasPermission(
-  member?: GuildMember,
-  permission?: PermissionResolvable,
-  { checkAdmin = true, checkOwner = true } = {}
-): boolean {
-  if (!member) return false;
-  if (checkOwner && member.id === member.guild.ownerID) return true;
-  if (devPerms(member.id)) return true;
-  if (!permission) return false;
-  return member.permissions.has(permission, checkAdmin);
-}
 
 /**
  * Pre-made emoji ids
@@ -129,25 +110,36 @@ export const emojis = {
 };
 
 /**
- * Convert milliseconds to readable time
- * @param ms Milliseconds
- * @returns A string
+ * Convert milliseconds (duration) to readable time
  */
-// TODO: clean this up
-export function msToUI(ms: number): string {
-  const seconds = +(ms / 1000).toFixed(0);
-  const minutes = +(ms / (1000 * 60)).toFixed(0);
-  const hours = +(ms / (1000 * 60 * 60)).toFixed(0);
-  const days = +(ms / (1000 * 60 * 60 * 24)).toFixed(0);
-  const months = +(ms / 2.628e9).toFixed(0);
-  const years = +(ms / 31557600000).toFixed(0);
+export function duration(ms: number): string {
+  const minutes = ~~(ms / (1000 * 60));
+  const hours = ~~(minutes / 60);
+  const days = ~~(hours / 24);
+  const months = ~~(ms / 2.628e9);
+  const years = ~~(ms / 31557600000);
 
-  if (seconds < 60) return seconds + ` Second${seconds > 1 ? 's' : ''}`;
-  else if (minutes < 60) return minutes + ` Minute${minutes > 1 ? 's' : ''}`;
-  else if (hours < 24) return hours + ` Hour${hours > 1 ? 's' : ''}`;
-  else if (days < 30) return days + ` Day${days > 1 ? 's' : ''}`;
-  else if (months < 12) return months + ` Month${months > 1 ? 's' : ''}`;
-  else return years + ` Year${years > 1 ? 's' : ''}`;
+  return ms < 1000
+    ? `${ms}ms`
+    : ms / 1000 < 60
+    ? 'A few seconds'
+    : minutes === 1
+    ? 'A minute'
+    : minutes < 60
+    ? `${minutes} minutes`
+    : hours === 1
+    ? 'An hour'
+    : days === 0
+    ? `${hours} hours`
+    : days < 30
+    ? `${days} days`
+    : months === 1
+    ? 'A month'
+    : years === 0
+    ? `${months} months`
+    : years === 1
+    ? 'A year'
+    : `${years} years`;
 }
 
 /**
@@ -192,7 +184,7 @@ export const READABLE_PERMISSIONS: Record<PermissionString, string> = {
 /**
  * Used for formatting timestamps to display
  */
-export const dateFormatStr = 'yyyy-mm-dd HH:MM:ss';
+export const dateFormatStr = 'UTC:yyyy-mm-dd HH:MM:ss Z';
 
 /**
  * Log a message to a guild's Log Channel
@@ -202,7 +194,7 @@ export const dateFormatStr = 'yyyy-mm-dd HH:MM:ss';
  */
 export async function sendToLogChannel(
   guild: Guild,
-  content: string | (MessageOptions & { split?: false }) | MessageAdditions
+  content: string | APIMessage | (MessageOptions & { split?: false })
 ): Promise<Message | Message[] | Error | undefined> {
   const settings = await getGuildSettings(guild.id, guild.memberCount);
   if (!settings.logChannel) return; // No logChannel set, ignore
@@ -223,15 +215,57 @@ export const sleep = (ms: number): Promise<void> => new Promise(resolve => setTi
  * Wraps the content in 2 backticks
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const code = (...content: any[]): string => `\`${content.join(' ')}\``
+export const code = (...content: any[]): string => `\`${content.join(' ')}\``;
 
 /**
- * Generates a list resembling this format:
+ * Generates a key-value list following this format:
  * |---------------------|
  * | • Name: `Content`   |
  * | • Name2: `Content2` |
  * |---------------------|
- * @param lines List of [name, content, should not make it code] tuples
+ * @param lines List of [name, content, should not make it code, shoud exclude] tuples
  */
-export const makeResponse = (lines: [string, any, boolean?][]): string =>
-  lines.map(l => `• ${l[0]}: ${l[2] ? l[1] : code(l[1])}`).join('\n')
+export const makeKVList = (...lines: [string, any, boolean?, boolean?][]): string =>
+  lines
+    .filter(l => !l[3])
+    .map(l => `• ${l[0]}: ${l[2] ? l[1] : code(l[1])}`)
+    .join('\n');
+
+/**
+ * Generates a list following this format:
+ * |----------|
+ * | • Value1 |
+ * | • Value2 |
+ * |----------|
+ * @param elements [value, toExclude][]
+ */
+export const makeList = (...elements: [string, boolean?][]): string =>
+  elements
+    .filter(e => !e[1])
+    .map(e => '• ' + e[0])
+    .join('\n');
+
+/**
+ * Generates a markdown link
+ */
+export const link = (name: string, url: string): string => `[${name}](${url})`;
+
+/**
+ * Formats a unix timestamp to this:
+ * 2020-11-16 13:56:22 (7 Months Ago)
+ * @param date UNIX timestamp in seconds
+ * @param options.code Make the timestamp appear as code
+ * @param options.duration Show duration
+ * @param options.newLine Place a newline between date and duration
+ */
+export const timestamp = (
+  date: number | Date | string,
+  options: { code?: boolean; duration?: boolean; newLine?: boolean } = { code: true, duration: true, newLine: false }
+): string => {
+  date = typeof date === 'number' ? new Date(date * 1000) : typeof date === 'string' ? new Date(date) : date;
+  return (
+    (options.code ? code(dateFormat(date, dateFormatStr)) : dateFormat(date, dateFormatStr)) +
+    (options.newLine ? '\n' : ' ') +
+    (options.duration ? `(${duration(Date.now() - date.getTime())} ago)` : '')
+  );
+};

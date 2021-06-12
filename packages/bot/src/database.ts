@@ -1,9 +1,11 @@
 import NodeCache from 'node-cache';
-import { logger } from './logging';
+import { defaultLogger as logger, Logger } from './logging';
 import { clamp } from './utils';
 import { client } from '.';
 import { Client } from 'pg';
 import { Snowflake } from 'discord.js';
+// console.log(Logger);
+// TODO: Logger is undefined???????
 
 export const database = new Client();
 database
@@ -16,21 +18,56 @@ database.on('end', () => {
   logger.error('Disconnected from database, continuing...');
 });
 
-//#region Database types
-type GuildSettings = {
+export interface ModelGuildSettings {
   id: Snowflake;
   joinMessage?: string;
   logChannel?: Snowflake;
   reportChannel?: Snowflake;
   autoRoles?: Snowflake[];
   createdAt: string;
-};
-//#endregion
+}
+
+enum ModerationCaseType {
+  WARN,
+  MUTE,
+  KICK,
+  SOFTBAN,
+  BAN
+}
+
+export interface ModelModerationCase {
+  user: Snowflake;
+  guild: Snowflake;
+  type: ModerationCaseType;
+  reason?: String;
+  endsAt: number;
+  createdAt: number;
+}
+
+export interface ModelReminder {
+  id: number;
+  channel: Snowflake;
+  guild: Snowflake;
+  time: Snowflake;
+  author: Snowflake;
+  content: string;
+}
+
+export interface ModelCustomCommand {
+  id: Snowflake;
+  name: Snowflake;
+  guild: Snowflake;
+  content: string;
+  author: Snowflake;
+  createdAt: number;
+  lastModifier: Snowflake;
+  lastModifiedAt: number;
+}
 
 export const cachedSettings = new NodeCache();
-export async function getGuildSettings(id: string, memberCount?: number): Promise<GuildSettings> {
+export async function getGuildSettings(id: string, memberCount?: number): Promise<ModelGuildSettings> {
   // Check if it exists in cache
-  const settings = cachedSettings.get<GuildSettings>(id);
+  const settings = cachedSettings.get<ModelGuildSettings>(id);
   if (settings) return settings;
 
   // Since its not cached, fetch it from the db.

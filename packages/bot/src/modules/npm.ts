@@ -1,9 +1,95 @@
 import { CommandInteraction, MessageEmbed } from 'discord.js';
 import { Module, ModuleCategory, OptionString } from '../modules';
-import { logger } from '../logging';
-import { msToUI } from '../utils';
-import dateFormat from 'dateformat';
+import { defaultLogger } from '../logging';
+import { link, makeKVList, makeList, timestamp } from '../utils';
 import fetch from 'node-fetch';
+import shortNumber from 'short-number';
+
+//#region NPM Registry typings
+export interface NpmInfo {
+  _id: string;
+  _rev: string;
+  name: string;
+  'dist-tags': StringProperty;
+  versions: Record<string, NpmVersion>;
+  time: StringProperty;
+  maintainers: NpmMaintainer[];
+  description: string;
+  homepage: string;
+  keywords: string[];
+  repository: NpmRepository;
+  author?: NpmAuthor | string;
+  bugs: NpmBug;
+  license: string;
+  readme: string;
+  readmeFilename: string;
+}
+
+export interface NpmAuthor {
+  name?: string;
+  email?: string;
+  url?: string;
+}
+
+export interface NpmBug {
+  url: string;
+}
+
+export interface NpmDist {
+  integrity: string;
+  shasum: string;
+  tarball: string;
+  fileCount: number;
+  unpackedSize: number;
+  'npm-signature': string;
+}
+
+export interface NpmMaintainer {
+  name: string;
+  email: string;
+}
+
+export interface NpmRepository {
+  type: string;
+  url: string;
+}
+
+export interface NpmVersion {
+  name: string;
+  version: string;
+  description: string;
+  main: string;
+  types: string;
+  scripts: StringProperty;
+  repository: NpmRepository;
+  keywords: string[];
+  author: NpmAuthor;
+  license: string;
+  bugs: NpmBug;
+  homepage: string;
+  dependencies: StringProperty;
+  devDependencies: StringProperty;
+  gitHead: string;
+  _id: string;
+  _nodeVersion: string;
+  _npmVersion: string;
+  dist: NpmDist;
+  maintainers: NpmMaintainer[];
+  _npmUser: NpmMaintainer;
+  directories: Record<string, unknown>;
+  _npmOperationalInternal: _npmOperationalInternal;
+  _hasShrinkwrap: boolean;
+}
+
+export interface StringProperty {
+  [key: string]: string;
+}
+
+export interface _npmOperationalInternal {
+  host: string;
+  tmp: string;
+}
+//#endregion
 
 export default class extends Module {
   name = 'npm';
@@ -24,52 +110,61 @@ export default class extends Module {
   ];
 
   async invoke(interaction: CommandInteraction, { package: { value } }: { package: OptionString }): Promise<any> {
-    let pkg: any = fetch('https://registry.npmjs.org/' + value).then(res => res.json());
-    try {
-      pkg = await pkg;
-    } catch (e) {
-      logger.warning(`Failed to fetch info from npm: ${e}`);
+    const pkg = await fetch('https://registry.npmjs.org/' + value)
+      .then(res => res.json() as Promise<NpmInfo>)
+      .catch(() => undefined);
+    if (!pkg) {
+      defaultLogger.warning(`Failed to fetch data from npm registry`);
       return interaction.reply('Failed to fetch data from the npm registry. Try again later.');
     }
+
+    //@ts-expect-error Check for api errors
     if (pkg.error) return interaction.reply(pkg.error);
 
-    const totalDLs = await fetch(`https://api.npmjs.org/downloads/point/1000-01-01:3000-01-01/${value}`)
+    const dlsURL = `https://api.npmjs.org/downloads/point/1000-01-01:3000-01-01/${value}`;
+    const totalDLs = await fetch(dlsURL)
       .then(r => r.json())
-      .then(r => r.downloads)
+      .then(r => r.downloads as number)
       .catch(() => undefined);
 
-    const formatString = 'yyyy-mm-dd HH:MM:ss';
-    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
-    const created = new Date(pkg.time.created).getTime() + timezoneOffset;
-    const modified = new Date(pkg.time.modified).getTime() + timezoneOffset;
     const embed = new MessageEmbed()
       .setAuthor('npm', 'https://authy.com/wp-content/uploads/npm-logo.png')
       .setTitle(pkg.name)
       .setURL(`https://www.npmjs.com/package/` + pkg._id)
       .setDescription(pkg.description)
-      .addField('❯ Latest Version', pkg['dist-tags'].latest, true)
-      .addField('❯ Total Downloads', totalDLs ? totalDLs : 'Unknown', true);
-    if (pkg.author?.name)
-      embed.addField('❯ Author', pkg.author.url ? `[${pkg.author.name}](${pkg.author.url})` : pkg.author.name, true);
+      .addField(
+        '❯ Info',
+        makeKVList(
+          ['Latest Version', pkg['dist-tags'].latest, true],
+          ['Downloads', link(totalDLs ? shortNumber(totalDLs) : 'Unknown', dlsURL), true],
+          [
+            'Author',
+            pkg.author
+              ? typeof pkg.author === 'string'
+                ? pkg.author
+                : pkg.author.url
+                ? `[${pkg.author.name}](${pkg.author.url})`
+                : pkg.author.name
+              : 'Unknown',
+            true,
+            !!pkg.author
+          ],
+          ['License', pkg.license, true]
+        ) +
+          '\n' +
+          makeList(
+            [link('Homepage', pkg.homepage), !!pkg.homepage],
+            [link('Repository', pkg.repository?.url?.replace('git+', '')), !!pkg.repository?.url],
+            [link('Issues', pkg.bugs?.url), !!pkg.bugs?.url]
+          ),
+        true
+      );
     embed
-      .addField(
-        '❯ Created',
-        `${dateFormat(created, formatString)}\n(${msToUI(Date.now() + timezoneOffset - created)} Ago)`,
-        true
-      )
-      .addField(
-        '❯ Last Modified',
-        `${dateFormat(modified, formatString)}\n(${msToUI(Date.now() + timezoneOffset - modified)}) Ago`,
-        true
-      )
-      .addField(
-        '❯ Links',
-        `• [Homepage](${pkg.homepage})\n${
-          pkg.repository?.url ? `• [Repository](${pkg.repository.url.replace('git+', '')})` : ''
-        }\n${pkg.bugs?.url ? `• [Issues](${pkg.bugs.url})` : ''}`,
-        true
-      )
-      .addField('❯ Maintainers', '• ' + pkg.maintainers.map((m: any) => m.name).join('\n• '), true);
-    interaction.reply(embed);
+      .addField('❯ Created', timestamp(pkg.time.created, { newLine: true }), true)
+      .addField('❯ Last Modified', timestamp(pkg.time.modified, { newLine: true }), true)
+      .addField('❯ Dependencies', Object.keys(pkg.versions[pkg['dist-tags'].latest].dependencies).join(', '))
+      .addField('❯ Maintainers', pkg.maintainers.map(m => m.name).join(', '));
+
+    interaction.reply({ embeds: [embed] });
   }
 }
