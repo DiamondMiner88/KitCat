@@ -17,14 +17,14 @@ export default class extends Module {
       type: 'STRING',
       name: 'name',
       description: 'Name for the new emoji.',
-      required: true,
+      required: false,
       choices: undefined,
       options: undefined
     },
     {
       type: 'STRING',
       name: 'emoji',
-      description: 'Use an existing emoji or an emoji id.',
+      description: 'Existing server emoji/emoji id.',
       required: false,
       choices: undefined,
       options: undefined
@@ -58,54 +58,53 @@ export default class extends Module {
   ): Promise<any> {
     interaction.defer();
 
-    let attachment: string | Buffer = '';
-
-    // Create from existing emoji
     if (emojiStr) {
-      // TODO: fix
-      return interaction.reply({ content: 'This option is not supported yet!', ephemeral: true });
+      const [_, isAnimated, extractedName, id] = emojiStr.value.match(/<?(a)?:?(\w{2,32})?:?(\d{17,19})>?/) ?? [];
+      name = name ?? extractedName;
 
-      // Get ID from input
-      const [id] = emojiStr.value.match(/\d{17,20}/) ?? [];
-      // If no match, return
-      if (!id) return interaction.reply({ content: 'Invalid emoji id.', ephemeral: true });
-      // Create emoji
-      const url = `https://cdn.discordapp.com/emojis/${id}.png?v=1`;
+      if (!name) return interaction.editReply('You need to supply a name!');
+      if (name.length < 2 || name.length > 32) return interaction.editReply('Name must be between 2 and 32 in length!');
+
+      if (!id) return interaction.editReply({ content: 'Invalid emoji!' });
+
       const emoji = await interaction.guild.emojis
-        .create(url, name, {
-          reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`
+        .create(`https://cdn.discordapp.com/emojis/${id}.${isAnimated ? 'gif' : 'png'}`, name, {
+          reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`,
+          roles: role ? [role.value] : undefined
         })
-        .catch((e: DiscordAPIError) => e);
-      // If the id was invalid, then return
-      if (emoji instanceof DiscordAPIError) return interaction.editReply('Could not find that emoji!');
-      // Reply with newly created emoji
+        .catch(e => e as DiscordAPIError);
+
+      if (emoji instanceof DiscordAPIError) {
+        if (emoji.code === 30008) return interaction.editReply(emoji.message);
+        if (emoji.code === 50035) return interaction.editReply('Invalid emoji ID!');
+        return interaction.editReply(`Error: ${emoji.message}`);
+      }
+
       return interaction.editReply(emoji.toString());
-    }
-    // Create from url
-    else if (url) {
+    } else if (url) {
       // TODO: Possible IP Leak, since the url can be pointing to a private server that logs ips. Solutions: use a proxy, or upload the image to discord using url first, then download it from discord.
       const res = await fetch(url.value)
         .then(r => r.buffer())
         .catch((e: FetchError) => e);
 
-      if (res instanceof FetchError) return interaction.editReply('Could not get image.');
+      if (res instanceof FetchError) return interaction.editReply('Invalid url');
 
-      // If emoji smaller than 256kb, then use the original url
-      if (res.byteLength < 256000) attachment = url.value;
-      // Otherwise, resize image
-      else attachment = await sharp(res).toFormat('png').resize(128, 128).toBuffer();
+      // If smaller than 256kb, then use url, otherwise resize
+      const attachment =
+        res.byteLength < 256000 ? url.value : await sharp(res).toFormat('png').resize(128, 128).toBuffer();
+
+      // Create emoji
+      const emoji = await interaction.guild.emojis
+        .create(attachment, name, {
+          reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`,
+          roles: role ? [role.value] : undefined
+        })
+        .catch((e: DiscordAPIError) => e);
+      // TODO: different messages for max emojis reached & other errors
+      if (emoji instanceof DiscordAPIError) interaction.editReply(`Error: ${emoji.message}`);
+      else interaction.editReply(emoji.toString());
     }
     // Neither url or emoji was provided
     else return interaction.editReply('No paramaters provided!');
-
-    // Create emoji
-    const emoji = await interaction.guild.emojis
-      .create(attachment, name, {
-        reason: `Requested by ${interaction.user.tag} (${interaction.user.id})`,
-        roles: role ? [role.value] : undefined
-      })
-      .catch((e: DiscordAPIError) => e);
-    if (emoji instanceof DiscordAPIError) interaction.editReply(`Error: ${emoji.message}`);
-    else interaction.editReply(emoji.toString());
   }
 }
