@@ -1,12 +1,13 @@
-import { Collection, Permissions, TextChannel, User } from 'discord.js';
+import { Collection, MessageEmbed, Permissions, TextChannel, User } from 'discord.js';
 import { defaultLogger } from './logging';
 import { database, getGuildSettings } from './database';
 import { KClient } from './base';
-import { NOOP, sleep } from './utils';
+import { NOOP, sleep, SNOWFLAKES } from './utils';
 import './database';
 import './wshandler';
 
 export let invite = '';
+let joinChannel: TextChannel;
 export const client = new KClient({
   partials: ['REACTION', 'MESSAGE'],
   intents: [
@@ -47,6 +48,8 @@ client.once('ready', async () => {
     client.user.id +
     '&scope=bot%20applications.commands&permissions=8';
 
+  joinChannel = client.channels.resolve(SNOWFLAKES.channels.join_log) as TextChannel;
+
   // client.emit('guildCreate', client.guilds.cache.get('676284863967526928')!); // test guildCreate command
 });
 
@@ -57,7 +60,8 @@ client.on('guildMemberAdd', async member => {
 
 client.on('guildCreate', async guild => {
   const logs = await guild.fetchAuditLogs({ limit: 3, type: 'BOT_ADD' }).catch(() => undefined);
-  const dm = await logs?.entries.find(entry => (entry.target as User).id === client.user?.id)?.executor?.createDM();
+  const inviter = logs?.entries.find(entry => (entry.target as User).id === client.user?.id)?.executor;
+  const dm = await inviter?.createDM();
   const textchannels = guild.channels.cache.filter(channel => channel.type === 'text') as Collection<
     string,
     TextChannel
@@ -90,6 +94,16 @@ If your server members cannot use slash commands, then you must enable the *Use 
       // If I cannot send this to the channel, then continue trying the next
     }
   }
+
+  // const owner = await guild.fetchOwner({ cache: false });
+  // const joinEmbed = new MessageEmbed().setTitle('Joined Server').addField('❯ Owner', `${owner.user.tag} (${owner.id})`);
+  // if (guild.icon) joinEmbed.setThumbnail(guild.iconURL({ format: 'png', dynamic: true, size: 256 })!);
+  // if (inviter)
+  //   joinEmbed.setFooter(
+  //     `Inviter: ${inviter.tag} (${inviter.id})`,
+  //     inviter.displayAvatarURL({ format: 'png', dynamic: true, size: 64 })
+  //   );
+  // joinChannel.send({ embeds: [joinEmbed] });
 });
 
 client.login().catch(e => {

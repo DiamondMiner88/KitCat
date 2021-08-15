@@ -8,10 +8,10 @@ import { Snowflake } from 'discord.js';
 // TODO: Logger is undefined???????
 
 export const database = new Client();
-database
-  .connect()
-  .then(() => (client.dbEnabled = true))
-  .catch(e => logger.error(`Could not connect to database because of: ${e}`));
+// database
+//   .connect()
+//   .then(() => (client.dbEnabled = true))
+//   .catch(e => logger.error(`Could not connect to database because of: ${e}`));
 
 database.on('end', () => {
   client.dbEnabled = false;
@@ -39,7 +39,7 @@ export interface ModelModerationCase {
   user: Snowflake;
   guild: Snowflake;
   type: ModerationCaseType;
-  reason?: String;
+  reason?: string;
   endsAt: number;
   createdAt: number;
 }

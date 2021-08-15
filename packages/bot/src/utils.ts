@@ -52,7 +52,8 @@ export const SNOWFLAKES = {
   channels: {
     errors: '816173167654469673' as Snowflake,
     warnings: '853055979972067358' as Snowflake,
-    info: '853056003293577216' as Snowflake
+    info: '853056003293577216' as Snowflake,
+    join_log: '854067587620405269' as Snowflake
   }
 };
 
